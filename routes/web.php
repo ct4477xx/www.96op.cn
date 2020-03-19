@@ -15,7 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
+//创建资源类
 Route::resource('test','TestController');
