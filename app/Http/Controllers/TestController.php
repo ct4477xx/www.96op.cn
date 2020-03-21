@@ -49,7 +49,7 @@ class TestController extends Controller
         $is_name = Test::all()
             ->where('name', $input['name'])
             ->count();
-        if ($is_name > 0) {
+        if ($is_name > 0 || $input['name']=='') {
             return back();
         }
         $data = new Test;

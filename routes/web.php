@@ -17,3 +17,7 @@ Route::get('/', function () {
 
 //创建资源类
 Route::resource('test','TestController');
+
+
+//网址缩短
+Route::resource('t','UrlController');

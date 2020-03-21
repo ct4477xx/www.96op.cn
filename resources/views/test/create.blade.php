@@ -24,5 +24,6 @@
     </table>
     {{csrf_field()}}
 </form>
+<a href="/test">返回</a>
 </body>
 </html>
