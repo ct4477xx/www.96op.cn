@@ -44,11 +44,11 @@ class UrlController extends Controller
 
     public function store(Request $request)
     {
-        function getrandstr()
+        function getrandstr($len)
         {
             $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
             $randStr = str_shuffle($str);//打乱字符串
-            $rands = substr($randStr, 0, 6);//substr(string,start,length);返回字符串的一部分
+            $rands = substr($randStr, 0, $len);//substr(string,start,length);返回字符串的一部分
             return $rands;
         }
 
@@ -69,7 +69,7 @@ class UrlController extends Controller
         if (!$is_data) {
             $data = new urlMaxToMin;
             $data['oldUrl'] = $inp['data']['url'];//原地址
-            $data['minUrl'] = getrandstr('5');//随机码
+            $data['minUrl'] = getrandstr('3');//随机码
             $data['infoBak'] = $inp['data']['infoBak'];//备注说明
             $expiration = $inp['data']['expiration'] ?: 30;
             $data['expiration'] = $expiration;//过期时间

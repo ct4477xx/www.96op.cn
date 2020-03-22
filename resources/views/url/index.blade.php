@@ -71,7 +71,7 @@
                     </div>
                     <div class="form-group">
                         <span for="expiration">二维码: </span>
-                        {!! QrCode::size(135)->generate('src'); !!}
+                        <img id="rwm" src=""/>
                     </div>
                     <div class="form-group">
                         <span for="expiration" id="expiration_">过期时间:</span>
@@ -131,9 +131,9 @@
                             $("#show_2").show();
                             $("#oldurl").text("原网址: " + data.oldUrl);
                             $("#expiration_").text("过期时间:" + data.endTime);
-                            $("#minUrl").val('{!! $doMain !!}/t/' + data.minUrl);
+                            $("#minUrl").val('{!! $doMain !!}/t/'+data.minUrl);
                             $("#ksfw").attr("href", "{!! $doMain !!}/t/" + data.minUrl);
-                            $("#rwm").attr("src", data.minUrl);
+                            $("#rwm").attr("src", "http://qr.liantu.com/api.php?w=140&m=10&text={!! $doMain !!}/t/"+data.minUrl);
                         })
                         //window.location.href = '../?api-getUrl.html';
                     } else {
