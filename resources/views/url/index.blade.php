@@ -1,4 +1,3 @@
-<!--#include file="../../routing.asp"-->
 <html lang="zh-CN">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -72,7 +71,7 @@
                     </div>
                     <div class="form-group">
                         <span for="expiration">二维码: </span>
-                        <img id="wrm" src=""/>
+                        {!! QrCode::size(135)->generate('src'); !!}
                     </div>
                     <div class="form-group">
                         <span for="expiration" id="expiration_">过期时间:</span>
@@ -132,9 +131,9 @@
                             $("#show_2").show();
                             $("#oldurl").text("原网址: " + data.oldUrl);
                             $("#expiration_").text("过期时间:" + data.endTime);
-                            $("#minUrl").val('{!! $doMain !!}/t/'+data.minUrl);
+                            $("#minUrl").val('{!! $doMain !!}/t/' + data.minUrl);
                             $("#ksfw").attr("href", "{!! $doMain !!}/t/" + data.minUrl);
-                            $("#wrm").attr("src", "../../../Plugin/qrcode/?index.html&text={!! $doMain !!}/t/" + data.minUrl + "&s=4");
+                            $("#rwm").attr("src", data.minUrl);
                         })
                         //window.location.href = '../?api-getUrl.html';
                     } else {

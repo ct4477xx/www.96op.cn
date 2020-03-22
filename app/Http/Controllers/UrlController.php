@@ -81,7 +81,8 @@ class UrlController extends Controller
                     'success' => true,
                     'oldUrl' => $data['oldUrl'],
                     'endTime' => $data['endTime'],
-                    'minUrl' => $data['minUrl']
+                    'minUrl' => $data['minUrl'],
+                    'rwm' => $data['minUrl']
 
                 ];
             } else {
@@ -95,12 +96,11 @@ class UrlController extends Controller
                 'success' => true,
                 'oldUrl' => $old_data[0]['oldUrl'],
                 'endTime' => $old_data[0]['endTime'],
-                'minUrl' => $old_data[0]['minUrl']
-
+                'minUrl' => $old_data[0]['minUrl'],
+                'rwm' => $old_data[0]['minUrl']
             ];
         }
     }
-
 
 
     /**
@@ -124,10 +124,10 @@ class UrlController extends Controller
         } else {
             //
             $new_data = urlMaxToMin::find($old_data[0]['id']);
-            $new_data['count']=$new_data['count']+1;
-            $new_data['visitTime']=date("Y-m-d h:i:s");
+            $new_data['count'] = $new_data['count'] + 1;
+            $new_data['visitTime'] = date("Y-m-d h:i:s");
             $new_data->save();
-            return redirect('http://'.$old_data[0]['oldUrl']);
+            return redirect('http://' . $old_data[0]['oldUrl']);
         }
     }
 
