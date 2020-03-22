@@ -44,11 +44,11 @@ class UrlController extends Controller
 
     public function store(Request $request)
     {
-        function getrandstr()
+        function getrandstr($len)
         {
             $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
             $randStr = str_shuffle($str);//打乱字符串
-            $rands = substr($randStr, 0, 6);//substr(string,start,length);返回字符串的一部分
+            $rands = substr($randStr, 0, $len);//substr(string,start,length);返回字符串的一部分
             return $rands;
         }
 
@@ -69,7 +69,7 @@ class UrlController extends Controller
         if (!$is_data) {
             $data = new urlMaxToMin;
             $data['oldUrl'] = $inp['data']['url'];//原地址
-            $data['minUrl'] = getrandstr('5');//随机码
+            $data['minUrl'] = getrandstr('3');//随机码
             $data['infoBak'] = $inp['data']['infoBak'];//备注说明
             $expiration = $inp['data']['expiration'] ?: 30;
             $data['expiration'] = $expiration;//过期时间
@@ -81,7 +81,8 @@ class UrlController extends Controller
                     'success' => true,
                     'oldUrl' => $data['oldUrl'],
                     'endTime' => $data['endTime'],
-                    'minUrl' => $data['minUrl']
+                    'minUrl' => $data['minUrl'],
+                    'rwm' => $data['minUrl']
 
                 ];
             } else {
@@ -95,12 +96,11 @@ class UrlController extends Controller
                 'success' => true,
                 'oldUrl' => $old_data[0]['oldUrl'],
                 'endTime' => $old_data[0]['endTime'],
-                'minUrl' => $old_data[0]['minUrl']
-
+                'minUrl' => $old_data[0]['minUrl'],
+                'rwm' => $old_data[0]['minUrl']
             ];
         }
     }
-
 
 
     /**
@@ -124,10 +124,10 @@ class UrlController extends Controller
         } else {
             //
             $new_data = urlMaxToMin::find($old_data[0]['id']);
-            $new_data['count']=$new_data['count']+1;
-            $new_data['visitTime']=date("Y-m-d h:i:s");
+            $new_data['count'] = $new_data['count'] + 1;
+            $new_data['visitTime'] = date("Y-m-d h:i:s");
             $new_data->save();
-            return redirect('http://'.$old_data[0]['oldUrl']);
+            return redirect('http://' . $old_data[0]['oldUrl']);
         }
     }
 
