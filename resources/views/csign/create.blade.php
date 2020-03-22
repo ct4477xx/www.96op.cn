@@ -1,17 +1,11 @@
 <html lang="zh-CN"><head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小区出入签到(<%=site_WebName%>)</title>
-    <!--#include file="../../style.asp"-->
-    <link rel="stylesheet" href="../../css/layout.css">
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../css/theme.css" rel="stylesheet">
-    <script src="../../js/jquery-1.8.3.min.js"></script>
+    <title>小区出入签到({!! site()['siteWebName'] !!})</title>
+    @include('pubilc/csign/css')
+    @include('pubilc/csign/js')
 </head>
 <body role="document" style="">
-<!--<header class="navbar navbar-default navbar-fixed-top">
-
- </header>-->
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-8">
@@ -27,7 +21,8 @@
                             <span for="street">街道名称 </span><br>
                             <select class="form-control" id="street" name="street">
                                 <option value="">请选择街道</option>
-                                <%Set Rs = op.db.Select(only_sql_sys,"select id,name from [sign_Street] where fatherId='2' order by bySort desc, id asc")
+                                <%Set Rs = op.db.Select(only_sql_sys,"select id,name from [sign_Street] where
+                                fatherId='2' order by bySort desc, id asc")
                                 While Not Rs.EOF%>
                                 <option value="<%=Rs(0)%>"><%=Rs(1)%></option>
                                 <%Rs.MoveNext:Wend:op.db.C(Rs)%>
@@ -41,38 +36,45 @@
                         </div>
                         <div class="form-group">
                             <span for="homeName">家庭住址 </span>
-                            <input type="text" class="form-control" id="homeName" name="homeName" placeholder="请输入小区名称与家庭住址"  value="">
+                            <input type="text" class="form-control" id="homeName" name="homeName"
+                                   placeholder="请输入小区名称与家庭住址" value="">
                         </div>
                         <div class="form-group">
                             <span for="users">住户信息 </span>
-                            <input type="text" class="form-control" id="users" name="users" placeholder="请输入常住人员姓名，支持多个姓名"  value="">
+                            <input type="text" class="form-control" id="users" name="users"
+                                   placeholder="请输入常住人员姓名，支持多个姓名" value="">
                         </div>
                         <div class="form-group">
                             <span for="mobile">联系电话 </span>
-                            <input type="text" class="form-control" id="mobile" name="mobile" placeholder="请输入联系电话"  value="">
+                            <input type="text" class="form-control" id="mobile" name="mobile" placeholder="请输入联系电话"
+                                   value="">
                         </div>
                         <br>
                         <div class="form-group" style="margin-bottom: 0px;text-align-last: center;">
-                            <button id="Btn" type="submit" class="btn btn-default" style="width: 220px;background-color: #c8ecf3;">确认</button><br><br>
-                            <input type="button" value="返回" onclick="javascrtpt:window.location.href='<%=doMain%>/_/_Csign/?index.html'" class="btn btn-default" style="width: 220px;"/>
+                            <button id="Btn" type="submit" class="btn btn-default"
+                                    style="width: 220px;background-color: #c8ecf3;">确认
+                            </button>
+                            <br><br>
+                            <input type="button" value="返回"
+                                   onclick="javascrtpt:window.location.href='{!! site()['doMain'] !!}/csign'"
+                                   class="btn btn-default" style="width: 220px;"/>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div align="center"><a href="http://www.beian.miit.gov.cn/" target="_blank"><%=op.iif(op.IsN(site_ICP),"粤ICP备18113405号-3",site_ICP)%></a></div>
-    <script src="../../js/lib/layer/layer.js"></script>
-    <script src="../../js/lib/jquery.validate.min.js"></script>
+    <div align="center"><a href="http://www.beian.miit.gov.cn/" target="_blank">{!! site()['siteICP'] !!}</a></div>
 
     <script type="text/javascript">
-        $(function(){
-
-
+        $(function () {
             //社区选择
-            $("#street").change(function(){
-                $.post("/sys/Ajax/_ajaxReadKey/?index.html", { type: "community", term: $(this).children(":selected").val() },
-                    function(data){
+            $("#street").change(function () {
+                $.post("/sys/Ajax/_ajaxReadKey/?index.html", {
+                        type: "community",
+                        term: $(this).children(":selected").val()
+                    },
+                    function (data) {
                         $("#community").html(data);
                         $("#district").val("");
                     });
@@ -81,79 +83,79 @@
         })
     </script>
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             $("#show_2").hide();
         })
         //表单验证
         $("#from_post").validate({
             rules: {
-                numbers:{
-                    required:true,
-                    rangelength:[2,25]
+                numbers: {
+                    required: true,
+                    rangelength: [2, 25]
                 },
-                street:"required",
-                community:"required",
-                homeName:{
-                    required:true,
-                    rangelength:[2,45]
+                street: "required",
+                community: "required",
+                homeName: {
+                    required: true,
+                    rangelength: [2, 45]
                 },
-                users:{
-                    required:true,
-                    rangelength:[2,30]
+                users: {
+                    required: true,
+                    rangelength: [2, 30]
                 },
-                mobile:{
-                    required:true,
-                    maxlength:11,
-                    minlength:11,
-                    digits:true
+                mobile: {
+                    required: true,
+                    maxlength: 11,
+                    minlength: 11,
+                    digits: true
                 },
             },
             errorElement: "a",
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 $(element).parents('.form-group').append(error);
             },
-            messages:{
-                numbers:{
-                    required:'请填写住宅编号',
-                    rangelength:"住宅编号不得少于2位"
+            messages: {
+                numbers: {
+                    required: '请填写住宅编号',
+                    rangelength: "住宅编号不得少于2位"
                 },
-                street:{
-                    required:'请选择街道名称'
+                street: {
+                    required: '请选择街道名称'
                 },
-                community:{
-                    required:'请选择社区名称'
+                community: {
+                    required: '请选择社区名称'
                 },
-                homeName:{
-                    required:'请填写家庭住址',
-                    rangelength:"家庭地址请控制在2-45个字符以内"
+                homeName: {
+                    required: '请填写家庭住址',
+                    rangelength: "家庭地址请控制在2-45个字符以内"
                 },
-                users:{
-                    required:'请填写住户信息',
-                    rangelength:"家庭成员名称可以只写一位或多位"
+                users: {
+                    required: '请填写住户信息',
+                    rangelength: "家庭成员名称可以只写一位或多位"
                 },
-                mobile:{
-                    required:'请填写联系电话',
-                    maxlength:"请输入正确的手机号",
-                    minlength:"请输入正确的手机号",
-                    digits:"请输入正确的手机号"
+                mobile: {
+                    required: '请填写联系电话',
+                    maxlength: "请输入正确的手机号",
+                    minlength: "请输入正确的手机号",
+                    digits: "请输入正确的手机号"
                 }
             },
-            submitHandler: function(form) {
-                $('#Btn').addClass('btn-dis').html('验证中...').attr('disabled',true);
+            submitHandler: function (form) {
+                $('#Btn').addClass('btn-dis').html('验证中...').attr('disabled', true);
                 $.ajax({
                     type: 'POST',
-                    url:"../../?api-addSign.html",
-                    dataType:'json',
+                    url: "../../?api-addSign.html",
+                    dataType: 'json',
                     data: $("#from_post").serialize(),
-                    success:function(json) {
-                        if(json.success=="True"){
+                    success: function (json) {
+                        if (json.success == "True") {
                             window.location.href = '<%=doMain%>/_/_Csign/?index.html';
                         } else {
-                            layer.msg(json.msg, {shift:6});
-                            $('#Btn').removeClass('btn-dis').html('确认').attr('disabled',false);
+                            layer.msg(json.msg, {shift: 6});
+                            $('#Btn').removeClass('btn-dis').html('确认').attr('disabled', false);
                         }
                     },
-                    timeout:3000
+                    timeout: 3000
                 });
                 return false;
             }

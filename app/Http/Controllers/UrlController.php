@@ -19,8 +19,8 @@ class UrlController extends Controller
     {
         //
         $data = [];
-        $data['site_WebName'] = "96OP";
-        $data['doMain'] = "https://96op.cn";
+        $data['siteWebName'] = site()['siteWebName'];
+        $data['doMain'] = site()['doMain'];
         return view('url.index', $data);
     }
 
@@ -44,13 +44,7 @@ class UrlController extends Controller
 
     public function store(Request $request)
     {
-        function getrandstr($len)
-        {
-            $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
-            $randStr = str_shuffle($str);//打乱字符串
-            $rands = substr($randStr, 0, $len);//substr(string,start,length);返回字符串的一部分
-            return $rands;
-        }
+
 
         //
         //获取前端表单信息
@@ -81,8 +75,7 @@ class UrlController extends Controller
                     'success' => true,
                     'oldUrl' => $data['oldUrl'],
                     'endTime' => $data['endTime'],
-                    'minUrl' => $data['minUrl'],
-                    'rwm' => $data['minUrl']
+                    'minUrl' => $data['minUrl']
 
                 ];
             } else {
@@ -96,8 +89,7 @@ class UrlController extends Controller
                 'success' => true,
                 'oldUrl' => $old_data[0]['oldUrl'],
                 'endTime' => $old_data[0]['endTime'],
-                'minUrl' => $old_data[0]['minUrl'],
-                'rwm' => $old_data[0]['minUrl']
+                'minUrl' => $old_data[0]['minUrl']
             ];
         }
     }

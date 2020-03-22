@@ -2,7 +2,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>短网址生成({!! $site_WebName !!})</title>
+    <title>短网址生成({!! site()['siteWebName']  !!})</title>
     @include('pubilc/url/css')
     @include('pubilc/url/js')
 </head>
@@ -10,7 +10,7 @@
 <header class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand"><strong>{!! $doMain !!} 短网址生成工具</strong></a>
+            <a class="navbar-brand"><strong>{!! site()['doMain'] !!} 短网址生成工具</strong></a>
         </div>
     </div>
 </header>
@@ -26,7 +26,7 @@
                         <div class="form-group">
                             <span for="url">请输入长网址</span>
                             <input type="text" class="form-control" id="url" name="url"
-                                   placeholder="{!! $doMain !!}/index.html" value="">
+                                   placeholder="{!! site()['doMain'] !!}/index.html" value="">
                         </div>
                         <div class="form-group">
                             <span for="expiration">过期时间（可不填）</span>
@@ -48,7 +48,7 @@
                         <span for="url">请输入短码</span>
                         <input name="qs_minUrl" id="qs_minUrl" type="text" class="form-control-1"
                                placeholder="请输入短码(区分大小写)">&nbsp;<a href="" id="qs_ksfw">快速访问</a>
-                        &nbsp;<e style="color: #888686;font-size: 13px;">(例如： "{!! $doMain !!}/t/96op", "96op"即为短码)</e>
+                        &nbsp;<e style="color: #888686;font-size: 13px;">(例如： "{!! site()['doMain'] !!}/t/96op", "96op"即为短码)</e>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
         </div>
     </div>
 </div>
-<div align="center"><a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备18113405号</a></div>
+<div align="center"><a href="http://www.miitbeian.gov.cn/" target="_blank">{!! site()['siteICP'] !!}</a></div>
 <script type="text/javascript">
     function myCopy() {
         var ele = document.getElementById("minUrl");
@@ -98,7 +98,7 @@
         $("#show_2").hide();
         $('#qs_minUrl').on('input propertychange', function () {
             var qs_minUrl = $(this).val();
-            $("#qs_ksfw").attr("href", "{!! $doMain !!}/t/" + qs_minUrl);
+            $("#qs_ksfw").attr("href", "{!! site()['doMain'] !!}/t/" + qs_minUrl);
         });
     })
     //表单验证
@@ -131,9 +131,9 @@
                             $("#show_2").show();
                             $("#oldurl").text("原网址: " + data.oldUrl);
                             $("#expiration_").text("过期时间:" + data.endTime);
-                            $("#minUrl").val('{!! $doMain !!}/t/'+data.minUrl);
-                            $("#ksfw").attr("href", "{!! $doMain !!}/t/" + data.minUrl);
-                            $("#rwm").attr("src", "http://qr.liantu.com/api.php?w=140&m=10&text={!! $doMain !!}/t/"+data.minUrl);
+                            $("#minUrl").val('{!! site()['doMain'] !!}/t/'+data.minUrl);
+                            $("#ksfw").attr("href", "{!! site()['doMain'] !!}/t/" + data.minUrl);
+                            $("#rwm").attr("src", "http://qr.liantu.com/api.php?w=140&m=10&text={!! site()['doMain'] !!}/t/"+data.minUrl);
                         })
                         //window.location.href = '../?api-getUrl.html';
                     } else {

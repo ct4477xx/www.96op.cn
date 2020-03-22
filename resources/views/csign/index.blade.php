@@ -1,17 +1,11 @@
 <html lang="zh-CN"><head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小区出入签到(<%=site_WebName%>)</title>
-    <!--#include file="../../style.asp"-->
-    <link rel="stylesheet" href="../../css/layout.css">
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../css/theme.css" rel="stylesheet">
-    <script src="../../js/jquery-1.8.3.min.js"></script>
+    <title>小区出入签到({!! site()['siteWebName'] !!})</title>
+    @include('pubilc/csign/css')
+    @include('pubilc/csign/js')
 </head>
 <body role="document" style="">
-<!--<header class="navbar navbar-default navbar-fixed-top">
-
- </header>-->
 <div class="container">
     <div class="row" id="show_1" name="show_1">
         <div class="col-xs-12 col-sm-6 col-md-8">
@@ -45,7 +39,7 @@
                     <e style="color: #888686;font-size: 13px;">请输入管理员密码后展示录入码：</e>
                     <input type="password" class="form-control" id="pwd" name="pwd" placeholder="请在输入管理员密码后自动展示录入码"  value="">
                     <div id="show_3" name="show_3" class="register-form" style="text-align-last: center;">
-                        <a href="<%=doMain%>/_/_CsignAdd/?index.html"><img src="../../../Plugin/qrcode/?index.html&text=<%=doMain%>/_/_CsignAdd/&s=6"/></a>
+                        <a href="{!! site()['doMain'] !!}/csign/create"><img src="http://qr.liantu.com/api.php?w=140&m=10&text={!! site()['doMain'] !!}/csign/create"/></a>
                         <div style="color: #888686;font-size: 13px;text-align-last: center;">点击或扫描二维码进行新住户录入</div>
                     </div>
                 </div>
@@ -83,9 +77,7 @@
         </div>
     </div>
 </div>
-<div align="center"><a href="http://www.miitbeian.gov.cn/" target="_blank"><%=op.iif(op.IsN(site_ICP),"粤ICP备18113405号-3",site_ICP)%></a></div>
-<script src="../../js/lib/layer/layer.js"></script>
-<script src="../../js/lib/jquery.validate.min.js"></script>
+<div align="center"><a href="http://www.miitbeian.gov.cn/" target="_blank">{!! site()['siteICP'] !!}</a></div>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#show_2").hide();

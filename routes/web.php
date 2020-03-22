@@ -12,12 +12,16 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('csign.index');
 });
 
 //创建资源类
 Route::resource('test','TestController');
 
 
+
 //网址缩短
 Route::resource('t','UrlController');
+
+//小区出入签到系统
+Route::resource('csign','CsignController');
