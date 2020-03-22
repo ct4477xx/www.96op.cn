@@ -13,3 +13,4 @@ yarn-error.log
 .idea
 .user.ini
 readme.md
+composer.lock
