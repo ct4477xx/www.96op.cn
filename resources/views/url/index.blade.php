@@ -48,7 +48,7 @@
                         <span for="url">请输入短码</span>
                         <input name="qs_minUrl" id="qs_minUrl" type="text" class="form-control-1"
                                placeholder="请输入短码(区分大小写)">&nbsp;<a href="" id="qs_ksfw">快速访问</a>
-                        &nbsp;<e style="color: #888686;font-size: 13px;">(例如： "{!! site()['doMain'] !!}/t/96op", "96op"即为短码)</e>
+                        &nbsp;<e style="color: #888686;font-size: 13px;">(例如： "{!! site()['doMain'] !!}/96op", "96op"即为短码)</e>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                         <span for="expiration" id="expiration_">过期时间:</span>
                     </div>
                     <div class="form-group" style="margin-bottom: 0px">
-                        <a class="btn btn-default" href="{{url('t')}}">继续生成</a>
+                        <a class="btn btn-default" href="{{url('/t')}}">继续生成</a>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
         $("#show_2").hide();
         $('#qs_minUrl').on('input propertychange', function () {
             var qs_minUrl = $(this).val();
-            $("#qs_ksfw").attr("href", "{!! site()['doMain'] !!}/t/" + qs_minUrl);
+            $("#qs_ksfw").attr("href", "/t/" + qs_minUrl);
         });
     })
     //表单验证
@@ -131,9 +131,9 @@
                             $("#show_2").show();
                             $("#oldurl").text("原网址: " + data.oldUrl);
                             $("#expiration_").text("过期时间:" + data.endTime);
-                            $("#minUrl").val('{!! site()['doMain'] !!}/t/'+data.minUrl);
-                            $("#ksfw").attr("href", "{!! site()['doMain'] !!}/t/" + data.minUrl);
-                            $("#rwm").attr("src", "http://qr.liantu.com/api.php?w=140&m=10&text={!! site()['doMain'] !!}/t/"+data.minUrl);
+                            $("#minUrl").val('{!! site()['doMain'] !!}/'+data.minUrl);
+                            $("#ksfw").attr("href", "{!! site()['doMain'] !!}/" + data.minUrl);
+                            $("#rwm").attr("src", "http://qr.liantu.com/api.php?w=140&m=10&text={!! site()['doMain'] !!}/"+data.minUrl);
                         })
                         //window.location.href = '../?api-getUrl.html';
                     } else {
