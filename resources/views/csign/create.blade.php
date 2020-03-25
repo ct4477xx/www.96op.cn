@@ -1,4 +1,5 @@
-<html lang="zh-CN"><head>
+<html lang="zh-CN">
+<head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>小区出入签到({!! site()['siteWebName'] !!})</title>
@@ -21,11 +22,9 @@
                             <span for="street">街道名称 </span><br>
                             <select class="form-control" id="street" name="street">
                                 <option value="">请选择街道</option>
-                                <%Set Rs = op.db.Select(only_sql_sys,"select id,name from [sign_Street] where
-                                fatherId='2' order by bySort desc, id asc")
-                                While Not Rs.EOF%>
-                                <option value="<%=Rs(0)%>"><%=Rs(1)%></option>
-                                <%Rs.MoveNext:Wend:op.db.C(Rs)%>
+                                @foreach(signStreet() as $v)
+                                    <option value="{{$v['Id']}}">{{$v['name']}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -65,18 +64,17 @@
         </div>
     </div>
     <div align="center"><a href="http://www.beian.miit.gov.cn/" target="_blank">{!! site()['siteICP'] !!}</a></div>
-
     <script type="text/javascript">
         $(function () {
             //社区选择
             $("#street").change(function () {
-                $.post("/sys/Ajax/_ajaxReadKey/?index.html", {
-                        type: "community",
-                        term: $(this).children(":selected").val()
+                $.post("{{url('/AjaxReadKey/community')}}/" + $(this).children(":selected").val(),
+                    {
+                        _method: "GET",
+                        _token: '{{csrf_token()}}'
                     },
                     function (data) {
                         $("#community").html(data);
-                        $("#district").val("");
                     });
             })
 
@@ -142,22 +140,30 @@
             },
             submitHandler: function (form) {
                 $('#Btn').addClass('btn-dis').html('验证中...').attr('disabled', true);
-                $.ajax({
-                    type: 'POST',
-                    url: "../../?api-addSign.html",
-                    dataType: 'json',
-                    data: $("#from_post").serialize(),
-                    success: function (json) {
-                        if (json.success == "True") {
-                            window.location.href = '<%=doMain%>/_/_Csign/?index.html';
-                        } else {
-                            layer.msg(json.msg, {shift: 6});
-                            $('#Btn').removeClass('btn-dis').html('确认').attr('disabled', false);
+                $.post("{{url('csign')}}",
+                    {
+                        _method: "POST",
+                        _token: '{{csrf_token()}}',
+                        data: {
+                            'street': $("#street").val(),
+                            'community': $("#community").val(),
+                            'homeName': $("#homeName").val(),
+                            'users': $("#users").val(),
+                            'mobile': $("#mobile").val()
                         }
                     },
-                    timeout: 3000
-                });
+                    function (data) {
+                        if (data.success) {
+                            window.location.href = '{{site()['doMain']}}/csign';
+                        } else {
+                            layer.msg(data.msg, {shift: 6});
+                            $('#Btn').removeClass('btn-dis').html('缩短网址').attr('disabled', false);
+                        }
+                        timeout: 3000
+                    },);
                 return false;
+
+
             }
         });
     </script>

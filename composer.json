@@ -40,7 +40,8 @@
             "database/factories"
         ],
         "files": [
-            "app/Base.php"
+            "app/Base.php",
+            "app/Ajax/ajaxReadKey.php"
         ]
     },
     "autoload-dev": {
