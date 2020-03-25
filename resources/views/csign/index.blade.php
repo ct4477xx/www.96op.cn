@@ -42,7 +42,7 @@
                     <input type="password" class="form-control" id="pwd" name="pwd" placeholder="请在输入管理员密码后自动展示录入码"
                            value="">
                     <div id="show_3" name="show_3" class="register-form" style="text-align-last: center;">
-                        <a href="{!! site()['doMain'] !!}/csign/create"><img
+                        <a href="/csign/create"><img
                                 src="http://qr.liantu.com/api.php?w=140&m=10&text={!! site()['doMain'] !!}/csign/create"/></a>
                         <div style="color: #888686;font-size: 13px;text-align-last: center;">点击或扫描二维码进行新住户录入</div>
                     </div>
@@ -141,7 +141,7 @@
                         //window.location.href = '../?api-getUrl.html';
                     } else {
                         layer.msg(data.msg, {shift: 6});
-                        $('#Btn').removeClass('btn-dis').html('缩短网址').attr('disabled', false);
+                        $('#Btn').removeClass('btn-dis').html('确认').attr('disabled', false);
                     }
 
                 },);

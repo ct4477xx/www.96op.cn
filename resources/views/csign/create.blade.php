@@ -55,7 +55,7 @@
                             </button>
                             <br><br>
                             <input type="button" value="返回"
-                                   onclick="javascrtpt:window.location.href='{!! site()['doMain'] !!}/csign'"
+                                   onclick="javascrtpt:window.location.href='/csign'"
                                    class="btn btn-default" style="width: 220px;"/>
                         </div>
                     </form>
