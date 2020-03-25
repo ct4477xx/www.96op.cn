@@ -14,7 +14,7 @@ function getrandstr($len)
 function site()
 {
     $data = [];
-    $data['doMain'] = 'http://www.96op.cn';
+    $data['doMain'] = URL::previous();
     $data['siteWebName'] = '96OP';
     $data['siteICP'] = '粤ICP备18113405号-3';
     return $data;
