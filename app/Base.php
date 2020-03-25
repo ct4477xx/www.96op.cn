@@ -100,7 +100,8 @@ function signStreet_String($Id)
 {
     $Id ?: '';
     if ($Id) {
-        $data = signStreet::where('Id', $Id)
+        $data = signStreet::select(['name'])
+            ->where('Id', $Id)
             ->get();
         return $data[0]['name'];
     }
