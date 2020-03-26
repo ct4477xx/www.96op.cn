@@ -154,7 +154,7 @@
                     },
                     function (data) {
                         if (data.success) {
-                            window.location.href = '{{site()['doMain']}}/csign';
+                            window.location.href = '/csign';
                         } else {
                             layer.msg(data.msg, {shift: 6});
                             $('#Btn').removeClass('btn-dis').html('缩短网址').attr('disabled', false);

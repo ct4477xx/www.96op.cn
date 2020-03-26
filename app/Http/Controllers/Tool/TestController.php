@@ -17,7 +17,7 @@ class TestController extends Controller
     public function index()
     {
         //
-        $u = Test::get();
+        $u = Test::all();
         $title = '首页 ' . now();
         return view('test.index', ['title' => $title, 'data' => $u]);
     }
@@ -46,7 +46,7 @@ class TestController extends Controller
         $input = $request->all();
 
         //查找名称是否存在
-        $is_name = Test::all()
+        $is_name = Test::get()
             ->where('name', $input['name'])
             ->count();
         if ($is_name > 0 || $input['name']=='') {
@@ -105,7 +105,7 @@ class TestController extends Controller
         //更新
         $inp = $request->all();
 
-        $is_name = Test::all()
+        $is_name = Test::get()
             ->where('name', $inp['name'])
             ->count();
         if ($is_name > 1) {

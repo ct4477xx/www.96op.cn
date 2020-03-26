@@ -55,7 +55,7 @@ class UrlController extends Controller
         $old_data = urlMaxToMin::where(['oldUrl' => $inp['data']['url']])
             ->where('endTime', '>=', date("Y-m-d h:i:s"))
             ->orderBy('id', 'desc')
-            ->get();
+            ->first();
         // ->where('oldUrl', $inp['data']['url'])
         //->where('endTime', '>=', date("Y-m-d h:i:s"))
         // ->count();
@@ -109,7 +109,7 @@ class UrlController extends Controller
         $old_data = urlMaxToMin::where(['minUrl' => $id])
             ->where('endTime', '>=', date("Y-m-d h:i:s"))
             ->orderBy('id', 'desc')
-            ->get();
+            ->first();
         $is_data = $old_data->count();
         //dd($is_data);
         if ($is_data == 0) {

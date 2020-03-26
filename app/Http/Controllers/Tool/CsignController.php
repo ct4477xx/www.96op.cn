@@ -40,14 +40,13 @@ class CsignController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $inp = $request->all();
+        //
         //查找手机号码是否存在
         $old_data = signUser::where('mobile', $inp['data']['mobile'])
             ->orderBy('addTime', 'desc')
-            ->get();
-        $is_data = $old_data->count();
-        if (!$is_data) {
+            ->first();
+        if (!$old_data) {
             $data = new signUser;
             $data['id'] = GetNewId();
             $data['street'] = $inp['data']['street'];
@@ -70,10 +69,6 @@ class CsignController extends Controller
 
     }
 
-    public function select(Request $request)
-    {
-
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -96,26 +91,33 @@ class CsignController extends Controller
     public function update(Request $request, $id)
     {
         $inp = $request->all();
-        $old_data = signUser::where('mobile', $inp['data']['mobile'])->get();
-        $old_Id = $old_data[0]['Id'];
-        $data = new signDese();
-        $data['Id'] = GetNewId();
-        $data['userId'] = $old_Id;
-        $data['types'] = $inp['data']['types'];
-        $data['status'] = $inp['data']['status'];
-        $data['addId'] = GetNewId();
-        $res = $data->save();
-        if ($res) {
-            $v = [];
-            $v['street'] = signStreet_String($old_data[0]['street']);
-            $v['community'] = signStreet_String($old_data[0]['community']);
-            $v['homeName'] = $old_data[0]['homeName'];
-            $v['users'] = $old_data[0]['users'];
-            $v['mobile'] = $old_data[0]['mobile'];
-            $v['success'] = true;
-            return $v;
-        } else {
-            return ['success' => false];
+        //
+        $old_data = signUser::where('mobile', $inp['data']['mobile'])
+            ->orderBy('addTime', 'desc')
+            ->first();
+        $old_Id = $old_data['Id'];
+        if ($old_Id) {
+            $data = new signDese();
+            $data['Id'] = GetNewId();
+            $data['userId'] = $old_Id;
+            $data['types'] = $inp['data']['types'];
+            $data['status'] = $inp['data']['status'];
+            $data['addId'] = GetNewId();
+            $res = $data->save();
+            if ($res) {
+                $v = [];
+                $v['street'] = signStreet_String($old_data['street']);
+                $v['community'] = signStreet_String($old_data['community']);
+                $v['homeName'] = $old_data['homeName'];
+                $v['users'] = $old_data['users'];
+                $v['mobile'] = $old_data['mobile'];
+                $v['success'] = true;
+                return $v;
+            } else {
+                return ['success' => false];
+            }
+        }else{
+            return ['success'=>false,'msg'=>'用户不存在'];
         }
         //
     }
