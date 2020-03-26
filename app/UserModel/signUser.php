@@ -1,13 +1,13 @@
 <?php
 
-namespace App;
+namespace App\UserModel;
 
 use Illuminate\Database\Eloquent\Model;
 
-class signDese extends Model
+class signUser extends Model
 {
     //
-    protected $table = 'signDese';
+    protected $table = 'signUser';
     const CREATED_AT = 'addTime';
     const UPDATED_AT = 'upTime';
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tool;
 
+use App\Http\Controllers\Controller;
 use App\Base;
-use App\signDese;
-use App\signUser;
+use App\UserModel\signDese;
+use App\UserModel\signUser;
 use Illuminate\Http\Request;
 
 class CsignController extends Controller

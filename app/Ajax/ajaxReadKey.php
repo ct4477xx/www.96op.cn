@@ -1,6 +1,6 @@
 <?php
 
-use App\signStreet;
+use App\UserModel\signStreet;
 
 function GetCommunity($fatherId, $Id)
 {

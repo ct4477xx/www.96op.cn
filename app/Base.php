@@ -1,6 +1,6 @@
 <?php
 
-use App\signStreet;
+use App\UserModel\signStreet;
 
 function getrandstr($len)
 {
@@ -105,7 +105,6 @@ function signStreet_String($Id)
             ->get();
         return $data[0]['name'];
     }
-
 
 }
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tool;
 
-use App\Test;
-use foo\bar;
+use App\Http\Controllers\Controller;
+use App\UserModel\Test;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 

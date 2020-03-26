@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tool;
 
+use App\Http\Controllers\Controller;
 use App\Base;
-use App\urlMaxToMin;
+use App\UserModel\urlMaxToMin;
 use Illuminate\Http\Request;
 
 class UrlController extends Controller

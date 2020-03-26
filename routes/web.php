@@ -20,16 +20,16 @@ Route::get('/', function () {
  * 公共方法
  *
  */
-Route::get('AjaxReadKey/{type}/{Id}', 'AjaxReadKeyController@show');
+Route::get('AjaxReadKey/{type}/{Id}', 'Tool\AjaxReadKeyController@show');
 //
 //
 //
 //创建资源类
-Route::resource('test', 'TestController');
+Route::resource('test', 'Tool\TestController');
 
 
 //网址缩短
-Route::resource('t', 'UrlController');
+Route::resource('t', 'Tool\UrlController');
 
 //小区出入签到系统
-Route::resource('csign', 'CsignController');
+Route::resource('csign', 'Tool\CsignController');
