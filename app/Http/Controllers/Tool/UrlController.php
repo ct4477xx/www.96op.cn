@@ -88,9 +88,9 @@ class UrlController extends Controller
         } else {
             return [
                 'success' => true,
-                'oldUrl' => $old_data[0]['oldUrl'],
-                'endTime' => $old_data[0]['endTime'],
-                'minUrl' => $old_data[0]['minUrl']
+                'oldUrl' => $old_data['oldUrl'],
+                'endTime' => $old_data['endTime'],
+                'minUrl' => $old_data['minUrl']
             ];
         }
     }
@@ -110,17 +110,15 @@ class UrlController extends Controller
             ->where('endTime', '>=', date("Y-m-d h:i:s"))
             ->orderBy('id', 'desc')
             ->first();
-        $is_data = $old_data->count();
-        //dd($is_data);
-        if ($is_data == 0) {
+        if (!$old_data) {
             return redirect('t');
         } else {
             //
-            $new_data = urlMaxToMin::find($old_data[0]['id']);
+            $new_data = urlMaxToMin::find($old_data['id']);
             $new_data['count'] = $new_data['count'] + 1;
             $new_data['visitTime'] = date("Y-m-d h:i:s");
             $new_data->save();
-            return redirect('http://' . $old_data[0]['oldUrl']);
+            return redirect('http://' . $old_data['oldUrl']);
         }
     }
 

@@ -33,3 +33,12 @@ Route::group(['namespace' => 'Tool'], function () {
 //小区出入签到系统
     Route::resource('csign', 'CsignController');
 });
+//
+//
+//
+Route::get('sys/login', 'Sys\LoginController@index');
+//
+Route::group(['namespace' => 'Sys', 'middleware' => ['IsLogin']], function () {
+    Route::get('sys', 'IndexController@index');
+
+});
