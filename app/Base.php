@@ -10,16 +10,6 @@ function getrandstr($len)
     return $rands;
 }
 
-
-function site()
-{
-    $data = [];
-    $data['doMain'] = URL::previous();
-    $data['siteWebName'] = '96OP';
-    $data['siteICP'] = '粤ICP备18113405号-3';
-    return $data;
-}
-
 function GetNewId($type = 5, $length = 8, $time = 0)
 {
     $str = $time == 0 ? '' : date('YmdHis', time());

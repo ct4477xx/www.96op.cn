@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('csign.index');
-});
+//Route::get('/', function () {
+//    return view('csign.index');
+//});
+Route::redirect('/', 'csign', 301);
 
 /**
  *
@@ -24,12 +25,11 @@ Route::get('AjaxReadKey/{type}/{Id}', 'Tool\AjaxReadKeyController@show');
 //
 //
 //
+Route::group(['namespace' => 'Tool'], function () {
 //创建资源类
-Route::resource('test', 'Tool\TestController');
-
-
+    Route::resource('test', 'TestController');
 //网址缩短
-Route::resource('t', 'Tool\UrlController');
-
+    Route::resource('t', 'UrlController');
 //小区出入签到系统
-Route::resource('csign', 'Tool\CsignController');
+    Route::resource('csign', 'CsignController');
+});
