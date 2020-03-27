@@ -56,12 +56,8 @@ class UrlController extends Controller
             ->where('endTime', '>=', date("Y-m-d h:i:s"))
             ->orderBy('id', 'desc')
             ->first();
-        // ->where('oldUrl', $inp['data']['url'])
-        //->where('endTime', '>=', date("Y-m-d h:i:s"))
-        // ->count();
-        $is_data = $old_data->count();
-        //dd($is_data);
-        if (!$is_data) {
+
+        if (!$old_data) {
             $data = new urlMaxToMin;
             $data['oldUrl'] = $inp['data']['url'];//原地址
             $data['minUrl'] = getrandstr('3');//随机码
@@ -118,7 +114,7 @@ class UrlController extends Controller
             $new_data['count'] = $new_data['count'] + 1;
             $new_data['visitTime'] = date("Y-m-d h:i:s");
             $new_data->save();
-            return redirect('http://' . $old_data['oldUrl']);
+            return redirect('http://' . str_replace('http://','',$old_data['oldUrl']));
         }
     }
 

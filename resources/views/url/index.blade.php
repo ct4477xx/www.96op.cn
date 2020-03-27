@@ -98,7 +98,7 @@
         $("#show_2").hide();
         $('#qs_minUrl').on('input propertychange', function () {
             var qs_minUrl = $(this).val();
-            $("#qs_ksfw").attr("href", "/t/" + qs_minUrl);
+            $("#qs_ksfw").attr("href", "{!! site()['doMain'] !!}/" + qs_minUrl);
         });
     })
     //表单验证
