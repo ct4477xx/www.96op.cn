@@ -10,7 +10,7 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 
 	var okTab = layui.okTab({
 		// 菜单请求路径
-		url: "data/navs.json",
+		url: "/resource/data/navs.json",
 		// 允许同时选项卡的个数
 		openTabNum: 30,
 		// 如果返回的结果和navs.json中的数据结构一致可省略这个方法
@@ -267,10 +267,10 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 			area: ["330px", "350px"],
 			tab: [{
 				title: "支付宝",
-				content: "<img src='images/zfb.jpg' width='200' height='300' style='margin: 0 auto; display: block;'>"
+				content: "<img src='/resource/images/zfb.jpg' width='200' height='300' style='margin: 0 auto; display: block;'>"
 			}, {
 				title: "微信",
-				content: "<img src='images/wx.jpg' width='200' height='300' style='margin: 0 auto; display: block;'>"
+				content: "<img src='/resource/images/wx.jpg' width='200' height='300' style='margin: 0 auto; display: block;'>"
 			}]
 		});
 	});
@@ -283,13 +283,13 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 			area: ["auto", "370px"],
 			tab: [{
 				title: "QQ群3",
-				content: "<img src='images/qq3.png' width='200' height='300' style='margin: 0 auto; display: block;'/>"
+				content: "<img src='/resource/images/qq3.png' width='200' height='300' style='margin: 0 auto; display: block;'/>"
 			}, {
 				title: "QQ群2（已满）",
-				content: "<img src='images/qq2.png' width='200' height='300' style='margin: 0 auto; display: block;'/>"
+				content: "<img src='/resource/images/qq2.png' width='200' height='300' style='margin: 0 auto; display: block;'/>"
 			}, {
 				title: "QQ群1（已满）",
-				content: "<img src='images/qq1.png' width='200' height='300' style='margin: 0 auto; display: block;'/>"
+				content: "<img src='/resource/images/qq1.png' width='200' height='300' style='margin: 0 auto; display: block;'/>"
 			}]
 		});
 	});
@@ -298,7 +298,7 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 	 * 弹窗皮肤
 	 */
 	$("#alertSkin").click(function () {
-		okLayer.open("皮肤动画", "pages/system/alertSkin.html", "50%", "45%", function (layero) {
+		okLayer.open("皮肤动画", "pages/system/alertSkin", "50%", "45%", function (layero) {
 		}, function () {
 		});
 	});
@@ -337,17 +337,4 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 			});
 		});
 	});
-
-	// console.log("        __                         .___      .__        \n" +
-	// 	"  ____ |  | __         _____     __| _/_____ |__| ____  \n" +
-	// 	" /  _ \\|  |/ /  ______ \\__  \\   / __ |/     \\|  |/    \\ \n" +
-	// 	"(  <_> )    <  /_____/  / __ \\_/ /_/ |  Y Y  \\  |   |  \\\n" +
-	// 	" \\____/|__|_ \\         (____  /\\____ |__|_|  /__|___|  /\n" +
-	// 	"            \\/              \\/      \\/     \\/        \\/\n" +
-	// 	"" +
-	// 	"版本：v2.0\n" +
-	// 	"作者：bobi\n" +
-	// 	"邮箱：bobi1234@foxmail.com\n" +
-	// 	"企鹅：833539807\n" +
-	// 	"描述：一个很赞的，扁平化风格的，响应式布局的后台管理模版，旨为后端程序员减压！");
 });

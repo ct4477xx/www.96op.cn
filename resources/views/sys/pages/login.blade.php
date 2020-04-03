@@ -13,7 +13,7 @@
 <body class="page-fill">
 <div class="page-fill" id="login">
     <form class="layui-form">
-        <div class="login_face"><img src="/sys/images/logo.png"></div>
+        <div class="login_face"><img src="/resource/images/logo.png"></div>
         <div class="layui-form-item input-item">
             <label for="username">用户名</label>
             <input type="text" lay-verify="required" name="username" placeholder="请输入账号" autocomplete="off"
@@ -25,12 +25,12 @@
                    id="password" class="layui-input">
         </div>
 
-{{--        <div class="layui-form-item input-item captcha-box" id="captchaCode" name="captchaCode">--}}
-{{--            <label for="captcha">验证码</label>--}}
-{{--            <input type="text" lay-verify="required|captcha" name="captcha" placeholder="请输入验证码" autocomplete="off"--}}
-{{--                   id="captcha" maxlength="4" class="layui-input">--}}
-{{--            <div class="img ok-none-select" id="captchaImg"></div>--}}
-{{--        </div>--}}
+        {{--        <div class="layui-form-item input-item captcha-box" id="captchaCode" name="captchaCode">--}}
+        {{--            <label for="captcha">验证码</label>--}}
+        {{--            <input type="text" lay-verify="required|captcha" name="captcha" placeholder="请输入验证码" autocomplete="off"--}}
+        {{--                   id="captcha" maxlength="4" class="layui-input">--}}
+        {{--            <div class="img ok-none-select" id="captchaImg"></div>--}}
+        {{--        </div>--}}
 
         <div class="layui-form-item">
             <button class="layui-btn layui-block" lay-filter="login" lay-submit="">登录</button>
@@ -75,7 +75,7 @@
                 function (data) {
                     if (data.success) {
                         okLayer.greenTickMsg("正在登录", function () {
-                            window.location = "/sys";
+                            window.location = "/sys/";
                         }, {icon: 3, time: 3000});
                     } else {
                         $("#username").val(data.username);

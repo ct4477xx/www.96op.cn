@@ -10,14 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-//Route::get('/', function () {
-//    return view('csign.index');
-//});
-use App\Http\Controllers\Sys\IndexController;
-
 Route::redirect('/', 'csign', 301);
-
+Route::redirect('/sys', 'sys/index');
 /**
  *
  * 公共方法
@@ -48,16 +42,22 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
 //
 //登录验证路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin'], function () {
-    Route::get('index', 'IndexController@index');
-    Route::get('pages/logout', 'LoginController@logout');
-    Route::get('pages/console', 'IndexController@console');
-    Route::get('pages/weather', 'IndexController@weather');
-    Route::get('welcome1', 'IndexController@welcome1');
-    Route::resource('house', 'HouseController');
-    Route::PATCH('houseRoom', 'HouseController@houseRoomStore');
-    Route::get('houseRoom/{id}', 'HouseController@houseRoomEdit');
+    Route::get('', 'IndexController@index');//后台主页
     //
-    Route::resource('tenant', 'TenantController');
+    Route::group(['prefix' => 'pages/'], function () {
+        Route::get('logout', 'LoginController@logout');
+        Route::get('console', 'IndexController@console');//控制台
+        Route::get('weather', 'IndexController@weather');//天气预报
+        //
+        //房屋管理
+        Route::group(['prefix' => 'house/'], function () {
+            Route::resource('house', 'HouseController');
+            Route::PATCH('houseRoom', 'HouseController@houseRoomStore');
+            Route::get('houseRoom/{id}', 'HouseController@houseRoomEdit');
+            Route::resource('tenant', 'TenantController');
+        });
+    });
+
 });
 //Route::get('/clear-cache', function() {
 //    Artisan::call('cache:clear');

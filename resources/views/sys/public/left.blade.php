@@ -3,11 +3,12 @@
         <div class="okadmin-logo">峰景微门店后台管理系统</div>
         <div class="user-photo">
             <a class="img" title="我的头像">
-                <img src="images/avatar.png" class="userAvatar">
+                <img src="/resource/images/avatar.png" class="userAvatar">
             </a>
             <p>你好！<span class="userName">{!! \Cookie::get('admName') !!}</span>, 欢迎登录</p>
         </div>
         <!--左侧导航菜单-->
+
         <ul id="navBar" class="layui-nav okadmin-nav okadmin-bg-20222A layui-nav-tree">
             <li class="layui-nav-item layui-this">
                 <a href="javascript:" lay-id="1" data-url="pages/console.html">
@@ -16,5 +17,6 @@
                 </a>
             </li>
         </ul>
+
     </div>
 </div>

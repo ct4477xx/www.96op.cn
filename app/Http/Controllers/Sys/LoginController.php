@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Sys;
 use App\Http\Controllers\Controller;
 use App\SysModel\AdmUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 
 class LoginController extends Controller
@@ -14,7 +14,7 @@ class LoginController extends Controller
     function index()
     {
         if (Session()->get('admId')) {
-            return view('sys.index');
+            return view('sys');
         } else {
             return view('sys.pages.login');
         }
@@ -25,20 +25,24 @@ class LoginController extends Controller
     {
         $inp = $request->all();
 
-        $db_data = AdmUser::where(['userName' => $inp['data']['username'], 'passWord' => $inp['data']['password']])
-            ->select('id', 'userName', 'passWord')
+        $db_data = AdmUser::where(['userName' => $inp['data']['username']])
+            ->select('id', 'code', 'userName', 'passWord')
             ->with(['admUserInfo:admId,name'])
             ->first();
-        if ($db_data) {
+        if (!$db_data) {
+            return getSuccess('用户名不存在, 再仔细想想?');
+        }
+        $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
+        if ($is_Pwd == 'true') {
             \Session()->put('admId', $db_data['id']);
             \Cookie::queue('admName', $db_data['admUserInfo']['name'], 1 * 60 * 12);
+            \Cookie::queue('admCode', $db_data['code'], 1 * 60 * 12);
             \Cookie::queue('captcha', null, -1);
             $data = [
                 'success' => true
             ];
         } else {
             \Cookie::get('captcha') ? \Cookie::get('captcha') : 0;
-
             \Cookie::queue('captcha', \Cookie::get('captcha') + 1, 0);
             $data = [
                 'success' => false,
@@ -54,6 +58,7 @@ class LoginController extends Controller
     {
         \Session()->forget('admId');
         \Cookie::queue('admName', null, -1);
+        \Cookie::queue('admCode', null, -1);
         return redirect('sys');
     }
 
@@ -74,9 +79,9 @@ class LoginController extends Controller
             ];
         }
         $data = new AdmUser();
-        $data['id'] = getNewId();
+        $data['code'] = getNewId();
         $data['username'] = $inp['data']['username'];
-        $data['password'] = Crypt::encrypt($inp['data']['password']);
+        $data['password'] = Hash::make($inp['data']['password']);
         if ($data->save()) {
             return getSuccess(1);
         } else {

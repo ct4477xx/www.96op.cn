@@ -13,6 +13,6 @@ class AdmUser extends Model
 
     public function admUserInfo()
     {
-        return $this->hasOne(AdmUserInfo::class,'admId','id');
+        return $this->hasOne(AdmUserInfo::class,'admId','code');
     }
 }

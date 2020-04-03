@@ -7,8 +7,7 @@
     <meta name="keywords" content="{!! site()['keywords'] !!}">
     <meta name="description" content="{!! site()['description'] !!}">
     <link rel="shortcut icon" href="{!! site()['ico'] !!}" type="image/x-icon"/>
-    @include('.sys.public.css')
-    @include('.sys.public.script')
+    @include('sys.public.css')
 </head>
 <body class="layui-layout-body">
 <!-- 更换主体 Eg:orange_theme|blue_theme -->
@@ -49,10 +48,10 @@
 
             <div id="tabContent" class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src='pages/console' frameborder="0" scrolling="yes" width="100%"
-                            height="100%"></iframe>
+                    <iframe src='pages/console' frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -61,5 +60,6 @@
 </div>
 <div class="yy"></div>
 <!--js逻辑-->
+@include('sys.public.script')
 </body>
 </html>

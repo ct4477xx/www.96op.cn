@@ -23,7 +23,7 @@ class HouseController extends Controller
             ->orderBy('hideBySort', 'desc')
             ->orderBy('mixBySort', 'desc')
             ->get();
-        return view('sys.house', ['data' => $data]);
+        return view('sys.pages.house.house', ['data' => $data]);
     }
 
     /**
