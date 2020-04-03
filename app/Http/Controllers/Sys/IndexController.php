@@ -12,4 +12,20 @@ class IndexController extends Controller
     {
         return view('sys.index');
     }
+
+    function house()
+    {
+        return view('sys.house');
+    }
+
+    function console()
+    {
+        return view('sys.pages.console');
+    }
+
+    function weather()
+    {
+        return view('sys.pages.weather');
+    }
+
 }

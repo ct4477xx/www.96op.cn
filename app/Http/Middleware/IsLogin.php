@@ -15,7 +15,7 @@ class IsLogin
      */
     public function handle($request, Closure $next)
     {
-        if (session('addId')) {
+        if (\Session()->get('admId')) {
             return $next($request);
         } else {
             return redirect('sys/login');

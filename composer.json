@@ -40,8 +40,8 @@
             "database/factories"
         ],
         "files": [
-            "app/Config.php",
-            "app/Base.php",
+            "app/ini/Config.php",
+            "app/ini/Base.php",
             "app/Ajax/ajaxReadKey.php"
         ]
     },

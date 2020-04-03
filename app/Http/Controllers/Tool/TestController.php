@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tool;
 
 use App\Http\Controllers\Controller;
-use App\UserModel\Test;
+use App\ToolModel\Test;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -17,9 +17,9 @@ class TestController extends Controller
     public function index()
     {
         //
-        $u = Test::all();
+        $u = Test::paginate(5);;
         $title = '首页 ' . now();
-        return view('test.index', ['title' => $title, 'data' => $u]);
+        return view('tool.test.index', ['title' => $title, 'data' => $u]);
     }
 
     /**
@@ -31,7 +31,7 @@ class TestController extends Controller
     {
         //添加页面
         //
-        return view('test.create', ['title' => '首页 ' . now()]);
+        return view('tool.test.create', ['title' => '首页 ' . now()]);
     }
 
     /**
@@ -49,7 +49,7 @@ class TestController extends Controller
         $is_name = Test::get()
             ->where('name', $input['name'])
             ->count();
-        if ($is_name > 0 || $input['name']=='') {
+        if ($is_name > 0 || $input['name'] == '') {
             return back();
         }
         $data = new Test;
@@ -75,7 +75,7 @@ class TestController extends Controller
         $data = Test::find($id);
         $data['title'] = '正在预览 ' . $data['name'] . ' / ' . now();
         //预览
-        return view('test.show', $data);
+        return view('tool.test.show', $data);
     }
 
     /**
@@ -90,7 +90,7 @@ class TestController extends Controller
         $data = [];
         $data = Test::find($id);
         $data['title'] = '正在修改: ' . $data['name'];
-        return view('test.edit', $data);
+        return view('tool.test.edit', $data);
     }
 
     /**
@@ -133,6 +133,6 @@ class TestController extends Controller
         //
         $inp = Test::find($id);
         $inp->delete();
-        return ['success'=>0,'msg'=>'删除成功'];
+        return ['success' => 0, 'msg' => '删除成功'];
     }
 }

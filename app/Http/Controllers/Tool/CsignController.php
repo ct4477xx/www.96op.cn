@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Tool;
 
 use App\Http\Controllers\Controller;
-use App\Base;
-use App\UserModel\signDese;
-use App\UserModel\signUser;
+use App\ini\Base;
+use App\ToolModel\signDese;
+use App\ToolModel\signUser;
 use Illuminate\Http\Request;
 
 class CsignController extends Controller
@@ -18,7 +18,7 @@ class CsignController extends Controller
     public function index()
     {
         //
-        return view('csign.index');
+        return view('tool.csign.index');
     }
 
     /**
@@ -29,7 +29,7 @@ class CsignController extends Controller
     public function create()
     {
         //
-        return view('csign.create');
+        return view('tool.csign.create');
     }
 
     /**
@@ -48,7 +48,7 @@ class CsignController extends Controller
             ->first();
         if (!$old_data) {
             $data = new signUser;
-            $data['id'] = GetNewId();
+            $data['id'] = getNewId();
             $data['street'] = $inp['data']['street'];
             $data['community'] = $inp['data']['community'];
             $data['homeName'] = $inp['data']['homeName'];
@@ -56,7 +56,7 @@ class CsignController extends Controller
             $data['mobile'] = $inp['data']['mobile'];
             $data['addTime'] = date('Y-m-d');
             $data['upTime'] = $inp['data']['street'];
-            $data['addId'] = GetNewId();
+            $data['addId'] = getNewId();
             $res = $data->save();
             if ($res) {
                 return ['success' => true];
@@ -98,11 +98,11 @@ class CsignController extends Controller
         $old_Id = $old_data['Id'];
         if ($old_Id) {
             $data = new signDese();
-            $data['Id'] = GetNewId();
+            $data['Id'] = getNewId();
             $data['userId'] = $old_Id;
             $data['types'] = $inp['data']['types'];
             $data['status'] = $inp['data']['status'];
-            $data['addId'] = GetNewId();
+            $data['addId'] = getNewId();
             $res = $data->save();
             if ($res) {
                 $v = [];

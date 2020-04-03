@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Tool;
 
 use App\Http\Controllers\Controller;
-use App\Base;
-use App\UserModel\urlMaxToMin;
+use App\ini\Base;
+use App\ToolModel\urlMaxToMin;
 use Illuminate\Http\Request;
 
 class UrlController extends Controller
@@ -22,7 +22,7 @@ class UrlController extends Controller
         $data = [];
         $data['siteWebName'] = site()['siteWebName'];
         $data['doMain'] = site()['doMain'];
-        return view('url.index', $data);
+        return view('tool.url.index', $data);
     }
 
     /**

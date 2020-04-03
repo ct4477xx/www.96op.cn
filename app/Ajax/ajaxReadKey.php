@@ -1,18 +1,28 @@
 <?php
 
-use App\UserModel\signStreet;
+use App\ToolModel\signStreet;
 
-function GetCommunity($fatherId, $Id)
+function getReadKeyCommunity($fatherId, $Id)
 {
     $fatherId ?: 0;
     $Id ?: '';
-    $data = signStreet::where('fatherId', $fatherId)
-        ->orderBy('bySort', 'desc')
-        ->get();
-
-    $res = "<option value=''>请选择社区</option>";
-    foreach ($data as $v) {
+    $db = getStreet($fatherId);
+    echo "<option value=''>请选择社区</option>";
+    foreach ($db as $v) {
         echo "<option value=" . $v['Id'] . ">" . $v['name'] . "</option>";
     }
-    return $res;
+    return '';
+}
+
+
+function getReadKeyHouseRoom($fatherId, $Id)
+{
+    $fatherId ?: 0;
+    $Id ?: '';
+    $db = getHouseRoom($fatherId);
+    echo "<option value=''>请选择房间</option>";
+    foreach ($db as $v) {
+        echo "<option value=" . $v['id'] . ">" . $v['name'] . "</option>";
+    }
+    return '';
 }
