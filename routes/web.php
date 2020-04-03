@@ -48,6 +48,7 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
 //
 //登录验证路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin'], function () {
+    Route::get('', 'IndexController@index');
     Route::get('index', 'IndexController@index');
     Route::get('pages/logout', 'LoginController@logout');
     Route::get('pages/console', 'IndexController@console');
