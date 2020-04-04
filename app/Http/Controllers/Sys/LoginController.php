@@ -13,10 +13,10 @@ class LoginController extends Controller
     //
     function index()
     {
-        if (Session()->get('admId')) {
+        if (\Session()->get('admId')) {
             return view('sys');
         } else {
-            return view('sys.pages.login');
+            return view('sys.login');
         }
     }
 
@@ -34,7 +34,7 @@ class LoginController extends Controller
         }
         $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
         if ($is_Pwd == 'true') {
-            \Session()->put('admId', $db_data['id']);
+            \Session()->put('admId', $db_data['code']);
             \Cookie::queue('admName', $db_data['admUserInfo']['name'], 1 * 60 * 12);
             \Cookie::queue('admCode', $db_data['code'], 1 * 60 * 12);
             \Cookie::queue('captcha', null, -1);

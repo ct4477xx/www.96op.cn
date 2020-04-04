@@ -1,66 +1,46 @@
-<div class="layui-header okadmin-header">
-    <ul class="layui-nav layui-layout-left">
+<div class="container">
+    <div class="logo">
+        <a href="index.blade.php">后台系统</a></div>
+    <div class="left_open">
+        <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
+    </div>
+    <ul class="layui-nav left fast-add" lay-filter="">
         <li class="layui-nav-item">
-            <a class="ok-menu ok-show-menu" href="javascript:" title="菜单切换">
-                <i class="layui-icon layui-icon-shrink-right"></i>
-            </a>
-        </li>
-        <!--天气信息-->
-
-        <li class="ok-nav-item ok-hide-md">
-            <div class="weather-ok">
-                <iframe frameborder="0" scrolling="no" class="iframe-style" src="pages/weather"
-                        frameborder="0"></iframe>
-            </div>
-        </li>
-
-    </ul>
-    <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item ok-input-search">
-            <input type="text" placeholder="搜索..." class="layui-input layui-input-search"/>
-        </li>
-        <li class="layui-nav-item">
-            <a class="ok-refresh" href="javascript:" title="刷新">
-                <i class="layui-icon layui-icon-refresh-3"></i>
-            </a>
-        </li>
-        <li class="no-line layui-nav-item layui-hide-xs">
-            <a id="notice" class="flex-vc pr10 pl10" href="javascript:">
-                <i class="ok-icon ok-icon-notice icon-head-i" title="系统公告"></i>
-                <span class="layui-badge-dot"></span>
-                <cite></cite>
-            </a>
-        </li>
-
-        <li class="no-line layui-nav-item layui-hide-xs">
-            <a id="lock" class="flex-vc pr10 pl10" href="javascript:">
-                <i class="ok-icon ok-icon-lock icon-head-i" title="锁屏"></i><cite></cite>
-            </a>
-        </li>
-
-        <!-- 全屏 -->
-        <li class="layui-nav-item layui-hide-xs">
-            <a id="fullScreen" class=" pr10 pl10" href="javascript:">
-                <i class="layui-icon layui-icon-screen-full"></i>
-            </a>
-        </li>
-
-        <li class="no-line layui-nav-item">
-            <a href="javascript:">
-                <img src="/resource/images/avatar.png" class="layui-nav-img">
-                {!! \Cookie::get('admName') !!}
-            </a>
-            <dl id="userInfo" class="layui-nav-child">
-                <dd><a lay-id="u-1" href="javascript:" data-url="pages/member/user">个人中心<span
-                            class="layui-badge-dot"></span></a></dd>
-                <dd><a lay-id="u-2" href="javascript:" data-url="pages/member/user-info">基本资料</a></dd>
-                <dd><a lay-id="u-3" href="javascript:" data-url="pages/member/user-pwd">安全设置</a></dd>
-                <dd><a lay-id="u-4" href="javascript:" id="alertSkin">皮肤动画</a></dd>
+            <a href="javascript:;">+新增</a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
                 <dd>
-                    <hr/>
-                </dd>
-                <dd><a href="javascript:void(0)" id="logout">退出登录</a></dd>
+                    <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">
+                        <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>
+                <dd>
+                    <a onclick="xadmin.open('弹出自动宽高','http://www.baidu.com')">
+                        <i class="iconfont">&#xe6a8;</i>弹出自动宽高</a></dd>
+                <dd>
+                    <a onclick="xadmin.open('弹出指定宽高','http://www.baidu.com',500,300)">
+                        <i class="iconfont">&#xe6a8;</i>弹出指定宽高</a></dd>
+                <dd>
+                    <a onclick="xadmin.add_tab('在tab打开','member-list.html')">
+                        <i class="iconfont">&#xe6b8;</i>在tab打开</a></dd>
+                <dd>
+                    <a onclick="xadmin.add_tab('在tab打开刷新','member-del.html',true)">
+                        <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>
             </dl>
         </li>
+    </ul>
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;">{!! @\Cookie::get('admName')!!}</a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
+                <dd>
+                    <a onclick="xadmin.open('个人信息','http://www.baidu.com')">个人信息</a></dd>
+                <dd>
+                    <a onclick="xadmin.open('切换帐号','http://www.baidu.com')">切换帐号</a></dd>
+                <dd>
+                    <a href="/sys/logout">退出</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item to-index">
+            <a href="/">前台首页</a></li>
     </ul>
 </div>

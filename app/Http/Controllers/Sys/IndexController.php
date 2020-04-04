@@ -13,14 +13,10 @@ class IndexController extends Controller
         return view('sys.index');
     }
 
-    function console()
+    function welcome()
     {
-        return view('sys.pages.console');
+        return view('sys.welcome');
     }
 
-    function weather()
-    {
-        return view('sys.pages.weather');
-    }
 
 }

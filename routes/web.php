@@ -11,7 +11,6 @@
 |
 */
 Route::redirect('/', 'csign', 301);
-Route::redirect('/sys', 'sys/index');
 /**
  *
  * 公共方法
@@ -35,19 +34,15 @@ Route::group(['namespace' => 'Tool'], function () {
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
     Route::get('login', 'LoginController@index');//登录页
     Route::post('login', 'LoginController@login');//登录接口
-    Route::get('register', 'LoginController@register');//注册页面
-    Route::post('register', 'LoginController@registerReg');//注册页面
-    Route::get('forget', 'LoginController@forget');//找回密码页面
 });
 //
 //登录验证路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin'], function () {
     Route::get('', 'IndexController@index');//后台主页
+    Route::get('welcome', 'IndexController@welcome');//控制台
     //
-    Route::group(['prefix' => 'pages/'], function () {
+    Route::group(['prefix' => 'blade/'], function () {
         Route::get('logout', 'LoginController@logout');
-        Route::get('console', 'IndexController@console');//控制台
-        Route::get('weather', 'IndexController@weather');//天气预报
         //
         //房屋管理
         Route::group(['prefix' => 'house/'], function () {
@@ -59,7 +54,7 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
     });
 
 });
-//Route::get('/clear-cache', function() {
-//    Artisan::call('cache:clear');
-//    return "Cache is cleared";
-//});
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});

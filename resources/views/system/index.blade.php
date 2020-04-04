@@ -1,1 +1,0 @@
-@extends('sys.public.admin')
