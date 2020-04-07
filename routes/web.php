@@ -59,9 +59,7 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         });
         //路由管理
         Route::group(['prefix' => 'routes/'], function () {
-            Route::get('route', function(){
-                return '1';
-            });
+            Route::resource('route', 'RouteController');
         });
     });
 });
