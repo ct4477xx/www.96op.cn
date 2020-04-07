@@ -34,16 +34,27 @@ Route::group(['namespace' => 'Tool'], function () {
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
     Route::get('login', 'LoginController@index');//登录页
     Route::post('login', 'LoginController@login');//登录接口
+    Route::get('register', 'LoginController@register');//注册页面
+    Route::post('registerReg', 'LoginController@registerReg');//注册接口
 });
 //
 //登录验证路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin'], function () {
     Route::get('', 'IndexController@index');//后台主页
-    Route::get('welcome', 'IndexController@welcome');//控制台
+    Route::get('logout', 'LoginController@logout');//退出系统
+    Route::get('userInfo', 'IndexController@userInfo');//基本资料
+    Route::post('userInfo', 'IndexController@userInfoUp');//基本资料接口
+    Route::get('userPwd', 'IndexController@userPwd');//安全设置
+    Route::post('userPwd', 'IndexController@userPwdUp');//安全设置接口
+    Route::get('menu','IndexController@menu');//左侧菜单
     //
-    Route::group(['prefix' => 'blade/'], function () {
-        Route::get('logout', 'LoginController@logout');
+    Route::group(['prefix' => 'pages/'], function () {
+        Route::get('console', 'IndexController@console');//控制台
+        Route::get('weather', 'IndexController@weather');//天气预报
         //
+        //账号相关
+        Route::group(['prefix' => 'member/'], function () {
+        });
         //房屋管理
         Route::group(['prefix' => 'house/'], function () {
             Route::resource('house', 'HouseController');
@@ -51,10 +62,13 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
             Route::get('houseRoom/{id}', 'HouseController@houseRoomEdit');
             Route::resource('tenant', 'TenantController');
         });
+        //系统相关
+        Route::group(['prefix' => 'system/'], function () {
+            Route::get('alertSkin', 'IndexController@alertSkin');
+        });
     });
-
 });
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });

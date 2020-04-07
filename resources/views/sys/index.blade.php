@@ -1,1 +1,1 @@
-@extends('sys.public.admin')
+@extends('.sys.public.mould')

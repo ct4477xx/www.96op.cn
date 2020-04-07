@@ -1,5 +1,6 @@
 <?php
 
+use App\SysModel\AdmUser;
 use App\SysModel\House;
 use App\ToolModel\signStreet;
 
@@ -180,4 +181,3 @@ function IsHas($table, $str, $val)
         ->count();
     return $data;
 }
-

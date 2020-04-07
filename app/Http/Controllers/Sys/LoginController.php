@@ -14,9 +14,9 @@ class LoginController extends Controller
     function index()
     {
         if (\Session()->get('admId')) {
-            return view('sys');
+            return view('.sys.index');
         } else {
-            return view('sys.login');
+            return view('.sys.login');
         }
     }
 
@@ -34,9 +34,11 @@ class LoginController extends Controller
         }
         $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
         if ($is_Pwd == 'true') {
+            $time = 1 * 60 * 12;//缓存时间
             \Session()->put('admId', $db_data['code']);
-            \Cookie::queue('admName', $db_data['admUserInfo']['name'], 1 * 60 * 12);
-            \Cookie::queue('admCode', $db_data['code'], 1 * 60 * 12);
+            \Cookie::queue('admId', $db_data['code'], $time);
+            \Cookie::queue('admName', $db_data['admUserInfo']['name'], $time);
+            \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
             $data = [
                 'success' => true
@@ -57,6 +59,7 @@ class LoginController extends Controller
     function logout()
     {
         \Session()->forget('admId');
+        \Cookie::queue('admId', null, -1);
         \Cookie::queue('admName', null, -1);
         \Cookie::queue('admCode', null, -1);
         return redirect('sys');
@@ -64,7 +67,7 @@ class LoginController extends Controller
 
     function register()
     {
-        return view('sys.pages.register');
+        return view('sys.register');
     }
 
     function registerReg(Request $request)
