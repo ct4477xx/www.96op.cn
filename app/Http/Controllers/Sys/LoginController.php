@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
 use App\SysModel\AdmUser;
+use App\SysModel\AdmUserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -37,7 +38,7 @@ class LoginController extends Controller
             $time = 1 * 60 * 12;//缓存时间
             \Session()->put('admId', $db_data['code']);
             \Cookie::queue('admId', $db_data['code'], $time);
-            \Cookie::queue('admName', $db_data['admUserInfo']['name'], $time);
+            \Cookie::queue('admName', $db_data['admUserInfo']['name'] ? $db_data['admUserInfo']['name'] : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
             $data = [
@@ -74,7 +75,7 @@ class LoginController extends Controller
     {
         $inp = $request->all();
         //判断用户名是否存在
-        if (IsHas('adm_user', 'userName', $inp['data']['username']) > 0) {
+        if (isHas('adm_user', 'userName', $inp['data']['username']) > 0) {
             return [
                 'success' => false, 'msg' => '用户名已存在, 请换个用户名试试!',
                 'username' => $inp['data']['username'],
@@ -86,6 +87,11 @@ class LoginController extends Controller
         $data['username'] = $inp['data']['username'];
         $data['password'] = Hash::make($inp['data']['password']);
         if ($data->save()) {
+            //创建admInfo信息
+            $info = new AdmUserInfo();
+            $info['admId'] = $data['code'];
+            $info['name'] = $inp['data']['username'];
+            $info->save();
             return getSuccess(1);
         } else {
             return [

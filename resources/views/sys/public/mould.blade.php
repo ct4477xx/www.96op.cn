@@ -49,7 +49,7 @@
 
             <div id="tabContent" class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src='pages/console' frameborder="0" scrolling="yes" width="100%"
+                    <iframe src='sys/pages/console' frameborder="0" scrolling="yes" width="100%"
                             height="100%"></iframe>
                 </div>
             </div>

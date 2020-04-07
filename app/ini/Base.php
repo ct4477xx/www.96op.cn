@@ -174,7 +174,7 @@ function signStreet_String($Id)
 
 
 //=================================== 数据判断操作 ===================================
-function IsHas($table, $str, $val)
+function isHas($table, $str, $val)
 {
     $data = DB::table($table)
         ->where($str, $val)

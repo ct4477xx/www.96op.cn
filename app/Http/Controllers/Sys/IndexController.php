@@ -14,27 +14,33 @@ class IndexController extends Controller
     //
     function index()
     {
+        //首页
         return view('sys.index');
     }
 
 
     function console()
     {
+        //控制台
         return view('sys.pages.console');
     }
 
     function weather()
     {
+        //天气预报
         return view('sys.pages.weather');
-    }
-
-    function welcome()
-    {
-        return view('sys.pages.welcome');
     }
 
     function userInfo()
     {
+        //个人用户信息
+        //在没有找到用户资料时,创建用户资料
+        if (isHas('adm_userinfo', 'admId', \Cookie::get('admId')) == 0) {
+            $info = new AdmUserInfo();
+            $info['admId'] = \Cookie::get('admId');
+            $info['name'] = \Cookie::get('admCode');
+            $info->save();
+        }
         $db = AdmUserInfo::where('admId', \Cookie::get('admId'))
             ->first();
         return view('sys.pages.member.userInfo', $db);
@@ -42,6 +48,7 @@ class IndexController extends Controller
 
     function userInfoUp(Request $request)
     {
+        //执行更新
         $inp = $request->all();
         $db = AdmUserInfo::where('admId', \Cookie::get('admId'))
             ->update(
@@ -63,11 +70,13 @@ class IndexController extends Controller
 
     function userPwd()
     {
+        //个人密码
         return view('sys.pages.member.userPwd');
     }
 
     function userPwdUp(Request $request)
     {
+        //执行更新
         $inp = $request->all();
         //查找用户
         $db = AdmUser::where('code', \Cookie::get('admId'))
@@ -88,14 +97,16 @@ class IndexController extends Controller
 
     function alertSkin()
     {
+        //配色设置
         return view('sys.pages.system.alertSkin');
     }
 
     function menu()
     {
+        //菜单
         //首先获取所有菜单
-        $data = Menu::where(['fatherId'=>0,'isDel'=>0])
-            ->select('id','title','href','fontFamily','icon','spread','isCheck')
+        $data = Menu::where(['fatherId' => 0, 'isDel' => 0])
+            ->select('id', 'title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck')
             ->with(['children:fatherId,title,href,fontFamily,icon,spread'])
             ->get();
         //遍历数据

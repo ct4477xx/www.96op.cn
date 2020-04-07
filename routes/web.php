@@ -20,16 +20,6 @@ Route::get('ajaxReadKey/{type}/{Id}', 'AjaxReadKeyController@show');
 //
 //
 //
-Route::group(['namespace' => 'Tool'], function () {
-//创建资源类
-    Route::resource('test', 'TestController');
-//网址缩短
-    Route::resource('t', 'UrlController');
-//小区出入签到系统
-    Route::resource('csign', 'CsignController');
-});
-//
-//
 //免登录路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
     Route::get('login', 'LoginController@index');//登录页
@@ -46,9 +36,10 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
     Route::post('userInfo', 'IndexController@userInfoUp');//基本资料接口
     Route::get('userPwd', 'IndexController@userPwd');//安全设置
     Route::post('userPwd', 'IndexController@userPwdUp');//安全设置接口
-    Route::get('menu','IndexController@menu');//左侧菜单
+    Route::get('menu', 'IndexController@menu');//左侧菜单
     //
     Route::group(['prefix' => 'pages/'], function () {
+        //
         Route::get('console', 'IndexController@console');//控制台
         Route::get('weather', 'IndexController@weather');//天气预报
         //
@@ -66,9 +57,26 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         Route::group(['prefix' => 'system/'], function () {
             Route::get('alertSkin', 'IndexController@alertSkin');
         });
+        //路由管理
+        Route::group(['prefix' => 'routes/'], function () {
+            Route::get('route', function(){
+                return '1';
+            });
+        });
     });
 });
 Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return "Cache is cleared";
+});
+//
+//
+//
+Route::group(['namespace' => 'Tool'], function () {
+//创建资源类
+    Route::resource('test', 'TestController');
+//网址缩短
+    Route::resource('t', 'UrlController');
+//小区出入签到系统
+    Route::resource('csign', 'CsignController');
 });

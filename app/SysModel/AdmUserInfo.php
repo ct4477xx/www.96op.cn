@@ -8,5 +8,5 @@ class AdmUserInfo extends Model
 {
     //
     protected $table = 'adm_userInfo';
-    const CREATED_AT = 'addTime';
+    //const CREATED_AT = 'addTime';
 }

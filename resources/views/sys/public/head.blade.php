@@ -8,7 +8,7 @@
         <!--天气信息-->
         <li class="ok-nav-item ok-hide-md">
             <div class="weather-ok">
-                <iframe frameborder="0" scrolling="no" class="iframe-style" src="pages/weather"
+                <iframe frameborder="0" scrolling="no" class="iframe-style" src="sys/pages/weather"
                         frameborder="0"></iframe>
             </div>
         </li>
