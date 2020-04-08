@@ -17,6 +17,13 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value=false title="女" {{$sex==0?'checked':''}}>
+                <input type="radio" name="sex" value=true title="男" {{$sex==1?'checked':''}}>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">出生年月</label>
             <div class="layui-input-block">
                 <input id="uDate" name="birthDate" type="text" value="{{$birthDate}}" placeholder="请输入出生年月" lay-verify="required"

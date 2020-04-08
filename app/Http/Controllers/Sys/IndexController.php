@@ -54,6 +54,7 @@ class IndexController extends Controller
             ->update(
                 [
                     'name' => $inp['data']['name'],
+                    'sex' => $inp['data']['sex'] == 'false' ? 0 : 1,
                     'birthDate' => $inp['data']['birthDate'],
                     'mobile' => $inp['data']['mobile'],
                     'mail' => $inp['data']['mail']

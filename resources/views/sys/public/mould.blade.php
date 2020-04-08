@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{!! site()['siteWebName'] !!}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
     <meta name="keywords" content="{!! site()['keywords'] !!}">
     <meta name="description" content="{!! site()['description'] !!}">
     <link rel="shortcut icon" href="{!! site()['ico'] !!}" type="image/x-icon"/>

@@ -1,5 +1,5 @@
 var ok_load_options = {
-	time: 1000,
+	time: 650,
 	content: "ok-admin..."
 };
 !function (content, options) {

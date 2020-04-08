@@ -60,7 +60,7 @@
         {{--            <button type="button" class="layui-btn btn-auth-code">获取验证码</button>--}}
         {{--        </div>--}}
         <div class="layui-form-item">
-            <button class="layui-btn layui-block" lay-filter="login" lay-submit="">注册</button>
+            <button class="layui-btn layui-block" lay-filter="login" name="login" lay-submit="">注册</button>
         </div>
         <div class="login-link">
             <a href="login">有账号去登录</a>
@@ -116,6 +116,7 @@
                         layer.msg(data.msg, {icon: 5});
                     }
                 }, "json");
+
             return false;
         });
 
