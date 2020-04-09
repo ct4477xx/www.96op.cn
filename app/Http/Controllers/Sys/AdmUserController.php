@@ -23,11 +23,10 @@ class AdmUserController extends Controller
     public function read(Request $request)
     {
         $inp = $request->all();
-
         $where =
             function ($query) use ($inp) {
                 if (!empty($inp['status'])) {
-                    $query->where('a.isLock', $inp['status']);
+                    $query->where('a.isLock',  $inp['status']=="n"?1:0);
                 }
                 if (!empty($inp['username'])) {
                     $query->where('a.username', $inp['username']);
@@ -37,6 +36,9 @@ class AdmUserController extends Controller
                 }
                 if (!empty($inp['email'])) {
                     $query->where('b.mail', 'like', '%' . $inp['email'] . '%');
+                }
+                if (!empty($inp['mobile'])) {
+                    $query->where('b.mobile', 'like', '%' . $inp['mobile'] . '%');
                 }
                 if (!empty($inp['startTime']) && !empty($inp['endTime'])) {
                     $query->where('a.created_at', '>=', $inp['startTime'])

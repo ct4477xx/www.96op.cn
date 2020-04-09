@@ -44,6 +44,12 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label">手机号码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" placeholder="手机号码" autocomplete="off" name="mobile">
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <label class="layui-form-label">邮箱</label>
                     <div class="layui-input-inline">
                         <input type="text" class="layui-input" placeholder="邮箱" autocomplete="off" name="email">
@@ -64,8 +70,8 @@
                     <div class="layui-input-inline">
                         <select name="status" lay-verify="">
                             <option value="" selected>请选择状态</option>
-                            <option value="0">已启用</option>
-                            <option value="1">已停用</option>
+                            <option value="o">已启用</option>
+                            <option value="n">已停用</option>
                         </select>
                     </div>
                 </div>
