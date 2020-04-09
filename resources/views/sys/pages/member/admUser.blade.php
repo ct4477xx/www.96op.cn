@@ -2,14 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>复杂表单二</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/resource/css/oksub.css">
     <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
-    <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body>
 <div class="ok-body">
@@ -98,14 +93,15 @@
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
         let $ = layui.jquery;
-
         laydate.render({elem: "#startTime", type: "datetime"});
         laydate.render({elem: "#endTime", type: "datetime"});
         okLoading.close($);
         let userTable = table.render({
             elem: '#tableId',
+            //height: 480,
             url: '/sys/pages/member/read',//'okMock.api.listUser',
             limit: 15,
+            limits: [15, 30, 45, 60],
             page: true,
             toolbar: true,
             toolbar: "#toolbarTpl",
@@ -113,7 +109,7 @@
             cols: [[
                 {type: "checkbox", fixed: "left"},
                 {field: "id", title: "ID", width: 70, sort: true},
-                {field: "username", title: "账号", width: 120},
+                {field: "username", title: "用户名", width: 120},
                 {field: "name", title: "姓名", width: 100},
                 {field: "birthDate", title: "出生日期", width: 100, sort: true},
                 {field: "sex", title: "性别", width: 60, templet: "#sexTpl"},
@@ -172,8 +168,10 @@
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("/user/normalUser", "put", {idsStr: idsStr}, true).done(function (response) {
-                        console.log(response);
+                    okUtils.ajax("admStart", "post", {
+                        id: idsStr,
+                        _token: '{{csrf_token()}}'
+                    }, true).done(function (response) {
                         okUtils.tableSuccessMsg(response.msg);
                     }).fail(function (error) {
                         console.log(error)
@@ -187,8 +185,10 @@
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("/user/stopUser", "put", {idsStr: idsStr}, true).done(function (response) {
-                        console.log(response);
+                    okUtils.ajax("admStop", "post", {
+                        id: idsStr,
+                        _token: '{{csrf_token()}}'
+                    }, true).done(function (response) {
                         okUtils.tableSuccessMsg(response.msg);
                     }).fail(function (error) {
                         console.log(error)
@@ -202,8 +202,10 @@
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("/user/deleteUser", "delete", {idsStr: idsStr}, true).done(function (response) {
-                        console.log(response);
+                    okUtils.ajax("admUser/destroy", "delete", {
+                        id: idsStr,
+                        _token: '{{csrf_token()}}'
+                    }, true).done(function (response) {
                         okUtils.tableSuccessMsg(response.msg);
                     }).fail(function (error) {
                         console.log(error)
@@ -213,7 +215,7 @@
         }
 
         function add() {
-            okLayer.open("添加用户", "user-add.html", "90%", "90%", null, function () {
+            okLayer.open("添加用户", "admUser/create", "90%", "90%", null, function () {
                 userTable.reload();
             })
         }
@@ -249,31 +251,31 @@
     </div>
 </script>
 <!-- 行工具栏模板 -->
-<script type="text/html" id="operationTpl">
-    <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
-    <a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
-</script>
-<!-- 启用|停用模板 -->
-<script type="text/html" id="sexTpl">
-    {{#  if(d.sex == 0){ }}
-    <span class="layui-btn layui-btn-warm layui-btn-xs">女</span>
-    {{#  } else if(d.sex == 1) { }}
-    <span class="layui-btn layui-btn-normal layui-btn-xs">男</span>
-    {{#  } }}
-</script>
-<script type="text/html" id="statusTpl">
-    {{#  if(d.status == 0){ }}
-    <span class="layui-btn layui-btn-normal layui-btn-xs">已启用</span>
-    {{#  } else if(d.status == 1) { }}
-    <span class="layui-btn layui-btn-warm layui-btn-xs">已停用</span>
-    {{#  } }}
-</script>
-<script type="text/html" id="roleTpl">
-    {{#  if(d.role == 0){ }}
-    <span class="layui-btn layui-btn-normal layui-btn-xs">超级会员</span>
-    {{#  } else if(d.role == 1) { }}
-    <span class="layui-btn layui-btn-warm layui-btn-xs">普通用户</span>
-    {{#  } }}
-</script>
+{{--<script type="text/html" id="operationTpl">--}}
+{{--    <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>--}}
+{{--    <a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>--}}
+{{--</script>--}}
+{{--<!-- 启用|停用模板 -->--}}
+{{--<script type="text/html" id="sexTpl">--}}
+{{--    {{#  if(d.sex == 0){ }}--}}
+{{--    <span class="layui-btn layui-btn-warm layui-btn-xs">女</span>--}}
+{{--    {{#  } else if(d.sex == 1) { }}--}}
+{{--    <span class="layui-btn layui-btn-normal layui-btn-xs">男</span>--}}
+{{--    {{#  } }}--}}
+{{--</script>--}}
+{{--<script type="text/html" id="statusTpl">--}}
+{{--    {{#  if(d.status == 0){ }}--}}
+{{--    <span class="layui-btn layui-btn-normal layui-btn-xs">已启用</span>--}}
+{{--    {{#  } else if(d.status == 1) { }}--}}
+{{--    <span class="layui-btn layui-btn-warm layui-btn-xs">已停用</span>--}}
+{{--    {{#  } }}--}}
+{{--</script>--}}
+{{--<script type="text/html" id="roleTpl">--}}
+{{--    {{#  if(d.role == 0){ }}--}}
+{{--    <span class="layui-btn layui-btn-normal layui-btn-xs">超级会员</span>--}}
+{{--    {{#  } else if(d.role == 1) { }}--}}
+{{--    <span class="layui-btn layui-btn-warm layui-btn-xs">普通用户</span>--}}
+{{--    {{#  } }}--}}
+{{--</script>--}}
 </body>
 </html>

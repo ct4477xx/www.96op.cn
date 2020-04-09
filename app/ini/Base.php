@@ -7,6 +7,12 @@ use App\ToolModel\signStreet;
 
 //=================================== 自定义方法类 ===================================
 
+//输入以逗号分隔的字符串,生成带单引号的数组
+function getInjoin($str)
+{
+    $array = explode(',',$str);
+    return array_filter($array);
+}
 
 //操作返回
 function getSuccess($cc)
@@ -15,13 +21,13 @@ function getSuccess($cc)
     $back = "";
     switch ($cc) {
         case 1:
-            $back = ['success' => true, 'msg' => '操作成功!'];
+            $back = ['code' => 0, 'success' => true, 'msg' => '操作成功!'];
             break;
         case 2:
-            $back = ['success' => false, 'msg' => '操作失败!'];
+            $back = ['code' => 1, 'success' => false, 'msg' => '操作失败!'];
             break;
         default:
-            $back = ['success' => false, 'msg' => $cc];
+            $back = ['code' => 1, 'success' => false, 'msg' => $cc];
             break;
     }
     return $back;

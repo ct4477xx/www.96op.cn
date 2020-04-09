@@ -46,7 +46,9 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         //账号相关
         Route::group(['prefix' => 'member/'], function () {
             Route::resource('admUser','AdmUserController');
-            Route::get('read','AdmUserController@read');
+            Route::get('read','AdmUserController@read');//获取列表
+            Route::post('admStart','AdmUserController@start');
+            Route::post('admStop','AdmUserController@stop');
         });
         //房屋管理
         Route::group(['prefix' => 'house/'], function () {

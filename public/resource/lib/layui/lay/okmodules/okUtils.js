@@ -5,11 +5,12 @@ layui.define(["layer"], function (exprots) {
         /**
          * 是否前后端分离
          */
-        isFrontendBackendSeparate: true,
+        isFrontendBackendSeparate: false,
         /**
          * 服务器地址
          */
-        baseUrl: "http://rap2api.taobao.org/app/mock/233041",
+        baseUrl:"",
+        //baseUrl: "http://rap2api.taobao.org/app/mock/233041",
         /**
          * 获取body的总宽度
          */

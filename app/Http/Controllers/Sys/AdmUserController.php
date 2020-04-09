@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
 use App\SysModel\AdmUser;
+use App\SysModel\AdmUserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdmUserController extends Controller
 {
@@ -26,7 +28,7 @@ class AdmUserController extends Controller
         $where =
             function ($query) use ($inp) {
                 if (!empty($inp['status'])) {
-                    $query->where('a.isLock',  $inp['status']=="n"?1:0);
+                    $query->where('a.isLock', $inp['status'] == "n" ? 1 : 0);
                 }
                 if (!empty($inp['username'])) {
                     $query->where('a.username', $inp['username']);
@@ -55,6 +57,7 @@ class AdmUserController extends Controller
         $db = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
             ->select('a.id', 'a.userName as username', 'a.isLock as status', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.created_at as createTime', 'a.updated_at as updateTime')
+            ->where('isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
             ->all();
@@ -80,6 +83,7 @@ class AdmUserController extends Controller
     public function create()
     {
         //
+        return view('.sys.pages.member.admUserAdd');
     }
 
     /**
@@ -91,6 +95,30 @@ class AdmUserController extends Controller
     public function store(Request $request)
     {
         //
+        $inp = $request->all();
+        //验证用户名是否存在
+        if (ishas('adm_user', 'userName', $inp['username'])) {
+            return getSuccess('用户名已存在, 重新换一个吧.');
+        }
+        $adm = new AdmUser();
+        $adm['code'] = getNewId();
+        $adm['userName'] = $inp['username'];
+        $adm['password'] = Hash::make($inp['password']);
+        $adm['isLock'] = empty($inp['status']) ? 1 : 0;
+        if ($adm->save()) {
+            //创建admInfo信息
+            $info = new AdmUserInfo();
+            $info['admId'] = $adm['code'];
+            $info['name'] = $inp['name'];
+            $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
+            $info['mobile'] = $inp['phone'];
+            $info['mail'] = $inp['email'];
+            $info['birthDate'] = $inp['birthday'];
+            $info->save();
+            return getSuccess(1);
+        } else {
+            return getSuccess(2);
+        }
     }
 
     /**
@@ -133,8 +161,31 @@ class AdmUserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        $inp = $request->all();
+        $db = AdmUser::where('isDel', 0)
+            ->whereIn('id', getInjoin($inp['id']))
+            ->update(['isDel' => 1]);
+        return getSuccess(1);
         //
+    }
+
+    public function start(Request $request)
+    {
+        $inp = $request->all();
+        $db = AdmUser::where('isLock', 1)
+            ->whereIn('id', getInjoin($inp['id']))
+            ->update(['isLock' => 0]);
+        return getSuccess(1);
+    }
+
+    public function stop(Request $request)
+    {
+        $inp = $request->all();
+        $db = AdmUser::where('isLock', 0)
+            ->whereIn('id', getInjoin($inp['id']))
+            ->update(['isLock' => 1]);
+        return getSuccess(1);
     }
 }

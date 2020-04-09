@@ -4,8 +4,8 @@
 	<meta charset="UTF-8">
 	<title>添加用户</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link rel="stylesheet" href="../../css/oksub.css">
-	<script type="text/javascript" src="../../lib/loading/okLoading.js"></script>
+	<link rel="stylesheet" href="/resource/css/oksub.css">
+	<script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
 </head>
 <body>
 <div class="ok-body">
@@ -15,41 +15,42 @@
 			<label class="layui-form-label">用户名</label>
 			<div class="layui-input-block">
 				<input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input"
-				       lay-verify="required">
+				       lay-verify="required" value="">
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">姓名</label>
 			<div class="layui-input-block">
-				<input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" lay-verify="required">
+				<input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" l
+                       ay-verify="required" value="">
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">手机号码</label>
 			<div class="layui-input-block">
 				<input type="text" name="phone" placeholder="请输入手机号码" autocomplete="off" class="layui-input"
-				       lay-verify="phone">
+				       lay-verify="phone" value="">
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">邮箱</label>
 			<div class="layui-input-block">
 				<input type="text" name="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
-				       lay-verify="email">
+				       lay-verify="email" value="">
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">密码</label>
 			<div class="layui-input-block">
 				<input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input"
-				       lay-verify="required">
+				       lay-verify="required" value="">
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">出生日期</label>
 			<div class="layui-input-block">
-				<input type="text" name="birthday" placeholder="请选择出生日期 格式为yyyy-MM-dd HH:mm:ss" autocomplete="off"
-				       class="layui-input" id="birthday" lay-verify="birthdayVerify">
+				<input type="text" name="birthday" placeholder="请选择出生日期 格式为yyyy-MM-dd" autocomplete="off"
+				       class="layui-input" id="birthday" lay-verify="birthdayVerify" value="">
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -61,43 +62,44 @@
 				</select>
 			</div>
 		</div>
-		<div class="layui-form-item">
-			<label class="layui-form-label">兴趣</label>
-			<div class="layui-input-block">
-				<input type="checkbox" name="like[write]" title="写作">
-				<input type="checkbox" name="like[read]" title="阅读">
-				<input type="checkbox" name="like[run]" title="运动">
-			</div>
-		</div>
+{{--		<div class="layui-form-item">--}}
+{{--			<label class="layui-form-label">兴趣</label>--}}
+{{--			<div class="layui-input-block">--}}
+{{--				<input type="checkbox" name="like[write]" title="写作">--}}
+{{--				<input type="checkbox" name="like[read]" title="阅读">--}}
+{{--				<input type="checkbox" name="like[run]" title="运动">--}}
+{{--			</div>--}}
+{{--		</div>--}}
 		<div class="layui-form-item">
 			<label class="layui-form-label">状态</label>
 			<div class="layui-input-block">
-				<input type="checkbox" name="status" lay-skin="switch" lay-text="启用|停用" checked value="0">
+				<input type="checkbox" name="status" lay-skin="switch" lay-text="启用|停用" checked value="1">
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">性别</label>
 			<div class="layui-input-block">
-				<input type="radio" name="sex" value="0" title="男">
-				<input type="radio" name="sex" value="1" title="女" checked>
+				<input type="radio" name="sex" value="0" title="女">
+				<input type="radio" name="sex" value="1" title="男" checked>
 			</div>
 		</div>
-		<div class="layui-form-item layui-form-text">
-			<label class="layui-form-label">备注</label>
-			<div class="layui-input-block">
-				<textarea name="remarks" placeholder="请输入内容" class="layui-textarea"></textarea>
-			</div>
-		</div>
+{{--		<div class="layui-form-item layui-form-text">--}}
+{{--			<label class="layui-form-label">备注</label>--}}
+{{--			<div class="layui-input-block">--}}
+{{--				<textarea name="remarks" placeholder="请输入内容" class="layui-textarea"></textarea>--}}
+{{--			</div>--}}
+{{--		</div>--}}
 		<div class="layui-form-item">
 			<div class="layui-input-block">
 				<button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
 				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
 			</div>
 		</div>
+        {{csrf_field()}}
 	</form>
 </div>
 <!--js逻辑-->
-<script src="../../lib/layui/layui.js"></script>
+<script src="/resource/lib/layui/layui.js"></script>
 <script>
 	layui.use(["element", "form", "laydate", "okLayer", "okUtils"], function () {
 		let form = layui.form;
@@ -112,9 +114,8 @@
 		});
 
 		form.on("submit(add)", function (data) {
-			okUtils.ajax("/user/addUser", "post", data.field, true).done(function (response) {
-				console.log(response);
-				okLayer.greenTickMsg("添加成功", function () {
+			okUtils.ajax("/sys/pages/member/admUser", "post", data.field, true).done(function (response) {
+				okLayer.greenTickMsg(response.msg, function () {
 					parent.layer.close(parent.layer.getFrameIndex(window.name));
 				});
 			}).fail(function (error) {
