@@ -66,6 +66,7 @@ class AdmUserController extends Controller
         $total = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
             ->select('1')
+            ->where('isDel', 0)
             ->where($where)
             ->count();
         $data['code'] = 0;
@@ -104,7 +105,7 @@ class AdmUserController extends Controller
         $adm['code'] = getNewId();
         $adm['userName'] = $inp['username'];
         $adm['password'] = Hash::make($inp['password']);
-        $adm['isLock'] = empty($inp['status']) ? 1 : 0;
+        $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
         if ($adm->save()) {
             //创建admInfo信息
             $info = new AdmUserInfo();
@@ -113,7 +114,7 @@ class AdmUserController extends Controller
             $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
             $info['mobile'] = $inp['phone'];
             $info['mail'] = $inp['email'];
-            $info['birthDate'] = $inp['birthday'];
+            $info['birthDate'] = $inp['birthDate'];
             $info->save();
             return getSuccess(1);
         } else {
@@ -130,6 +131,7 @@ class AdmUserController extends Controller
     public function show($id)
     {
         //
+
     }
 
     /**
@@ -141,6 +143,12 @@ class AdmUserController extends Controller
     public function edit($id)
     {
         //
+        $db = AdmUser::where('id', $id)
+            ->select('id', 'code', 'userName', 'isLock')
+            ->with('admUserInfo:admId,name,sex,birthDate,mobile,mail')
+            ->get();
+
+        return view('.sys.pages.member.admUserEdit', $db[0]);
     }
 
     /**
@@ -153,39 +161,62 @@ class AdmUserController extends Controller
     public function update(Request $request, $id)
     {
         //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
-    {
         $inp = $request->all();
-        $db = AdmUser::where('isDel', 0)
-            ->whereIn('id', getInjoin($inp['id']))
-            ->update(['isDel' => 1]);
-        return getSuccess(1);
-        //
-    }
 
-    public function start(Request $request)
-    {
-        $inp = $request->all();
-        $db = AdmUser::where('isLock', 1)
-            ->whereIn('id', getInjoin($inp['id']))
-            ->update(['isLock' => 0]);
+        $adm = AdmUser::find($id);
+        if ($inp['password']) {
+            $adm['password'] = Hash::make($inp['password']);
+        }
+        $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
+        $adm->save();
+
+        //修改admInfo信息
+        $info = AdmUserInfo::where('admId', $adm['code'])
+            ->update([
+                'name'=>$inp['name'],
+                'sex'=>$inp['sex'] == 0 ? 0 : 1,
+                'mobile'=> $inp['mobile'],
+                'mail'=>$inp['mail'],
+                'birthDate'=>$inp['birthDate'],
+            ]);
         return getSuccess(1);
     }
 
-    public function stop(Request $request)
-    {
-        $inp = $request->all();
-        $db = AdmUser::where('isLock', 0)
-            ->whereIn('id', getInjoin($inp['id']))
-            ->update(['isLock' => 1]);
-        return getSuccess(1);
+
+        /**
+         * Remove the specified resource from storage.
+         *
+         * @param int $id
+         * @return \Illuminate\Http\Response
+         */
+        public
+        function destroy(Request $request)
+        {
+            $inp = $request->all();
+            $db = AdmUser::where('isDel', 0)
+                ->whereIn('id', getInjoin($inp['id']))
+                ->update(['isDel' => 1]);
+            return getSuccess(1);
+            //
+        }
+
+        public
+        function start(Request $request)
+        {
+            $inp = $request->all();
+            $db = AdmUser::where('isLock', 1)
+                ->whereIn('id', getInjoin($inp['id']))
+                ->update(['isLock' => 0]);
+            return getSuccess(1);
+        }
+
+        public
+        function stop(Request $request)
+        {
+            $inp = $request->all();
+            $db = AdmUser::where('isLock', 0)
+                ->whereIn('id', getInjoin($inp['id']))
+                ->update(['isLock' => 1]);
+            return getSuccess(1);
+        }
     }
-}

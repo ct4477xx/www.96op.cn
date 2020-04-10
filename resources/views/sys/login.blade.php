@@ -77,7 +77,7 @@
                     } else {
                         $("#username").val(data.username);
                         $("#password").val(data.password);
-                        layer.msg(data.msg, {icon: 5});
+                        layer.msg(data.msg, {icon: 5, time: 1500});
                     }
                 }, "json");
             return false;

@@ -26,12 +26,18 @@ class LoginController extends Controller
     {
         $inp = $request->all();
 
-        $db_data = AdmUser::where(['userName' => $inp['data']['username']])
-            ->select('id', 'code', 'userName', 'passWord')
+        $db_data = AdmUser::where([
+            'userName' => $inp['data']['username'],
+            'isDel' => 0
+        ])
+            ->select('id', 'code', 'userName', 'passWord','isLock')
             ->with(['admUserInfo:admId,name'])
             ->first();
         if (!$db_data) {
             return getSuccess('用户名不存在, 再仔细想想?');
+        }
+        if ($db_data['isLock']==1) {
+            return getSuccess('当前账号已被锁定, 请联系系统管理员');
         }
         $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
         if ($is_Pwd == 'true') {

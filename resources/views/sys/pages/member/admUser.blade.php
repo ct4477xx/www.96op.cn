@@ -103,29 +103,62 @@
             limit: 15,
             limits: [15, 30, 45, 60],
             page: true,
-            toolbar: true,
-            toolbar: "#toolbarTpl",
+            toolbar: '<div class="layui-btn-container">\n' +
+                '        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>\n' +
+                '        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchEnabled">批量启用</button>\n' +
+                '        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="batchDisabled">批量停用</button>\n' +
+                '        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>\n' +
+                '    </div>',
             size: "sm",
-            cols: [[
-                {type: "checkbox", fixed: "left"},
-                {field: "id", title: "ID", width: 70, sort: true},
-                {field: "username", title: "用户名", width: 120},
-                {field: "name", title: "姓名", width: 100},
-                {field: "birthDate", title: "出生日期", width: 100, sort: true},
-                {field: "sex", title: "性别", width: 60, templet: "#sexTpl"},
-                {field: "mail", title: "邮箱", width: 150},
-                {field: "mobile", title: "手机号码", width: 120},
-                {field: "role", title: "角色", width: 100, templet: "#roleTpl"},
-                {field: "status", title: "状态", width: 100, templet: "#statusTpl"},
-                {field: "createTime", title: "创建时间", width: 150},
-                {field: "updateTime", title: "更新时间", width: 150},
-                {title: "操作", width: 100, align: "center", fixed: "right", templet: "#operationTpl"}
-            ]],
+            cols:
+                [[
+                    {type: "checkbox", fixed: "left"},
+                    {field: "id", title: "ID", width: 70, sort: true},
+                    {field: "username", title: "用户名", width: 120},
+                    {field: "name", title: "姓名", width: 100},
+                    {field: "birthDate", title: "出生日期", width: 100, sort: true},
+                    {
+                        field: "sex", title: "性别", width: 60, templet: function (d) {
+                            if (d.sex == '1') {
+                                return '<span class="layui-btn layui-btn-normal layui-btn-xs">男</span>'
+                            } else {
+                                return '<span class="layui-btn layui-btn-warm layui-btn-xs">女</span>'
+                            }
+                        }
+                    },
+                    {field: "mail", title: "邮箱", width: 150},
+                    {field: "mobile", title: "手机号码", width: 120},
+                    {
+                        field: "role", title: "角色", width: 100, templet: function (d) {
+                            if (d.role == '0') {
+                                return '<span class="layui-btn layui-btn-warm layui-btn-xs">普通用户</span>'
+                            } else {
+                                return ' <span class="layui-btn layui-btn-normal layui-btn-xs">超级会员</span>'
+                            }
+                        }
+                    },
+                    {
+                        field: "status", title: "状态", width: 100, templet: function (d) {
+                            if (d.status == '0') {
+                                return '<span class="layui-btn layui-btn-normal layui-btn-xs">已启用</span>'
+                            } else {
+                                return '<span class="layui-btn layui-btn-warm layui-btn-xs">已停用</span>'
+                            }
+                        }
+                    },
+                    {field: "createTime", title: "创建时间", width: 150},
+                    {field: "updateTime", title: "更新时间", width: 150},
+                    {
+                        title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
+                            return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +
+                                "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>"
+                        }
+                    }
+                ]],
             done: function (res, curr, count) {
                 //console.info(res, curr, count);
             }
         });
-
         form.on("submit(search)", function (data) {
             userTable.reload({
                 where: data.field,
@@ -221,7 +254,7 @@
         }
 
         function edit(data) {
-            okLayer.open("更新用户", "user-edit.html", "90%", "90%", function (layero) {
+            okLayer.open("更新用户", "admUser/" + data.id + "/edit", "90%", "90%", function (layero) {
                 let iframeWin = window[layero.find("iframe")[0]["name"]];
                 iframeWin.initForm(data);
             }, function () {
@@ -231,7 +264,10 @@
 
         function del(id) {
             okLayer.confirm("确定要删除吗？", function () {
-                okUtils.ajax("/user/deleteUser", "delete", {idsStr: id}, true).done(function (response) {
+                okUtils.ajax("admUser/destroy", "delete", {
+                    id: id,
+                    _token: '{{csrf_token()}}'
+                }, true).done(function (response) {
                     console.log(response);
                     okUtils.tableSuccessMsg(response.msg);
                 }).fail(function (error) {
@@ -241,41 +277,5 @@
         }
     })
 </script>
-<!-- 头工具栏模板 -->
-<script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchEnabled">批量启用</button>
-        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="batchDisabled">批量停用</button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>
-        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>
-    </div>
-</script>
-<!-- 行工具栏模板 -->
-{{--<script type="text/html" id="operationTpl">--}}
-{{--    <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>--}}
-{{--    <a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>--}}
-{{--</script>--}}
-{{--<!-- 启用|停用模板 -->--}}
-{{--<script type="text/html" id="sexTpl">--}}
-{{--    {{#  if(d.sex == 0){ }}--}}
-{{--    <span class="layui-btn layui-btn-warm layui-btn-xs">女</span>--}}
-{{--    {{#  } else if(d.sex == 1) { }}--}}
-{{--    <span class="layui-btn layui-btn-normal layui-btn-xs">男</span>--}}
-{{--    {{#  } }}--}}
-{{--</script>--}}
-{{--<script type="text/html" id="statusTpl">--}}
-{{--    {{#  if(d.status == 0){ }}--}}
-{{--    <span class="layui-btn layui-btn-normal layui-btn-xs">已启用</span>--}}
-{{--    {{#  } else if(d.status == 1) { }}--}}
-{{--    <span class="layui-btn layui-btn-warm layui-btn-xs">已停用</span>--}}
-{{--    {{#  } }}--}}
-{{--</script>--}}
-{{--<script type="text/html" id="roleTpl">--}}
-{{--    {{#  if(d.role == 0){ }}--}}
-{{--    <span class="layui-btn layui-btn-normal layui-btn-xs">超级会员</span>--}}
-{{--    {{#  } else if(d.role == 1) { }}--}}
-{{--    <span class="layui-btn layui-btn-warm layui-btn-xs">普通用户</span>--}}
-{{--    {{#  } }}--}}
-{{--</script>--}}
 </body>
 </html>

@@ -183,6 +183,7 @@ function signStreet_String($Id)
 function isHas($table, $str, $val)
 {
     $data = DB::table($table)
+        ->where('isDel', 0)
         ->where($str, $val)
         ->count();
     return $data;
