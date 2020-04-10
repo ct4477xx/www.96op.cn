@@ -9,7 +9,6 @@ function site()
     $data['ico'] = '/resource/images/favicon.ico';
     $data['keywords'] = 'admin v2.0,ok-admin网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载';
     $data['description'] = 'ok-admin v2.0，顾名思义，很赞的后台模版，它是一款基于Layui框架的轻量级扁平化且完全免费开源的网站后台管理系统模板，适合中小型CMS后台系统。';
-
     return $data;
 }
 
@@ -18,5 +17,14 @@ function home()
 {
     $data = [];
     $data['title'] = '后台管理系统';
+    return $data;
+}
+
+//针对前端框架的初始值
+function pages()
+{
+    $data = [];
+    $data['limit'] = 15;//默认每页数量
+    $data['limits'] = '15, 30, 45, 60, 75, 100';//默认每页显示数量
     return $data;
 }

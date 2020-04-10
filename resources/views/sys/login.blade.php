@@ -7,7 +7,8 @@
     <meta name="keywords" content="{!! site()['keywords'] !!}">
     <meta name="description" content="{!! site()['description'] !!}">
     <link rel="shortcut icon" href="{!! site()['ico'] !!}" type="image/x-icon"/>
-    <link rel="stylesheet" href="/resource/css/oksub.css"/>
+    @include('.sys.public.css')
+    @include('.sys.public.js')
 </head>
 <body class="page-fill">
 <div class="page-fill" id="login">
@@ -38,7 +39,6 @@
     </form>
 </div>
 <!--js逻辑-->
-<script src="/resource/lib/layui/layui.js"></script>
 <script>
     layui.use(["form", "okGVerify", "okUtils", "okLayer"], function () {
         let form = layui.form;

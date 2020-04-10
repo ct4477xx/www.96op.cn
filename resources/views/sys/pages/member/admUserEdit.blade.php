@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/resource/css/oksub.css">
-    <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
+    @include('.sys.public.css')
+    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    @include('.sys.public.js')
 </head>
 <body>
 <div class="ok-body">
@@ -99,7 +100,6 @@
     </form>
 </div>
 <!--js逻辑-->
-<script src="/resource/lib/layui/layui.js"></script>
 <script>
     let initData;
 

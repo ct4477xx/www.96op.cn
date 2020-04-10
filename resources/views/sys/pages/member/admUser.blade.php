@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/resource/css/oksub.css">
-    <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
+    @include('.sys.public.css')
+    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    @include('.sys.public.js')
 </head>
 <body>
 <div class="ok-body">
@@ -84,7 +85,6 @@
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
-<script src="/resource/lib/layui/layui.js"></script>
 <script>
     layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils"], function () {
         let table = layui.table;
@@ -98,10 +98,9 @@
         okLoading.close($);
         let userTable = table.render({
             elem: '#tableId',
-            //height: 480,
-            url: '/sys/pages/member/read',//'okMock.api.listUser',
-            limit: 15,
-            limits: [15, 30, 45, 60],
+            url: '/sys/pages/member/read',
+            limit: '{!! pages()['limit'] !!}',
+            limits: [{!! pages()['limits'] !!}],
             page: true,
             toolbar: '<div class="layui-btn-container">\n' +
                 '        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>\n' +
@@ -133,7 +132,7 @@
                             if (d.role == '0') {
                                 return '<span class="layui-btn layui-btn-warm layui-btn-xs">普通用户</span>'
                             } else {
-                                return ' <span class="layui-btn layui-btn-normal layui-btn-xs">超级会员</span>'
+                                return ' <span class="layui-btn layui-btn-danger layui-btn-xs">超级会员</span>'
                             }
                         }
                     },

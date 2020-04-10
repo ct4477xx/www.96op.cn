@@ -7,9 +7,11 @@
     <meta name="keywords" content="{!! site()['keywords'] !!}">
     <meta name="description" content="{!! site()['description'] !!}">
     <link rel="shortcut icon" href="{!! site()['ico'] !!}" type="image/x-icon"/>
-    <link rel="stylesheet" href="/resource/css/okadmin.css">
-    <link rel="stylesheet" href="/resource/lib/loading/okLoading.css"/>
-    <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
+    <link rel="stylesheet" href="{{asset('/resource/css/okadmin.css')}}">
+    <link rel="stylesheet" href="{{asset('/resource/lib/loading/okLoading.css')}}"/>
+    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    @include('.sys.public.js')
+    <script src="{{asset('/resource/js/okadmin.js')}}"></script>
 </head>
 <body class="layui-layout-body">
 <!-- 更换主体 Eg:orange_theme|blue_theme -->
@@ -60,7 +62,5 @@
 </div>
 <div class="yy"></div>
 <!--js逻辑-->
-<script src="/resource/lib/layui/layui.js"></script>
-<script src="/resource/js/okadmin.js"></script>
 </body>
 </html>

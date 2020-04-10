@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <title>基本资料</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/resource/css/oksub.css">
-    <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
+    @include('.sys.public.css')
+    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    @include('.sys.public.js')
 </head>
 <body class="user-info">
 <form class="layui-form changeInfo">
@@ -70,7 +71,6 @@
         </div>
     </div>
 </form>
-<script type="text/javascript" src="/resource/lib/layui/layui.js"></script>
 <script type="text/javascript">
     layui.use(['form', 'layer', 'upload', 'laydate', 'okAddlink'], function () {
         var form = layui.form;

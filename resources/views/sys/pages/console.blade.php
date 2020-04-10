@@ -11,10 +11,12 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="stylesheet" href="/resource/css/oksub.css" media="all"/>
+	@include('.sys.public.css')
 	<script type="text/javascript" src="/resource/lib/echarts/echarts.min.js"></script>
 	<script type="text/javascript" src="/resource/lib/echarts/echarts.theme.js"></script>
 	<script type="text/javascript" src="/resource/lib/echarts/world/js/china.js"></script>
+    @include('.sys.public.js')
+    <script type="text/javascript" src="/resource/js/console.js"></script>
 </head>
 <body class="ok-body-scroll console">
 <div class="ok-body home">
@@ -169,8 +171,6 @@
 </div>
 </body>
 </html>
-<script type="text/javascript" src="/resource/lib/layui/layui.js"></script>
-<script type="text/javascript" src="/resource/js/console.js"></script>
 
 
 
