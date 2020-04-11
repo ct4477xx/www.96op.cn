@@ -57,7 +57,7 @@ class AdmUserController extends Controller
         $db = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
             ->select('a.id', 'a.userName as username', 'a.isLock as status', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.created_at as createTime', 'a.updated_at as updateTime')
-            ->where('isDel', 0)
+            ->where('a.isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
             ->all();
@@ -66,7 +66,7 @@ class AdmUserController extends Controller
         $total = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
             ->select('1')
-            ->where('isDel', 0)
+            ->where('a.isDel', 0)
             ->where($where)
             ->count();
         $data['code'] = 0;

@@ -11,9 +11,8 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 	var okTab = layui.okTab({
 		// 菜单请求路径
 		url: "/sys/menu",
-        //url: "/resource/data/navs.json",
 		// 允许同时选项卡的个数
-		openTabNum: 30,
+		openTabNum: 20,
 		// 如果返回的结果和navs.json中的数据结构一致可省略这个方法
 		parseData: function (data) {
 			return data;
@@ -55,7 +54,6 @@ layui.use(["element", "layer", "okUtils", "okTab", "okLayer", "okContextMenu", "
 					text: "关闭所有页",
 					icon: "ok-icon ok-icon-roundclose",
 					callback: function () {
-
 						okTab.tabClose(3);
 					}
 				}

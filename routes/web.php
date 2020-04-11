@@ -47,8 +47,11 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         Route::group(['prefix' => 'member/'], function () {
             Route::resource('admUser','AdmUserController');
             Route::get('read','AdmUserController@read');//获取列表
-            Route::post('admStart','AdmUserController@start');
-            Route::post('admStop','AdmUserController@stop');
+            Route::post('admStart','AdmUserController@start');//启用用户
+            Route::post('admStop','AdmUserController@stop');//禁止用户
+            //
+            Route::resource('admUserRole','AdmUserRoleController');
+            Route::resource('admUserPower','AdmUserPowerController');
         });
         //房屋管理
         Route::group(['prefix' => 'house/'], function () {

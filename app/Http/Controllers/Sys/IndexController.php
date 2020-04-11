@@ -7,6 +7,7 @@ use App\SysModel\AdmUser;
 use App\SysModel\AdmUserInfo;
 use App\SysModel\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class IndexController extends Controller
@@ -104,25 +105,12 @@ class IndexController extends Controller
 
     function menu()
     {
-        //菜单
-        //首先获取所有菜单
-        $data = Menu::where(['fatherId' => 0, 'isDel' => 0])
-            ->select('id', 'title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck')
-            ->with(['children:fatherId,title,href,fontFamily,icon,spread'])
-            ->get();
-        //遍历数据
-//        $list = [];
-//        foreach ($data as $key => $value) {
-//            $fatherId = $key['fatherId'];
-//            //先找到顶级菜单
-//            if ($value->fatherId == $fatherId) {
-//                if ($value->id !== 1) {
-//                    $value->children = DB::table("menu")->where('fatherId', $value->id)->get();
-//                }
-//                $list[] = $value;
-//            }
-//        }
-        return $data;
+        //无限极菜单
+//        $data = Menu::where(['fatherId' => 0, 'isDel' => 0])
+//            ->select('id', 'title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck')
+//            ->with(['children:id,fatherId,title,href,fontFamily,icon,spread'])
+//            ->get();
+//        return $data;
+        return getMenu();
     }
-
 }

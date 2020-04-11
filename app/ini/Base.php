@@ -1,7 +1,7 @@
 <?php
 
-use App\SysModel\AdmUser;
 use App\SysModel\House;
+use App\SysModel\Menu;
 use App\ToolModel\signStreet;
 
 
@@ -10,7 +10,7 @@ use App\ToolModel\signStreet;
 //输入以逗号分隔的字符串,生成带单引号的数组
 function getInjoin($str)
 {
-    $array = explode(',',$str);
+    $array = explode(',', $str);
     return array_filter($array);
 }
 
@@ -114,6 +114,24 @@ function getNewId($type = 5, $length = 8, $time = 0)
 
 //=================================== 数据库操作类 ===================================
 
+//通过无限极获取菜单
+function getMenu()
+{
+    $data = Menu::where(['isDel' => 0])->get()->toArray();
+    $items = [];
+    foreach ($data as $value) {
+        $items[$value['id']] = $value;
+    }
+    $tree = [];
+    foreach ($items as $k => $v) {
+        if (isset($items[$v['fatherId']])) {
+            $items[$v['fatherId']]['children'][] = &$items[$k];
+        } else {
+            $tree[] = &$items[$k];
+        }
+    }
+    return $tree;
+}
 
 //不传参数获取楼层->获取顶级信息
 function getHouse()

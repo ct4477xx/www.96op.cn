@@ -4,23 +4,24 @@
 	<meta charset="UTF-8">
 	<title>权限列表</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link rel="stylesheet" href="../../css/oksub.css">
-	<script type="text/javascript" src="../../lib/loading/okLoading.js"></script>
+    @include('.sys.public.css')
+    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    @include('.sys.public.js')
 </head>
 <body class="ok-body-scroll">
 <div class="ok-body">
 	<!--面包屑导航区域-->
-	<!--<div class="ok-body-breadcrumb">
-					<span class="layui-breadcrumb">
-							<a><cite>首页</cite></a>
-							<a><cite>常用页面</cite></a>
-							<a><cite>权限列表</cite></a>
-					</span>
-			<a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-					<i class="layui-icon layui-icon-refresh"></i>
-			</a>
-	</div>
-	&lt;!&ndash;模糊搜索区域&ndash;&gt;
+{{--	<div class="ok-body-breadcrumb">--}}
+{{--					<span class="layui-breadcrumb">--}}
+{{--							<a><cite>首页</cite></a>--}}
+{{--							<a><cite>常用页面</cite></a>--}}
+{{--							<a><cite>权限列表</cite></a>--}}
+{{--					</span>--}}
+{{--			<a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">--}}
+{{--					<i class="layui-icon layui-icon-refresh"></i>--}}
+{{--			</a>--}}
+{{--	</div>--}}
+{{--	&lt;!&ndash;模糊搜索区域&ndash;&gt;--}}
 	<div class="layui-row">
 			<form class="layui-form layui-col-md12 ok-search">
 					<input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
@@ -30,7 +31,7 @@
 							<i class="layui-icon layui-icon-search"></i>
 					</button>
 			</form>
-	</div>-->
+	</div>
 	<div class="layui-row">
 		<div class="layui-col-md3">
 			<div id="permissionTree"></div>
@@ -41,20 +42,18 @@
 	</div>
 </div>
 <!--js逻辑-->
-<script src="../../lib/layui/layui.js"></script>
 <script>
-	layui.use(["element", "table", "laydate", "tree", "okUtils", "okMock"], function () {
+	layui.use(["element", "table", "laydate", "tree", "okUtils"], function () {
 		let table = layui.table;
 		let laydate = layui.laydate;
 		let tree = layui.tree;
 		let okUtils = layui.okUtils;
-		let okMock = layui.okMock;
 		okLoading.close();
 		laydate.render({elem: '#startTime', type: "datetime"});
 		laydate.render({elem: '#endTime', type: "datetime"});
 
 		function initPermissionTree() {
-			okUtils.ajax("/permission/tree", "get", null, true).done(function (response) {
+			okUtils.ajax("http://rap2api.taobao.org/app/mock/233041/permission/tree", "get", null, true).done(function (response) {
 				tree.render({
 					elem: '#permissionTree',
 					data: response.data,
@@ -76,7 +75,7 @@
 		function initPermissionTable() {
 			table.render({
 				elem: '#permissionTable',
-				url: okMock.api.permission.list,
+				url: 'http://rap2api.taobao.org/app/mock/233041/permission/list?page=1&limit=20',
 				limit: 20,
 				page: true,
 				size: "sm",
@@ -106,14 +105,14 @@
 	<a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
 </script>
 
-<script type="text/html" id="typeTpl">
-	{{#  if(d.type == 0){ }}
-	<span class="layui-btn layui-btn-normal layui-btn-xs">目录</span>
-	{{#  } else if(d.type == 1){ }}
-	<span class="layui-btn layui-btn-warm layui-btn-xs">菜单</span>
-	{{#  } else if(d.type == 2) { }}
-	<span class="layui-btn layui-btn-danger layui-btn-xs">按钮</span>
-	{{#  } }}
-</script>
+{{--<script type="text/html" id="typeTpl">--}}
+{{--	{{#  if(d.type == 0){ }}--}}
+{{--	<span class="layui-btn layui-btn-normal layui-btn-xs">目录</span>--}}
+{{--	{{#  } else if(d.type == 1){ }}--}}
+{{--	<span class="layui-btn layui-btn-warm layui-btn-xs">菜单</span>--}}
+{{--	{{#  } else if(d.type == 2) { }}--}}
+{{--	<span class="layui-btn layui-btn-danger layui-btn-xs">按钮</span>--}}
+{{--	{{#  } }}--}}
+{{--</script>--}}
 </body>
 </html>
