@@ -67,6 +67,8 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         //路由管理
         Route::group(['prefix' => 'routes/'], function () {
             Route::resource('route', 'RouteController');
+            Route::post('storeSon','RouteController@storeSon');
+            Route::get('storeSon/{id}/edit','RouteController@storeSonEdit');
         });
     });
 });

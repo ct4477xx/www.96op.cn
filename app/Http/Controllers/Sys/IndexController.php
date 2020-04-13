@@ -36,7 +36,7 @@ class IndexController extends Controller
     {
         //个人用户信息
         //在没有找到用户资料时,创建用户资料
-        if (isHas('adm_userinfo', 'admId', \Cookie::get('admId')) == 0) {
+        if (getIsExist('adm_userinfo', 'admId', \Cookie::get('admId')) == 0) {
             $info = new AdmUserInfo();
             $info['admId'] = \Cookie::get('admId');
             $info['name'] = \Cookie::get('admCode');

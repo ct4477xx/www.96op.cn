@@ -98,7 +98,7 @@ class AdmUserController extends Controller
         //
         $inp = $request->all();
         //验证用户名是否存在
-        if (ishas('adm_user', 'userName', $inp['username'])) {
+        if (getIsExist('adm_user', 'userName', $inp['username'])) {
             return getSuccess('用户名已存在, 重新换一个吧.');
         }
         $adm = new AdmUser();

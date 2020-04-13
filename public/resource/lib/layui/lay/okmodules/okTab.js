@@ -277,7 +277,6 @@ layui.define(["element", "jquery"], function (exports) {
 	okTab.prototype.tabAdd = function (_thisa) {
 		var that = this;
 		var _this = $(_thisa).clone(true);//拷贝dom（js： _this.cloneNode(true) ）
-
 		var openTabNum = that.tabConfig.openTabNum;
 		var tabFilter = that.tabConfig.tabFilter;
 		var url = _this.attr("data-url");//选项卡的页面路径

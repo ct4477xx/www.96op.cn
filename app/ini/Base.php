@@ -1,7 +1,7 @@
 <?php
 
 use App\SysModel\House;
-use App\SysModel\Menu;
+use App\SysModel\Route;
 use App\ToolModel\signStreet;
 
 
@@ -111,13 +111,56 @@ function getNewId($type = 5, $length = 8, $time = 0)
     return $str;
 }
 
+//获取路由的类型
+function getRouteType($str)
+{
+    switch ($str) {
+        case 0:
+            return '<fount class="layui-btn layui-btn layui-btn-xs">页面</fount>';
+            break;
+        case 1:
+            return '<fount class="layui-btn layui-btn-normal layui-btn-xs">按钮</fount>';
+            break;
+        default:
+            break;
+    }
+}
 
 //=================================== 数据库操作类 ===================================
 
 //通过无限极获取菜单
 function getMenu()
 {
-    $data = Menu::where(['isDel' => 0])->get()->toArray();
+    $data = Route::where(['isDel' => 0, 'isOk' => 0])
+        ->orderBy('fatherId', 'asc')
+        ->orderBy('isOk', 'desc')
+        ->orderBy('bySort', 'desc')
+        ->get()
+        ->toArray();
+    $items = [];
+    foreach ($data as $value) {
+        $items[$value['id']] = $value;
+    }
+    $tree = [];
+    foreach ($items as $k => $v) {
+        if (isset($items[$v['fatherId']])) {
+            $items[$v['fatherId']]['children'][] = &$items[$k];
+        } else {
+            $tree[] = &$items[$k];
+        }
+    }
+    return $tree;
+}
+
+//通过无限极获取路由
+function getRoute()
+{
+    $data = Route::where(['isDel' => 0])
+        ->orderBy('fatherId', 'asc')
+        ->orderBy('isOk', 'desc')
+        ->orderBy('bySort', 'desc')
+        ->get()
+        ->toArray();
     $items = [];
     foreach ($data as $value) {
         $items[$value['id']] = $value;
@@ -198,7 +241,7 @@ function signStreet_String($Id)
 
 
 //=================================== 数据判断操作 ===================================
-function isHas($table, $str, $val)
+function getIsExist($table, $str, $val)
 {
     $data = DB::table($table)
         ->where('isDel', 0)

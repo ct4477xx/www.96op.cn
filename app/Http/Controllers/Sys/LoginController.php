@@ -81,7 +81,7 @@ class LoginController extends Controller
     {
         $inp = $request->all();
         //判断用户名是否存在
-        if (isHas('adm_user', 'userName', $inp['data']['username']) > 0) {
+        if (getIsExist('adm_user', 'userName', $inp['data']['username']) > 0) {
             return [
                 'success' => false, 'msg' => '用户名已存在, 请换个用户名试试!',
                 'username' => $inp['data']['username'],

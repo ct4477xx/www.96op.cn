@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/resource/css/okadmin.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script src="/resource/lib/layui/layui.js" charset="utf-8"></script>
+    <script src="/resource/js/xadmin.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -18,13 +19,15 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body ">
-                    <form class="layui-form layui-col-space5">
+                    <form class="layui-form layui-col-space5" method="post">
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="路由名称" name="cate_name"></div>
+                            <input class="layui-input" placeholder="一级菜单路由名称" name="routeTitle"
+                                   lay-verify="required|routeTitle"></div>
                         <div class="layui-input-inline layui-show-xs-block">
                             <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon"></i>增加路由
                             </button>
                         </div>
+                        {{csrf_field()}}
                     </form>
                     <hr>
                 </div>
@@ -32,134 +35,101 @@
                     <table class="layui-table layui-form">
                         <thead>
                         <tr>
-                            <th width="20">
-                                <input type="checkbox" name="" lay-skin="primary">
-                            </th>
-                            <th width="70">ID</th>
+                            {{--                            <th width="70">ID</th>--}}
                             <th>路由名称</th>
                             <th>作用</th>
+                            <th>排序</th>
                             <th width="250">操作</th>
                         </thead>
                         <tbody class="x-cate">
                         @foreach($data as $v)
                             <tr cate-id='{{$v['id']}}' fid='{{$v['fatherId']}}'>
-                                <td>
-                                    <input type="checkbox" name="" lay-skin="primary">
-                                </td>
-                                <td>{{$v['id']}}</td>
+                                {{--                                <td>{{$v['id']}}</td>--}}
                                 <td>
                                     @if(isset($v['children']))
                                         <i class="layui-icon x-show" status='true'>&#xe623;</i>
+                                    @else
+                                        <i class="layui-icon">&#xe63f;</i>
                                     @endif
                                     {!! $v['title'] !!}
                                 </td>
-                                <td>页面</td>
+                                <td>{!! getRouteType($v['isOk']) !!}</td>
+                                <td>{!! $v['bySort'] !!}</td>
                                 <td class="td-manage">
                                     <button class="layui-btn layui-btn layui-btn-xs"
-                                            onclick="xadmin .open('编辑','admin-edit.html')"><i
+                                            onclick="xadmin.open('编辑','/sys/pages/routes/route/{{$v['id']}}/edit')"><i
                                             class="layui-icon">&#xe642;</i>编辑
                                     </button>
                                     <button class="layui-btn layui-btn-warm layui-btn-xs"
-                                            onclick="xadmin.open('编辑','admin-edit.html')"><i
-                                            class="layui-icon">&#xe642;</i>添加子栏目
+                                            onclick="xadmin.open('添加子路由','/sys/pages/routes/route/{{$v['id']}}')"><i
+                                            class="layui-icon">&#xe642;</i>添加子路由
                                     </button>
-                                    <button class="layui-btn-danger layui-btn layui-btn-xs"
-                                            onclick="member_del(this,'要删除的id')" href="javascript:;"><i
-                                            class="layui-icon">&#xe640;</i>删除
-                                    </button>
+                                    @if(isset($v['children'])==false)
+                                        <button class="layui-btn-danger layui-btn layui-btn-xs"
+                                                onclick="del(this,{!! $v['id'] !!})" href="javascript:;"><i
+                                                class="layui-icon">&#xe640;</i>删除
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @if(isset($v['children']))
-                                @foreach($v['children'] as $c)
-                                    <tr cate-id='{{$c['id']}}' fid='{{$c['fatherId']}}'>
-                                        <td>
-                                            <input type="checkbox" name="" lay-skin="primary">
-                                        </td>
-                                        <td>{{$c['id']}}</td>
-                                        @if(isset($c['children']))
-                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                ├<i class="layui-icon x-show"
-                                                    status='true'>&#xe623;</i>{!! $c['title'] !!}
-                                            </td>
-                                        @else
-                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                ├{!! $c['title'] !!}
-                                            </td>
-                                        @endif
-                                        <td>页面</td>
-                                        <td class="td-manage">
-                                            <button class="layui-btn layui-btn layui-btn-xs"
-                                                    onclick="xadmin .open('编辑','admin-edit.html')"><i
-                                                    class="layui-icon">&#xe642;</i>编辑
-                                            </button>
-                                            <button class="layui-btn layui-btn-warm layui-btn-xs"
-                                                    onclick="xadmin.open('编辑','admin-edit.html')"><i
-                                                    class="layui-icon">&#xe642;</i>添加子栏目
-                                            </button>
-                                            <button class="layui-btn-danger layui-btn layui-btn-xs"
-                                                    onclick="member_del(this,'要删除的id')" href="javascript:;"><i
-                                                    class="layui-icon">&#xe640;</i>删除
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    @if(isset($c['children']))
-                                        @foreach($c['children'] as $d)
-                                            <tr cate-id='{{$d['id']}}' fid='{{$d['fatherId']}}'>
-                                                <td>
-                                                    <input type="checkbox" name="" lay-skin="primary">
-                                                </td>
-                                                <td>{{$d['id']}}</td>
-                                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    ├{!! $d['title'] !!}
-                                                </td>
-                                                <td>按钮</td>
-                                                <td class="td-manage">
-                                                    <button class="layui-btn layui-btn layui-btn-xs"
-                                                            onclick="xadmin .open('编辑','admin-edit.html')"><i
-                                                            class="layui-icon">&#xe642;</i>编辑
-                                                    </button>
-                                                    <button class="layui-btn-danger layui-btn layui-btn-xs"
-                                                            onclick="member_del(this,'要删除的id')" href="javascript:;"><i
-                                                            class="layui-icon">&#xe640;</i>删除
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
+                                @foreach($v['children'] as $li)
+                                    {!! children($li,1) !!}
                                 @endforeach
                             @endif
                         @endforeach
                         </tbody>
                     </table>
                 </div>
-                {{--                <div class="layui-card-body ">--}}
-                {{--                    <div class="page">--}}
-                {{--                        <div>--}}
-                {{--                            <a class="prev" href="">&lt;&lt;</a>--}}
-                {{--                            <a class="num" href="">1</a>--}}
-                {{--                            <span class="current">2</span>--}}
-                {{--                            <a class="num" href="">3</a>--}}
-                {{--                            <a class="num" href="">489</a>--}}
-                {{--                            <a class="next" href="">&gt;&gt;</a></div>--}}
-                {{--                    </div>--}}
-                {{--                </div>--}}
             </div>
         </div>
     </div>
 </div>
 <script>
-    layui.use(['form', "okLayer"], function () {
+    layui.use(['form', "okLayer", "okLayer", "okUtils"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+
+
+        //自定义验证规则
+        form.verify({
+            routeTitle: function (value) {
+                if (value.length > 6) {
+                    return '路由名称请控制在6个字符以内';
+                }
+
+            },
+        });
+
+        form.on("submit(sreach)", function (data) {
+            okUtils.ajax("{{url('sys/pages/routes/route')}}", "post", data.field, true).done(function (response) {
+                okLayer.greenTickMsg(response.msg, function () {
+                    location.reload();
+                });
+            }).fail(function (error) {
+                console.log(error)
+            });
+            return false;
+        });
     });
 
     /*用户-删除*/
-    function member_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            //发异步删除数据
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
-        });
+    function del(obj, id) {
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        okLayer.confirm("确定要删除吗？", function (index) {
+            okUtils.ajax("{{url('sys/pages/routes/route/')}}/" + id, "DELETE", {
+                id: id,
+                _token: '{{csrf_token()}}'
+            }, true).done(function (response) {
+                //okUtils.tableSuccessMsg(response.msg, {icon: 1, time: 1000});
+                okLayer.msg(response.msg, {icon: 1, time: 1000});
+                $(obj).parents("tr").remove();
+            }).fail(function (error) {
+                console.log(error)
+            });
+        })
     }
 
     // 分类展开收起的分类的逻辑
@@ -197,3 +167,43 @@
 </script>
 </body>
 </html>
+<?php
+function children($li, $i)
+{
+    echo '<tr cate-id=' . $li['id'] . ' fid=' . $li['fatherId'] . '>';
+//    echo '<td><input type="checkbox" name="" lay-skin="primary"></td>';
+//    echo '<td>' . $li['id'] . '</td>';
+    echo '<td>';
+    for ($k = 1; $k <= $i; $k++) {
+        echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+    }
+    if (isset($li['children'])) {
+        echo ' <i class="layui-icon x-show" status="true">&#xe623;</i>' . $li['title'];
+    } else {
+        echo '|-- ' . $li['title'];
+    }
+    echo '</td>';
+    echo '<td>' . getRouteType($li['isOk']) . '</td>';
+    echo '<td>';
+    echo '|';
+    for ($k = 1; $k <= $i; $k++) {
+        echo '--';
+    }
+    echo $li['bySort'];
+    echo ' </td>';
+    echo '<td class="td-manage">';
+    echo '<button class="layui-btn layui-btn layui-btn-xs" onclick="xadmin.open(\'编辑\',\'storeSon/' . $li['id'] . '/edit\')"><i class="layui-icon">&#xe642;</i>编辑</button>';
+    echo '<button class="layui-btn layui-btn-warm layui-btn-xs" onclick="xadmin.open(\'添加子路由\',\'/sys/pages/routes/route/' . $li['id'] . '/\')"><i class="layui-icon">&#xe642;</i>添加子路由</button>';
+    if (isset($li['children']) == false) {
+        echo '<button class="layui-btn-danger layui-btn layui-btn-xs" onclick="del(this,' . $li['id'] . ')" href="javascript:;"><i class="layui-icon">&#xe640;</i>删除</button>';
+    }
+    echo '</td>';
+    echo '</tr>';
+    if (isset($li['children'])) {
+        $j = $i + 1;
+        foreach ($li['children'] as $li2) {
+            children($li2, $j);
+        }
+    }
+}
+?>
