@@ -43,20 +43,18 @@ class AdmUserController extends Controller
                     $query->where('b.mobile', 'like', '%' . $inp['mobile'] . '%');
                 }
                 if (!empty($inp['startTime']) && !empty($inp['endTime'])) {
-                    $query->where('a.created_at', '>=', $inp['startTime'])
-                        ->where('a.created_at', '<=', $inp['endTime']);
+                    $query->where('a.addTime', '>=', $inp['startTime'])
+                        ->where('a.addTime', '<=', $inp['endTime']);
                 } else if (!empty($inp['startTime'])) {
-                    $query->where('a.created_at', '>=', $inp['startTime']);
+                    $query->where('a.addTime', '>=', $inp['startTime']);
                 } else if (!empty($inp['endTime'])) {
-                    $query->where('a.created_at', '<=', $inp['endTime']);
+                    $query->where('a.addTime', '<=', $inp['endTime']);
                 }
             };
-        $data = [];
-//        $db = AdmUser::simplePaginate($request->get('limit'),['id','userName as username','created_at as createTime','updated_at as updateTime'])
-//            ->all();
+
         $db = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
-            ->select('a.id', 'a.userName as username', 'a.isLock as status', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.created_at as createTime', 'a.updated_at as updateTime')
+            ->select('a.id', 'a.userName as username', 'a.isLock as status', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addTime', 'a.upTime')
             ->where('a.isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
@@ -69,6 +67,7 @@ class AdmUserController extends Controller
             ->where('a.isDel', 0)
             ->where($where)
             ->count();
+        $data = [];
         $data['code'] = 0;
         $data['msg'] = '查询用户成功';
         $data['data'] = $db;
@@ -106,6 +105,9 @@ class AdmUserController extends Controller
         $adm['userName'] = $inp['username'];
         $adm['password'] = Hash::make($inp['password']);
         $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
+        $adm['isDel'] = 0;
+        $adm['addId'] = _admId();
+        $adm['addTime'] = getTime(1);
         if ($adm->save()) {
             //创建admInfo信息
             $info = new AdmUserInfo();
@@ -115,6 +117,7 @@ class AdmUserController extends Controller
             $info['mobile'] = $inp['phone'];
             $info['mail'] = $inp['email'];
             $info['birthDate'] = $inp['birthDate'];
+            $info['isDel'] = 0;
             $info->save();
             return getSuccess(1);
         } else {
@@ -168,55 +171,56 @@ class AdmUserController extends Controller
             $adm['password'] = Hash::make($inp['password']);
         }
         $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
+        $adm['upId'] = _admId();
+        $adm['upTime'] = getTime(1);
         $adm->save();
 
         //修改admInfo信息
         $info = AdmUserInfo::where('admId', $adm['code'])
             ->update([
-                'name'=>$inp['name'],
-                'sex'=>$inp['sex'] == 0 ? 0 : 1,
-                'mobile'=> $inp['mobile'],
-                'mail'=>$inp['mail'],
-                'birthDate'=>$inp['birthDate'],
+                'name' => $inp['name'],
+                'sex' => $inp['sex'] == 0 ? 0 : 1,
+                'mobile' => $inp['mobile'],
+                'mail' => $inp['mail'],
+                'birthDate' => $inp['birthDate'],
             ]);
         return getSuccess(1);
     }
 
 
-        /**
-         * Remove the specified resource from storage.
-         *
-         * @param int $id
-         * @return \Illuminate\Http\Response
-         */
-        public
-        function destroy(Request $request)
-        {
-            $inp = $request->all();
-            $db = AdmUser::where('isDel', 0)
-                ->whereIn('id', getInjoin($inp['id']))
-                ->update(['isDel' => 1]);
-            return getSuccess(1);
-            //
-        }
-
-        public
-        function start(Request $request)
-        {
-            $inp = $request->all();
-            $db = AdmUser::where('isLock', 1)
-                ->whereIn('id', getInjoin($inp['id']))
-                ->update(['isLock' => 0]);
-            return getSuccess(1);
-        }
-
-        public
-        function stop(Request $request)
-        {
-            $inp = $request->all();
-            $db = AdmUser::where('isLock', 0)
-                ->whereIn('id', getInjoin($inp['id']))
-                ->update(['isLock' => 1]);
-            return getSuccess(1);
-        }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public
+    function destroy($id)
+    {
+        //
     }
+
+    public function del(Request $request)
+    {
+        //
+        $inp = $request->all();
+        setDel('adm_user', $inp['id']);
+        return getSuccess(1);
+    }
+
+    public
+    function start(Request $request)
+    {
+        $inp = $request->all();
+        setNoLock('adm_user', $inp['id']);
+        return getSuccess(1);
+    }
+
+    public
+    function stop(Request $request)
+    {
+        $inp = $request->all();
+        setLock('adm_user', $inp['id']);
+        return getSuccess(1);
+    }
+}

@@ -30,13 +30,13 @@ class LoginController extends Controller
             'userName' => $inp['data']['username'],
             'isDel' => 0
         ])
-            ->select('id', 'code', 'userName', 'passWord','isLock')
+            ->select('id', 'code', 'userName', 'passWord', 'isLock')
             ->with(['admUserInfo:admId,name'])
             ->first();
         if (!$db_data) {
             return getSuccess('用户名不存在, 再仔细想想?');
         }
-        if ($db_data['isLock']==1) {
+        if ($db_data['isLock'] == 1) {
             return getSuccess('当前账号已被锁定, 请联系系统管理员');
         }
         $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
@@ -92,11 +92,16 @@ class LoginController extends Controller
         $data['code'] = getNewId();
         $data['username'] = $inp['data']['username'];
         $data['password'] = Hash::make($inp['data']['password']);
+        $data['isLock'] = 0;
+        $data['isDel'] = 0;
+        $data['addId'] = '';
+        $data['addTime'] = getTime(1);
         if ($data->save()) {
             //创建admInfo信息
             $info = new AdmUserInfo();
             $info['admId'] = $data['code'];
             $info['name'] = $inp['data']['username'];
+            $info['isDel'] = 0;
             $info->save();
             return getSuccess(1);
         } else {

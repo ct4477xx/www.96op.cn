@@ -46,15 +46,19 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         //账号相关
         Route::group(['prefix' => 'member/'], function () {
             Route::resource('admUser', 'AdmUserController');
-            Route::get('admUserRead', 'AdmUserController@read');//获取列表
-            Route::post('admStart', 'AdmUserController@start');//启用用户
-            Route::post('admStop', 'AdmUserController@stop');//禁止用户
+            Route::get('admUserRead', 'AdmUserController@read');//获取页面数据
+            Route::post('admUserDel', 'AdmUserController@del');//删除用户
+            Route::post('admUserStart', 'AdmUserController@start');//启用用户
+            Route::post('admUserStop', 'AdmUserController@stop');//禁止用户
             //
             //角色列表
             Route::resource('admUserRole', 'AdmUserRoleController');
-            Route::get('admUserRoleRead', 'AdmUserRoleController@read');
-            Route::get('admUserRoleReadEdit', 'AdmUserRoleController@edit');
-//            Route::get('route','AdmUserRoleController@route');
+            Route::get('admUserRoleRead', 'AdmUserRoleController@read');//获取页面数据
+            Route::post('admUserRoleDel', 'AdmUserRoleController@del');//删除用户
+            Route::post('admUserRoleStart', 'AdmUserRoleController@start');//启用用户
+            Route::post('admUserRoleStop', 'AdmUserRoleController@stop');//禁止用户
+            //
+            Route::get('admUserRoleReadEdit', 'AdmUserRoleController@edit');//编辑角色权限页面
             //权限列表
             Route::get('admUserPowerRoute', 'AdmUserPowerController@route');
         });

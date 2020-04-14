@@ -78,8 +78,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="0" title="女">
                 <input type="radio" name="sex" value="1" title="男" checked>
+                <input type="radio" name="sex" value="0" title="女">
             </div>
         </div>
         {{--		<div class="layui-form-item layui-form-text">--}}

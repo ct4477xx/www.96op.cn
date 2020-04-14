@@ -7,6 +7,34 @@ use App\ToolModel\signStreet;
 
 //=================================== 自定义方法类 ===================================
 
+function _admId()
+{//获取当前用户Id
+    return \Cookie::get('admId');
+}
+
+function _admName()
+{//获取当前用户名称
+    return \Cookie::get('admName');
+}
+
+
+function getTime($str)
+{
+    switch ($str) {
+        case 1:
+            $back = new DateTime('now');
+
+            break;
+        case 2:
+            $back = date('Y/m/d');
+            break;
+        default:
+            $back = time();
+            break;
+    }
+    return $back;
+}
+
 //性别   0女 1男
 function getSex($str)
 {
@@ -256,6 +284,35 @@ function signStreet_String($Id)
     }
 }
 
+//伪删除
+function setDel($table, $val)
+{
+    $data = DB::table($table)
+        ->where('isDel', 0)
+        ->whereIn('id', getInjoin($val))
+        ->update(['isDel' => 1, 'delId' => _admId(), 'delTime' => getTime(1)]);
+    return $data;
+}
+
+//锁定
+function setLock($table, $val)
+{
+    $data = DB::table($table)
+        ->where('isLock', 0)
+        ->whereIn('id', getInjoin($val))
+        ->update(['isLock' => 1, 'upId' => _admId(), 'upTime' => getTime(1)]);
+    return $data;
+}
+
+//解锁
+function setNoLock($table, $val)
+{
+    $data = DB::table($table)
+        ->where('isLock', 1)
+        ->whereIn('id', getInjoin($val))
+        ->update(['isLock' => 0, 'upId' => _admId(), 'upTime' => getTime(1)]);
+    return $data;
+}
 
 //=================================== 数据判断操作 ===================================
 function getIsExist($table, $str, $val)

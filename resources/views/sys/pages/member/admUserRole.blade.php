@@ -11,17 +11,27 @@
 <body>
 <div class="ok-body">
     <!--模糊搜索区域-->
-    <div class="layui-row">
-        <form class="layui-form layui-col-md12 ok-search">
-            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime" name="startTime">
-            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime" name="endTime">
-            <input class="layui-input" placeholder="请输入角色名" autocomplete="off" name="name">
-            <button class="layui-btn" lay-submit="" lay-filter="search">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-        </form>
-    </div>
-    <!--数据表格-->
+{{--    <div class="layui-row">--}}
+{{--        <form class="layui-form layui-col-md12 ok-search">--}}
+{{--            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime" name="startTime">--}}
+{{--            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime" name="endTime">--}}
+{{--            <input class="layui-input" placeholder="请输入角色名" autocomplete="off" name="name">--}}
+{{--            <div class="layui-inline">--}}
+{{--                <label class="layui-form-label">请选择状态</label>--}}
+{{--                <div class="layui-input-inline">--}}
+{{--                    <select name="status" lay-verify="">--}}
+{{--                        <option value="" selected>请选择状态</option>--}}
+{{--                        <option value="o">已启用</option>--}}
+{{--                        <option value="n">已停用</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <button class="layui-btn" lay-submit="" lay-filter="search">--}}
+{{--                <i class="layui-icon layui-icon-search"></i>--}}
+{{--            </button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
+<!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
@@ -51,7 +61,7 @@
             size: "sm",
             cols: [[
                 {type: "checkbox"},
-                {field: "id", title: "编号", width: 170, sort: true},
+                {field: "code", title: "编号", width: 170, sort: true},
                 {field: "name", title: "角色名", width: 100},
                 {field: "remarks", title: "备注", width: 100},
                 {field: "addName", title: "创建者", width: 85},
@@ -90,6 +100,12 @@
 
         table.on("toolbar(tableFilter)", function (obj) {
             switch (obj.event) {
+                case "batchEnabled":
+                    batchEnabled();
+                    break;
+                case "batchDisabled":
+                    batchDisabled();
+                    break;
                 case "add":
                     add();
                     break;
@@ -111,18 +127,57 @@
             }
         });
 
+        function batchEnabled() {
+            okLayer.confirm("确定要批量启用吗？", function (index) {
+                layer.close(index);
+                let idsStr = okUtils.tableBatchCheck(table);
+                if (idsStr) {
+                    okUtils.ajax("admUserRoleStart", "post", {
+                        id: idsStr,
+                        _token: '{{csrf_token()}}'
+                    }, true).done(function (response) {
+                        okUtils.tableSuccessMsg(response.msg);
+                    }).fail(function (error) {
+                        console.log(error)
+                    });
+                }
+            });
+        }
+
+        function batchDisabled() {
+            okLayer.confirm("确定要批量停用吗？", function (index) {
+                layer.close(index);
+                let idsStr = okUtils.tableBatchCheck(table);
+                if (idsStr) {
+                    okUtils.ajax("admUserRoleStop", "post", {
+                        id: idsStr,
+                        _token: '{{csrf_token()}}'
+                    }, true).done(function (response) {
+                        okUtils.tableSuccessMsg(response.msg);
+                    }).fail(function (error) {
+                        console.log(error)
+                    });
+                }
+            });
+        }
+
+
         function add() {
             okLayer.open("添加角色", "admUserRole/create", "90%", "90%", null, function () {
                 roleTable.reload();
             })
         }
 
+
         function batchDel() {
             okLayer.confirm("确定要批量删除吗？", function (index) {
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("/role/deleteRole", "delete", {idsStr: idsStr}, true).done(function (response) {
+                    okUtils.ajax("admUserRoleDel", "post", {
+                        id: idsStr,
+                        _token: '{{csrf_token()}}'
+                    }, true).done(function (response) {
                         okUtils.tableSuccessMsg(response.msg);
                     }).fail(function (error) {
                         console.log(error)
@@ -132,14 +187,18 @@
         }
 
         function edit(id) {
-            okLayer.open("编辑角色", "role-edit.html?id=" + id, "90%", "90%", null, function () {
+            okLayer.open("编辑角色", "admUserRole/" + id + "/edit", "90%", "90%", null, function () {
                 roleTable.reload();
             })
         }
 
         function del(id) {
             okLayer.confirm("确定要删除吗？", function () {
-                okUtils.ajax("/role/deleteRole", "delete", {idsStr: id}, true).done(function (response) {
+                okUtils.ajax("admUserRoleDel", "post", {
+                    id: id,
+                    _token: '{{csrf_token()}}'
+                }, true).done(function (response) {
+                    console.log(response);
                     okUtils.tableSuccessMsg(response.msg);
                 }).fail(function (error) {
                     console.log(error)

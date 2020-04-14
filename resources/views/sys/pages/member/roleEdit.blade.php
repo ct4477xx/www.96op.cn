@@ -15,14 +15,14 @@
             <label class="layui-form-label">角色名</label>
             <div class="layui-input-block">
                 <input type="text" name="name" placeholder="请输入角色名" autocomplete="off" class="layui-input"
-                       lay-verify="required">
+                       lay-verify="required" value="{!! $db['name'] ??'' !!}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
                 <input type="text" name="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input"
-                       lay-verify="required">
+                       lay-verify="" value="{!! $db['remarks']??'' !!}">
             </div>
         </div>
         <div class="layui-form-item">
@@ -37,6 +37,8 @@
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
+        <input type="hidden" name='id' value="{!! $db['id']??'' !!}">
+        {{csrf_field()}}
     </form>
 </div>
 <!--js逻辑-->
@@ -48,7 +50,7 @@
         let okUtils = layui.okUtils;
         okLoading.close();
 
-        let data=[{!! $data !!}]
+        let data = [{!! $data !!}]
         //console.log(data);
 
         tree.render({
@@ -61,9 +63,9 @@
             // TODO 权限节点校验
 
             // 请求后台
-            okUtils.ajax("/role/addRole", "post", data.field, true).done(function (response) {
+            okUtils.ajax("/sys/pages/member/admUserRole", "post", data.field, true).done(function (response) {
                 console.log(response);
-                okLayer.greenTickMsg("添加成功", function () {
+                okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                 });
             }).fail(function (error) {

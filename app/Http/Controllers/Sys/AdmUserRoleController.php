@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
 use App\SysModel\AdmUserRole;
-use App\SysModel\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdmUserRoleController extends Controller
 {
@@ -26,50 +26,36 @@ class AdmUserRoleController extends Controller
         $where =
             function ($query) use ($inp) {
                 if (!empty($inp['status'])) {
-                    $query->where('a.isLock', $inp['status'] == "n" ? 1 : 0);
-                }
-                if (!empty($inp['username'])) {
-                    $query->where('a.username', $inp['username']);
+                    $query->where('isLock', $inp['status'] == "n" ? 1 : 0);
                 }
                 if (!empty($inp['name'])) {
-                    $query->where('b.name', 'like', '%' . $inp['name'] . '%');
-                }
-                if (!empty($inp['email'])) {
-                    $query->where('b.mail', 'like', '%' . $inp['email'] . '%');
-                }
-                if (!empty($inp['mobile'])) {
-                    $query->where('b.mobile', 'like', '%' . $inp['mobile'] . '%');
+                    $query->where('name', 'like', '%' . $inp['name'] . '%');
                 }
                 if (!empty($inp['startTime']) && !empty($inp['endTime'])) {
-                    $query->where('a.created_at', '>=', $inp['startTime'])
-                        ->where('a.created_at', '<=', $inp['endTime']);
+                    $query->where('addTime', '>=', $inp['startTime'])
+                        ->where('addTime', '<=', $inp['endTime']);
                 } else if (!empty($inp['startTime'])) {
-                    $query->where('a.created_at', '>=', $inp['startTime']);
+                    $query->where('addTime', '>=', $inp['startTime']);
                 } else if (!empty($inp['endTime'])) {
-                    $query->where('a.created_at', '<=', $inp['endTime']);
+                    $query->where('addTime', '<=', $inp['endTime']);
                 }
             };
-        $data = [];
-        $db = AdmUserRole::simplePaginate($request->get('limit'), ['id', 'code', 'name', 'remarks', 'addId', 'addTime', 'upId', 'upTime'])
+
+        $db = DB::table('adm_role')
+            ->select('id', 'code', 'name', 'remarks', 'isLock', 'addId', 'addTime', 'upId', 'upTime')
             ->where('isDel', 0)
-//            ->where($where)
+            ->where($where)
+            ->paginate($inp['limit'])
             ->all();
 
-
-//
-//        $db = DB::table('adm_User as a')
-//            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
-//            ->select('a.id', 'a.userName as username', 'a.isLock as status', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.created_at as createTime', 'a.updated_at as updateTime')
-//            ->where('a.isDel', 0)
-//            ->where($where)
-//            ->paginate($inp['limit'])
-//            ->all();
-//        //
-//        //总记录
-        $total = AdmUserRole::simplePaginate($request->get('limit'), ['id'])
+        //
+        //总记录
+        $total = DB::table('adm_role')
+            ->select(1)
             ->where('isDel', 0)
-//            ->where($where)
+            ->where($where)
             ->count();
+        $data = [];
         $data['code'] = 0;
         $data['msg'] = '查询用户成功';
         $data['data'] = $db;
@@ -101,6 +87,28 @@ class AdmUserRoleController extends Controller
     public function store(Request $request)
     {
         //
+        $inp = $request->all();
+        //
+        if ($inp['id'] == '') {
+            $db = new AdmUserRole();
+            $db['code'] = getNewId();
+            $db['isLock'] = 0;
+            $db['isDel'] = 0;
+            $db['addId'] = _admId();
+            $db['addTime'] = getTime(1);
+        } else {
+            $db = AdmUserRole::find($inp['id']);
+            $db['upId'] = _admId();
+            $db['upTime'] = getTime(1);
+        }
+        $db['name'] = $inp['name'];
+        $db['remarks'] = $inp['remarks'];
+
+        if ($db->save()) {
+            return getSuccess(1);
+        } else {
+            return getSuccess(2);
+        }
     }
 
     /**
@@ -123,6 +131,14 @@ class AdmUserRoleController extends Controller
     public function edit($id)
     {
         //
+
+        $db = AdmUserRole::find($id);
+        $list = [];
+        $list["title"] = "根目录";
+        $list["spread"] = true;
+        $list["children"] = getRoute(2);
+
+        return view('.sys.pages.member.roleEdit', ['data' => json_encode($list), 'db' => $db]);
     }
 
     /**
@@ -145,6 +161,30 @@ class AdmUserRoleController extends Controller
      */
     public function destroy($id)
     {
+
+    }
+
+    public function del(Request $request)
+    {
         //
+        $inp = $request->all();
+        setDel('adm_role', $inp['id']);
+        return getSuccess(1);
+    }
+
+    public
+    function start(Request $request)
+    {
+        $inp = $request->all();
+        setNoLock('adm_role', $inp['id']);
+        return getSuccess(1);
+    }
+
+    public
+    function stop(Request $request)
+    {
+        $inp = $request->all();
+        setLock('adm_role', $inp['id']);
+        return getSuccess(1);
     }
 }

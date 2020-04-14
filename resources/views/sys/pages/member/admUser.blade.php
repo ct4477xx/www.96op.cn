@@ -145,8 +145,8 @@
                             }
                         }
                     },
-                    {field: "createTime", title: "创建时间", width: 150},
-                    {field: "updateTime", title: "更新时间", width: 150},
+                    {field: "addTime", title: "创建时间", width: 150},
+                    {field: "upTime", title: "更新时间", width: 150},
                     {
                         title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
                             return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +
@@ -200,7 +200,7 @@
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("admStart", "post", {
+                    okUtils.ajax("admUserStart", "post", {
                         id: idsStr,
                         _token: '{{csrf_token()}}'
                     }, true).done(function (response) {
@@ -217,7 +217,7 @@
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("admStop", "post", {
+                    okUtils.ajax("admUserStop", "post", {
                         id: idsStr,
                         _token: '{{csrf_token()}}'
                     }, true).done(function (response) {
@@ -234,7 +234,7 @@
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
                 if (idsStr) {
-                    okUtils.ajax("admUser/destroy", "delete", {
+                    okUtils.ajax("admUserDel", "post", {
                         id: idsStr,
                         _token: '{{csrf_token()}}'
                     }, true).done(function (response) {
@@ -263,7 +263,7 @@
 
         function del(id) {
             okLayer.confirm("确定要删除吗？", function () {
-                okUtils.ajax("admUser/destroy", "delete", {
+                okUtils.ajax("admUserDel", "post", {
                     id: id,
                     _token: '{{csrf_token()}}'
                 }, true).done(function (response) {
