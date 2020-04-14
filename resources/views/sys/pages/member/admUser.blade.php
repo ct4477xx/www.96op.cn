@@ -98,7 +98,7 @@
         okLoading.close($);
         let userTable = table.render({
             elem: '#tableId',
-            url: '/sys/pages/member/read',
+            url: '/sys/pages/member/admUserRead',
             limit: '{!! pages()['limit'] !!}',
             limits: [{!! pages()['limits'] !!}],
             page: true,
@@ -119,9 +119,9 @@
                     {
                         field: "sex", title: "性别", width: 60, templet: function (d) {
                             if (d.sex == '1') {
-                                return '<span class="layui-btn layui-btn-normal layui-btn-xs">男</span>'
+                                return '{!! getSex(1) !!}'
                             } else {
-                                return '<span class="layui-btn layui-btn-warm layui-btn-xs">女</span>'
+                                return '{!! getSex(0) !!}'
                             }
                         }
                     },

@@ -7,6 +7,28 @@ use App\ToolModel\signStreet;
 
 //=================================== 自定义方法类 ===================================
 
+//性别   0女 1男
+function getSex($str)
+{
+    if ($str == 1) {
+        return '<span class="layui-btn layui-btn-normal layui-btn-xs">男</span>';
+    } else {
+        return '<span class="layui-btn layui-btn-warm layui-btn-xs">女</span>';
+    }
+}
+
+
+//状态   0正常 1锁定
+function getIsLock($str)
+{
+    if ($str == 0) {
+        return '<span class="layui-btn layui-btn-normal layui-btn-xs">启用</span>';
+    } else {
+        return '<span class="layui-btn layui-btn-warm layui-btn-xs">停用</span>';
+    }
+}
+
+
 //输入以逗号分隔的字符串,生成带单引号的数组
 function getInjoin($str)
 {
@@ -118,8 +140,11 @@ function getRouteType($str)
         case 0:
             return '<fount class="layui-btn layui-btn layui-btn-xs">页面</fount>';
             break;
-        case 1:
+        case 4:
             return '<fount class="layui-btn layui-btn-normal layui-btn-xs">按钮</fount>';
+            break;
+        case 8:
+            return '<fount class="layui-btn layui-btn-warm layui-btn-xs">数据</fount>';
             break;
         default:
             break;
@@ -129,33 +154,25 @@ function getRouteType($str)
 //=================================== 数据库操作类 ===================================
 
 //通过无限极获取菜单
-function getMenu()
+function getRoute($s)
 {
-    $data = Route::where(['isDel' => 0, 'isOk' => 0])
-        ->orderBy('fatherId', 'asc')
-        ->orderBy('isOk', 'desc')
-        ->orderBy('bySort', 'desc')
-        ->get()
-        ->toArray();
-    $items = [];
-    foreach ($data as $value) {
-        $items[$value['id']] = $value;
+    $s ?? 0;
+    if ($s == 0) {//获取所有未被删除的路由
+        $select = '*';
+        $where = [];
     }
-    $tree = [];
-    foreach ($items as $k => $v) {
-        if (isset($items[$v['fatherId']])) {
-            $items[$v['fatherId']]['children'][] = &$items[$k];
-        } else {
-            $tree[] = &$items[$k];
-        }
+    if ($s == 1) {//获取所有未被删除且为页面的路由
+        $select = '*';
+        $where = ['isOk' => 0];
     }
-    return $tree;
-}
+    if ($s == 2) {//获取所有路由树
+        $select = getInjoin('id,fatherId,title,spread');
+        $where = [];
+    }
 
-//通过无限极获取路由
-function getRoute()
-{
     $data = Route::where(['isDel' => 0])
+        ->where($where)
+        ->select($select)
         ->orderBy('fatherId', 'asc')
         ->orderBy('isOk', 'desc')
         ->orderBy('bySort', 'desc')

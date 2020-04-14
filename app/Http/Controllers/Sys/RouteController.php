@@ -22,7 +22,7 @@ class RouteController extends Controller
 //            //->with(['children:id,fatherId,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
-        return view('sys.pages.routes.route', ['data' => getRoute()]);
+        return view('sys.pages.routes.route', ['data' => getRoute(0)]);
     }
 
     /**
@@ -158,7 +158,7 @@ class RouteController extends Controller
         }
     }
 
-    public function storeSonEdit($id)
+    public function routeSonEdit($id)
     {
         $db = Route::find($id);
 //        return $db;

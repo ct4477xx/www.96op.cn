@@ -12,26 +12,27 @@
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form">
         <div class="layui-form-item">
-            <label class="layui-form-label">子项路由名称</label>
+            <label class="layui-form-label">子名称</label>
             <div class="layui-input-block">
                 <input type="text" name="title" placeholder="请输入子项路由名称" autocomplete="off" class="layui-input"
                        lay-verify="required" value="{{$title ?? ''}}">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">子项路由地址</label>
+            <label class="layui-form-label">子地址</label>
             <div class="layui-input-block">
                 <input type="text" name="href" placeholder="请输入子项路由地址" autocomplete="off" class="layui-input"
                        lay-verify="required" value="{{$href ?? "/"}}">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">作用</label>
+            <label class="layui-form-label">类型</label>
             <div class="layui-input-block">
                 <select name="isOk" lay-verify="required">
                     <option value=""></option>
+                    <option value="8" {{$isOk==8 ? 'selected':''}}>数据</option>
+                    <option value="4" {{$isOk==4 ? 'selected':''}}>按钮</option>
                     <option value="0" {{$isOk==0 ? 'selected':''}}>页面</option>
-                    <option value="1" {{$isOk==1 ? 'selected':''}}>按钮</option>
                 </select>
             </div>
         </div>

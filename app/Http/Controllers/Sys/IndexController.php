@@ -7,7 +7,6 @@ use App\SysModel\AdmUser;
 use App\SysModel\AdmUserInfo;
 use App\SysModel\Menu;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class IndexController extends Controller
@@ -111,6 +110,7 @@ class IndexController extends Controller
 //            ->with(['children:id,fatherId,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
-        return getMenu();
+        return getRoute(1);
     }
+
 }

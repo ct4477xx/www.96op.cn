@@ -45,13 +45,18 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         //
         //账号相关
         Route::group(['prefix' => 'member/'], function () {
-            Route::resource('admUser','AdmUserController');
-            Route::get('read','AdmUserController@read');//获取列表
-            Route::post('admStart','AdmUserController@start');//启用用户
-            Route::post('admStop','AdmUserController@stop');//禁止用户
+            Route::resource('admUser', 'AdmUserController');
+            Route::get('admUserRead', 'AdmUserController@read');//获取列表
+            Route::post('admStart', 'AdmUserController@start');//启用用户
+            Route::post('admStop', 'AdmUserController@stop');//禁止用户
             //
-            Route::resource('admUserRole','AdmUserRoleController');
-            Route::resource('admUserPower','AdmUserPowerController');
+            //角色列表
+            Route::resource('admUserRole', 'AdmUserRoleController');
+            Route::get('admUserRoleRead', 'AdmUserRoleController@read');
+            Route::get('admUserRoleReadEdit', 'AdmUserRoleController@edit');
+//            Route::get('route','AdmUserRoleController@route');
+            //权限列表
+            Route::get('admUserPowerRoute', 'AdmUserPowerController@route');
         });
         //房屋管理
         Route::group(['prefix' => 'house/'], function () {
@@ -67,8 +72,8 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
         //路由管理
         Route::group(['prefix' => 'routes/'], function () {
             Route::resource('route', 'RouteController');
-            Route::post('storeSon','RouteController@storeSon');
-            Route::get('storeSon/{id}/edit','RouteController@storeSonEdit');
+            Route::post('storeSon', 'RouteController@storeSon');
+            Route::get('routeSon/{id}/edit', 'RouteController@routeSonEdit');
         });
     });
 });
@@ -87,6 +92,6 @@ Route::group(['namespace' => 'Tool'], function () {
 //小区出入签到系统
     Route::resource('csign', 'CsignController');
 });
-Event::listen('illuminate.query', function($sql,$param) {
-    file_put_contents(public_path().'/sql.log',$sql.'['.print_r($param, 1).']'."\r\n",8);
+Event::listen('illuminate.query', function ($sql, $param) {
+    file_put_contents(public_path() . '/sql.log', $sql . '[' . print_r($param, 1) . ']' . "\r\n", 8);
 });

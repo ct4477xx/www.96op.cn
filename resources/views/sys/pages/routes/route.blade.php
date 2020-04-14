@@ -37,7 +37,7 @@
                         <tr>
                             {{--                            <th width="70">ID</th>--}}
                             <th>路由名称</th>
-                            <th>作用</th>
+                            <th>类型</th>
                             <th>排序</th>
                             <th width="250">操作</th>
                         </thead>
@@ -123,8 +123,7 @@
                 id: id,
                 _token: '{{csrf_token()}}'
             }, true).done(function (response) {
-                //okUtils.tableSuccessMsg(response.msg, {icon: 1, time: 1000});
-                okLayer.msg(response.msg, {icon: 1, time: 1000});
+                layer.msg(response.msg, {icon: 1, time: 1000});
                 $(obj).parents("tr").remove();
             }).fail(function (error) {
                 console.log(error)
@@ -192,7 +191,7 @@ function children($li, $i)
     echo $li['bySort'];
     echo ' </td>';
     echo '<td class="td-manage">';
-    echo '<button class="layui-btn layui-btn layui-btn-xs" onclick="xadmin.open(\'编辑\',\'storeSon/' . $li['id'] . '/edit\')"><i class="layui-icon">&#xe642;</i>编辑</button>';
+    echo '<button class="layui-btn layui-btn layui-btn-xs" onclick="xadmin.open(\'编辑\',\'routeSon/' . $li['id'] . '/edit\')"><i class="layui-icon">&#xe642;</i>编辑</button>';
     echo '<button class="layui-btn layui-btn-warm layui-btn-xs" onclick="xadmin.open(\'添加子路由\',\'/sys/pages/routes/route/' . $li['id'] . '/\')"><i class="layui-icon">&#xe642;</i>添加子路由</button>';
     if (isset($li['children']) == false) {
         echo '<button class="layui-btn-danger layui-btn layui-btn-xs" onclick="del(this,' . $li['id'] . ')" href="javascript:;"><i class="layui-icon">&#xe640;</i>删除</button>';
