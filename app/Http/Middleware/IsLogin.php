@@ -15,7 +15,7 @@ class IsLogin
      */
     public function handle($request, Closure $next)
     {
-        if (\Session()->get('admId')) {
+        if (\Cookie::get('admCode')) {
             return $next($request);
         } else {
             return redirect('sys/login');

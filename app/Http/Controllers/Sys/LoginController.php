@@ -14,7 +14,7 @@ class LoginController extends Controller
     //
     function index()
     {
-        if (\Session()->get('admId')) {
+        if (\Cookie::get('admCode')) {
             return view('.sys.index');
         } else {
             return view('.sys.login');
@@ -31,7 +31,7 @@ class LoginController extends Controller
             'isDel' => 0
         ])
             ->select('id', 'code', 'userName', 'passWord', 'isLock')
-            ->with(['admUserInfo:admId,name'])
+            ->with(['admUserInfo:admCode,name'])
             ->first();
         if (!$db_data) {
             return getSuccess('用户名不存在, 再仔细想想?');
@@ -42,9 +42,10 @@ class LoginController extends Controller
         $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
         if ($is_Pwd == 'true') {
             $time = 1 * 60 * 12;//缓存时间
-            \Session()->put('admId', $db_data['code']);
-            \Cookie::queue('admId', $db_data['code'], $time);
-            \Cookie::queue('admName', $db_data['admUserInfo']['name'] ? $db_data['admUserInfo']['name'] : $db_data['code'], $time);
+            //\Session()->put('admId', $db_data['code']);
+            \Cookie::queue('admId', $db_data['id'], $time);
+            $name = $db_data['admUserInfo']['name'];
+            \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
             $data = [
@@ -65,7 +66,7 @@ class LoginController extends Controller
 
     function logout()
     {
-        \Session()->forget('admId');
+        //\Session()->forget('admId');
         \Cookie::queue('admId', null, -1);
         \Cookie::queue('admName', null, -1);
         \Cookie::queue('admCode', null, -1);
@@ -92,16 +93,15 @@ class LoginController extends Controller
         $data['code'] = getNewId();
         $data['username'] = $inp['data']['username'];
         $data['password'] = Hash::make($inp['data']['password']);
-        $data['isLock'] = 0;
+        $data['isLock'] = 1;
         $data['isDel'] = 0;
-        $data['addId'] = '';
+        $data['addCode'] = '';
         $data['addTime'] = getTime(1);
         if ($data->save()) {
-            //创建admInfo信息
+            //用户注册后自动生成关联信息表
             $info = new AdmUserInfo();
-            $info['admId'] = $data['code'];
-            $info['name'] = $inp['data']['username'];
-            $info['isDel'] = 0;
+            $info['admCode'] = $data['code'];
+            $info['name'] = $data['code'];
             $info->save();
             return getSuccess(1);
         } else {

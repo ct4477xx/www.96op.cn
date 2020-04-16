@@ -61,14 +61,14 @@
             size: "sm",
             cols: [[
                 {type: "checkbox"},
-                {field: "code", title: "编号", width: 170, sort: true},
+                {field: "code", title: "编号", width: 100},
                 {field: "name", title: "角色名", width: 100},
                 {field: "remarks", title: "备注", width: 180},
-                {field: "isLock", title: "状态", width: 85},
+                {field: "isLock", title: "状态", width: 85, sort: true},
                 {field: "addName", title: "创建者", width: 90},
-                {field: "addTime", title: "创建时间", width: 145},
+                {field: "addTime", title: "创建时间", width: 145, sort: true},
                 {field: "upName", title: "最后修改人", width: 90},
-                {field: "upTime", title: "修改时间", width: 145},
+                {field: "upTime", title: "修改时间", width: 145, sort: true},
                 {
                     title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
                         return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +

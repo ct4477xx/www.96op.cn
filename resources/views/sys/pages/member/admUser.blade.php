@@ -28,9 +28,9 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">账号</label>
+                    <label class="layui-form-label">用户名</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" placeholder="账号" autocomplete="off" name="username">
+                        <input type="text" class="layui-input" placeholder="用户名" autocomplete="off" name="username">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -114,7 +114,7 @@
             cols:
                 [[
                     {type: "checkbox", fixed: "left"},
-                    {field: "id", title: "ID", width: 70, sort: true},
+                    {field: "code", title: "编号", width: 100},
                     {field: "username", title: "用户名", width: 120},
                     {field: "name", title: "姓名", width: 100},
                     {field: "birthDate", title: "出生日期", width: 100, sort: true},
@@ -122,11 +122,11 @@
                     {field: "mail", title: "邮箱", width: 150},
                     {field: "mobile", title: "手机号码", width: 120},
                     {field: "role", title: "角色", width: 100},
-                    {field: "isLock", title: "状态", width: 85},
+                    {field: "isLock", title: "状态", width: 85, sort: true},
                     {field: "addName", title: "创建者", width: 90},
-                    {field: "addTime", title: "创建时间", width: 145},
+                    {field: "addTime", title: "创建时间", width: 145, sort: true},
                     {field: "upName", title: "最后修改人", width: 90},
-                    {field: "upTime", title: "修改时间", width: 145},
+                    {field: "upTime", title: "修改时间", width: 145, sort: true},
                     {
                         title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
                             return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +

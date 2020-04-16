@@ -50,6 +50,8 @@ class RouteController extends Controller
         }
         $db = new Route();
         $db['title'] = $inp['routeTitle'];
+        $db['fontFamily'] = 'layui-icon';
+        $db['icon'] = '&#xe602;';
         $db['bySort'] = 0;
         $db['fatherId'] = 0;
         if ($db->save()) {

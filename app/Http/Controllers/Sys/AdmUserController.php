@@ -55,17 +55,19 @@ class AdmUserController extends Controller
                 }
             };
         $db = DB::table('adm_User as a')
-            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
+            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admCode')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
-            ->select('a.id', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addId', 'a.addTime', 'a.upId', 'a.upTime', 'c.roleId')
+            ->select('a.id','a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
             ->where('a.isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
             ->all();
+
         $dbData = [];
         foreach ($db as $k => $v) {
             $dbData[] = [
                 'id' => $v->id,
+                'code' => $v->code,
                 'username' => $v->username,
                 'isLock' => getIsLock($v->isLock),
                 'sex' => getSex($v->sex),
@@ -74,16 +76,17 @@ class AdmUserController extends Controller
                 'mobile' => $v->mobile,
                 'role' => getRoleName($v->roleId),
                 'mail' => $v->mail,
-                'addName' => getAdmName($v->addId),
+                'addName' => getAdmName($v->addCode),
                 'addTime' => $v->addTime,
-                'upName' => getAdmName($v->upId),
+                'upName' => getAdmName($v->upCode),
                 'upTime' => $v->upTime,
             ];
         }
+
         //
         //总记录
         $total = DB::table('adm_User as a')
-            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
+            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admCode')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
             ->select('1')
             ->where('a.isDel', 0)
@@ -128,12 +131,12 @@ class AdmUserController extends Controller
         $adm['password'] = Hash::make($inp['password']);
         $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
         $adm['isDel'] = 0;
-        $adm['addId'] = _admId();
+        $adm['addCode'] = _admCode();
         $adm['addTime'] = getTime(1);
         if ($adm->save()) {
             //创建admInfo信息
             $info = new AdmUserInfo();
-            $info['admId'] = $adm['code'];
+            $info['admCode'] = $adm['code'];
             $info['name'] = $inp['name'];
             $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
             $info['mobile'] = $inp['phone'];
@@ -174,12 +177,12 @@ class AdmUserController extends Controller
         //
         $db = AdmUser::where('id', $id)
             ->select('id', 'code', 'userName', 'isLock')
-            ->with('admUserInfo:admId,name,sex,birthDate,mobile,mail')
+            ->with('admUserInfo:admCode,name,sex,birthDate,mobile,mail')
             ->get();
 
         $role = DB::table('adm_user_role')->where('uid', $id)->select('roleId')->get();
         $result = json_decode($role, true);
-        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'roleId' => $result[0]['roleId']]);
+        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'roleId' => $result[0]['roleId'] ?? []]);
     }
 
     /**
@@ -198,20 +201,33 @@ class AdmUserController extends Controller
         if ($inp['password']) {
             $adm['password'] = Hash::make($inp['password']);
         }
-       // $adm['isLock'] = empty($inp['isLocks']) ? 1 : 0;
-        $adm['upId'] = _admId();
+        // $adm['isLock'] = empty($inp['isLocks']) ? 1 : 0;
+        $adm['upCode'] = _admCode();
         $adm['upTime'] = getTime(1);
         $adm->save();
 
-        //修改admInfo信息
-        $info = AdmUserInfo::where('admId', $adm['code'])
-            ->update([
-                'name' => $inp['name'],
-                'sex' => $inp['sex'] == 0 ? 0 : 1,
-                'mobile' => $inp['mobile'],
-                'mail' => $inp['mail'],
-                'birthDate' => $inp['birthDate'],
-            ]);
+
+        //在没有找到用户资料时,创建用户资料
+        if (getIsExist('adm_userinfo', 'admCode', \Cookie::get('admCode')) == 0) {
+            $info = new AdmUserInfo();
+            $info['admCode'] = $adm['code'];
+            $info['name'] = $inp['name'];
+            $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
+            $info['mobile'] = $inp['mobile'];
+            $info['mail'] = $inp['mail'];
+            $info['birthDate'] = $inp['birthDate'];
+            $info->save();
+        } else {
+            //修改admInfo信息
+            $info = AdmUserInfo::where('admCode', $adm['code'])
+                ->update([
+                    'name' => $inp['name'],
+                    'sex' => $inp['sex'] == 0 ? 0 : 1,
+                    'mobile' => $inp['mobile'],
+                    'mail' => $inp['mail'],
+                    'birthDate' => $inp['birthDate'],
+                ]);
+        }
         //保存角色
         if ($inp['roleId']) {
             DB::table('adm_user_role')->where('uid', $adm['id'])->delete();

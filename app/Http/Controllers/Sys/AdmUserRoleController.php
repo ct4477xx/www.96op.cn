@@ -42,7 +42,7 @@ class AdmUserRoleController extends Controller
             };
 
         $db = DB::table('adm_role')
-            ->select('id', 'code', 'name', 'remarks', 'isLock', 'addId', 'addTime', 'upId', 'upTime')
+            ->select('id', 'code', 'name', 'remarks', 'isLock', 'addCode', 'addTime', 'upCode', 'upTime')
             ->where('isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
@@ -57,9 +57,9 @@ class AdmUserRoleController extends Controller
                 'name' => $v->name,
                 'remarks' => $v->remarks,
                 'isLock' => getIsLock($v->isLock),
-                'addName' => getAdmName($v->addId),
+                'addName' => getAdmName($v->addCode),
                 'addTime' => $v->addTime,
-                'upName' => getAdmName($v->upId),
+                'upName' => getAdmName($v->upCode),
                 'upTime' => $v->upTime,
             ];
         }
@@ -111,7 +111,7 @@ class AdmUserRoleController extends Controller
         $db['code'] = getNewId();
         $db['isLock'] = 0;
         $db['isDel'] = 0;
-        $db['addId'] = _admId();
+        $db['addCode'] = _admCode();
         $db['addTime'] = getTime(1);
         $db['name'] = $inp['name'];
         $db['remarks'] = $inp['remarks'];
@@ -177,7 +177,7 @@ class AdmUserRoleController extends Controller
         DB::table('adm_role_route')->where('roleId', $id)->delete();
         //
         $db = AdmUserRole::find($id);
-        $db['upId'] = _admId();
+        $db['upCode'] = _admCode();
         $db['upTime'] = getTime(1);
         $db['name'] = $inp['name'];
         $db['remarks'] = $inp['remarks'];

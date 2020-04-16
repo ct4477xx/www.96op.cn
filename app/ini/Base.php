@@ -14,6 +14,12 @@ function _admId()
     return \Cookie::get('admId');
 }
 
+function _admCode()
+{//获取当前用户Id
+    return \Cookie::get('admCode');
+}
+
+
 function _admName()
 {//获取当前用户名称
     return \Cookie::get('admName');
@@ -21,7 +27,7 @@ function _admName()
 
 function getAdmName($code)
 {
-    $db =AdmUserInfo::where('admId',$code)->select('name')->first();
+    $db = AdmUserInfo::where('admCode',$code)->select('name')->first();
     return $db['name'];
 }
 
@@ -344,7 +350,7 @@ function setDel($table, $val)
     $data = DB::table($table)
         ->where('isDel', 0)
         ->whereIn('id', getInjoin($val))
-        ->update(['isDel' => 1, 'delId' => _admId(), 'delTime' => getTime(1)]);
+        ->update(['isDel' => 1, 'delCode' => _admCode(), 'delTime' => getTime(1)]);
     return $data;
 }
 
@@ -354,7 +360,7 @@ function setLock($table, $val)
     $data = DB::table($table)
         ->where('isLock', 0)
         ->whereIn('id', getInjoin($val))
-        ->update(['isLock' => 1, 'upId' => _admId(), 'upTime' => getTime(1)]);
+        ->update(['isLock' => 1, 'upCode' => _admCode(), 'upTime' => getTime(1)]);
     return $data;
 }
 
@@ -364,7 +370,7 @@ function setNoLock($table, $val)
     $data = DB::table($table)
         ->where('isLock', 1)
         ->whereIn('id', getInjoin($val))
-        ->update(['isLock' => 0, 'upId' => _admId(), 'upTime' => getTime(1)]);
+        ->update(['isLock' => 0, 'upCode' => _admCode(), 'upTime' => getTime(1)]);
     return $data;
 }
 

@@ -35,13 +35,13 @@ class IndexController extends Controller
     {
         //个人用户信息
         //在没有找到用户资料时,创建用户资料
-        if (getIsExist('adm_userinfo', 'admId', \Cookie::get('admId')) == 0) {
+        if (getIsExist('adm_userinfo', 'admCode', \Cookie::get('admCode')) == 0) {
             $info = new AdmUserInfo();
-            $info['admId'] = \Cookie::get('admId');
-            $info['name'] = \Cookie::get('admCode');
+            $info['admCode'] = \Cookie::get('admCode');
+            $info['name'] = \Cookie::get('admName');
             $info->save();
         }
-        $db = AdmUserInfo::where('admId', \Cookie::get('admId'))
+        $db = AdmUserInfo::where('admCode', \Cookie::get('admCode'))
             ->first();
         return view('sys.pages.member.userInfo', $db);
     }
@@ -50,7 +50,7 @@ class IndexController extends Controller
     {
         //执行更新
         $inp = $request->all();
-        $db = AdmUserInfo::where('admId', \Cookie::get('admId'))
+        $info = $db = AdmUserInfo::where('admCode', _admCode())
             ->update(
                 [
                     'name' => $inp['data']['name'],
@@ -60,9 +60,12 @@ class IndexController extends Controller
                     'mail' => $inp['data']['mail']
                 ]
             );
-        if ($db) {
+
+        $bool = AdmUser::where('code', _admCode())->update(['upCode' => _admCode(), 'upTime' => getTime(1)]);
+        if ($info || $bool) {
             $time = 1 * 60 * 12;//缓存时间
             \Cookie::queue('admName', $inp['data']['name'], $time);
+
             return getSuccess(1);
         } else {
             return getSuccess(2);
@@ -80,14 +83,14 @@ class IndexController extends Controller
         //执行更新
         $inp = $request->all();
         //查找用户
-        $db = AdmUser::where('code', \Cookie::get('admId'))
+        $db = AdmUser::where('code', \Cookie::get('admCode'))
             ->select(['password'])
             ->first();
         $is_Pwd = json_encode(Hash::check($inp['data']['oldPwd'], $db['password']));
         if ($is_Pwd == 'false') {
             return getSuccess('旧密码错误，请重新输入！');
         }
-        $data = AdmUser::where('code', \Cookie::get('admId'))
+        $data = AdmUser::where('code', \Cookie::get('admCode'))
             ->update(['password' => Hash::make($inp['data']['password'])]);
         if ($data) {
             return getSuccess(1);
