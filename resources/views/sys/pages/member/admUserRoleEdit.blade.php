@@ -28,16 +28,15 @@
         <div class="layui-form-item">
             <label class="layui-form-label">权限</label>
             <div class="layui-input-block">
-                <div id="permissionTree" name="permissionTree"></div>
+                <div id="permissionTree"></div>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                <button class="layui-btn" lay-submit lay-filter="edit">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
-        <input type="hidden" name='id' value="{!! $db['id']??'' !!}">
         {{csrf_field()}}
     </form>
 </div>
@@ -48,22 +47,23 @@
         let tree = layui.tree;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
-        okLoading.close();
 
         let data = [{!! $data !!}]
-        //console.log(data);
-
         tree.render({
             elem: "#permissionTree",
             data: data,
-            showCheckbox: true
+            id: 'permissionTreeId',
+            showCheckbox: true,
+            showLine: true //是否开启连接线
+
         });
+        tree.setChecked('permissionTreeId', {!! $role !!});
+        okLoading.close();
 
-        form.on("submit(add)", function (data) {
+        form.on("submit(edit)", function (data) {
             // TODO 权限节点校验
-
             // 请求后台
-            okUtils.ajax("/sys/pages/member/admUserRole", "post", data.field, true).done(function (response) {
+            okUtils.ajax("/sys/pages/member/admUserRole/{{$db['id']}}", "put", data.field, true).done(function (response) {
                 console.log(response);
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));

@@ -14,29 +14,29 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">
-                <input type="text" placeholder="{{$userName}}" autocomplete="off" class="layui-input"
-                       value="{{$userName}}" disabled>
+                <input type="text" placeholder="{{$db['userName']}}" autocomplete="off" class="layui-input"
+                       value="{{$db['userName']}}" disabled>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-block">
                 <input type="text" name="name" placeholder="请输入真实姓名" autocomplete="off" class="layui-input"
-                       value="{{$adm_user_info['name']}}">
+                       value="{{$db['adm_user_info']['name']}}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">手机号码</label>
             <div class="layui-input-block">
                 <input type="text" name="mobile" placeholder="请输入手机号码" autocomplete="off" class="layui-input"
-                       value="{{$adm_user_info['mobile']}}">
+                       value="{{$db['adm_user_info']['mobile']}}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
                 <input type="text" name="mail" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
-                       value="{{$adm_user_info['mail']}}">
+                       value="{{$db['adm_user_info']['mail']}}">
             </div>
         </div>
         <div class="layui-form-item">
@@ -50,15 +50,17 @@
             <label class="layui-form-label">出生日期</label>
             <div class="layui-input-block">
                 <input type="text" name="birthDate" placeholder="请选择出生日期 格式为yyyy-MM-dd" autocomplete="off"
-                       class="layui-input" id="birthDate" value="{{$adm_user_info['birthDate']}}">
+                       class="layui-input" id="birthDate" value="{{$db['adm_user_info']['birthDate']}}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">角色</label>
             <div class="layui-input-block">
-                <select name="role">
-                    <option value="0">管理员</option>
-                    <option value="1">普通用户</option>
+                <select name="role" lay-verify="required">
+                    @foreach(getRole() as $k=>$v)
+                        <option
+                            value="{!! $v['id'] !!}" {{$v['id']== $role?'selected="selected"':''}}>{!! $v['name'] !!}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -74,14 +76,14 @@
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
                 <input type="checkbox" name="isLock" lay-skin="switch" lay-text="启用|停用"
-                       {{$isLock==0?'checked':''}} value=o>
+                       {{$db['isLock']==0?'checked':''}} value=o>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" {{$adm_user_info['sex']==1?'checked':''}}>
-                <input type="radio" name="sex" value="0" title="女" {{$adm_user_info['sex']==0?'checked':''}}>
+                <input type="radio" name="sex" value="1" title="男" {{$db['adm_user_info']['sex']==1?'checked':''}}>
+                <input type="radio" name="sex" value="0" title="女" {{$db['adm_user_info']['sex']==0?'checked':''}}>
             </div>
         </div>
         {{--        <div class="layui-form-item layui-form-text">--}}
@@ -123,7 +125,7 @@
         });
 
         form.on("submit(edit)", function (data) {
-            okUtils.ajax("/sys/pages/member/admUser/{{$id}}", "put", data.field, true).done(function (response) {
+            okUtils.ajax("/sys/pages/member/admUser/{{$db['id']}}", "put", data.field, true).done(function (response) {
                 // console.log(response);
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));

@@ -75,7 +75,7 @@ class AdmUserRoleController extends Controller
         $list["spread"] = true;
         $list["children"] = getRoute(2);
 
-        return view('.sys.pages.member.roleEdit', ['data' => json_encode($list)]);
+        return view('.sys.pages.member.admUserRoleAdd', ['data' => json_encode($list), 'role' => '']);
     }
 
     /**
@@ -84,27 +84,26 @@ class AdmUserRoleController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
+
+
     public function store(Request $request)
     {
         //
         $inp = $request->all();
         //
-        if ($inp['id'] == '') {
-            $db = new AdmUserRole();
-            $db['code'] = getNewId();
-            $db['isLock'] = 0;
-            $db['isDel'] = 0;
-            $db['addId'] = _admId();
-            $db['addTime'] = getTime(1);
-        } else {
-            $db = AdmUserRole::find($inp['id']);
-            $db['upId'] = _admId();
-            $db['upTime'] = getTime(1);
-        }
+        $db = new AdmUserRole();
+        $db['code'] = getNewId();
+        $db['isLock'] = 0;
+        $db['isDel'] = 0;
+        $db['addId'] = _admId();
+        $db['addTime'] = getTime(1);
         $db['name'] = $inp['name'];
         $db['remarks'] = $inp['remarks'];
 
         if ($db->save()) {
+            //往角色关联表写入数据
+            $list = getRouteDataValue($inp, $db['id']);
+            DB::table('adm_role_power')->insert($list);
             return getSuccess(1);
         } else {
             return getSuccess(2);
@@ -137,8 +136,12 @@ class AdmUserRoleController extends Controller
         $list["title"] = "根目录";
         $list["spread"] = true;
         $list["children"] = getRoute(2);
-
-        return view('.sys.pages.member.roleEdit', ['data' => json_encode($list), 'db' => $db]);
+        $role = DB::table('adm_role_power')->where('roleId', $id)->select('powerId')->get();
+        $roleList = collect([]);
+        foreach ($role as $k) {
+            $roleList->push($k->powerId);
+        }
+        return view('.sys.pages.member.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
     }
 
     /**
@@ -151,6 +154,25 @@ class AdmUserRoleController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $inp = $request->all();
+
+        //
+        //删除所有当前角色相关的role数据
+        DB::table('adm_role_power')->where('roleId', $id)->delete();
+        //
+        $db = AdmUserRole::find($id);
+        $db['upId'] = _admId();
+        $db['upTime'] = getTime(1);
+        $db['name'] = $inp['name'];
+        $db['remarks'] = $inp['remarks'];
+        if ($db->save()) {
+            //往角色关联表写入数据
+            $list = getRouteDataValue($inp, $db['id']);
+            DB::table('adm_role_power')->insert($list);
+            return getSuccess(1);
+        } else {
+            return getSuccess(2);
+        }
     }
 
     /**

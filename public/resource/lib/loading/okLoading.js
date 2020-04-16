@@ -39,7 +39,7 @@ var okLoading = {
 			var setTime2 = setTimeout(function () {
 				clearTimeout(setTime2);
 				dom.parentNode.removeChild(dom);/**删除当前节点*/
-			}, 800);
+			}, 200);
 		}, time);
 	}
 };

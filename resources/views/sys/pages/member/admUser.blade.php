@@ -56,8 +56,9 @@
                     <div class="layui-input-inline">
                         <select name="role" lay-verify="">
                             <option value="" selected>请选择角色</option>
-                            <option value="0">超级会员</option>
-                            <option value="1">普通用户</option>
+                            @foreach(getRole() as $k=>$v)
+                                <option value="{!! $v['id'] !!}">{!! $v['name'] !!}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -86,12 +87,13 @@
 </div>
 <!--js逻辑-->
 <script>
-    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils"], function () {
+    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils","okFly"], function () {
         let table = layui.table;
         let form = layui.form;
         let laydate = layui.laydate;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
+        let okFly = layui.okFly;
         let $ = layui.jquery;
         laydate.render({elem: "#startTime", type: "datetime"});
         laydate.render({elem: "#endTime", type: "datetime"});
@@ -118,11 +120,19 @@
                     {field: "birthDate", title: "出生日期", width: 100, sort: true},
                     {
                         field: "sex", title: "性别", width: 60, templet: function (d) {
-                            if (d.sex == '1') {
-                                return '{!! getSex(1) !!}'
-                            } else {
-                                return '{!! getSex(0) !!}'
-                            }
+                            // okUtils.ajax("/ajaxReadKey/sex/" + d.sex, "get", null, false).done(function (response) {
+                            //     console.log(response.data);
+                            //     return response.data;
+                            // });
+                           // okFly.get("/ajaxReadKey/sex/"+ d.sex).then(function(res){
+                           //     return '123';
+                           // });
+                            okFly.get("/ajaxReadKey/sex/"+ d.sex).then(function(res){
+                               return 123;
+                            }).catch(function(err) {
+                               return 321;
+                            });
+
                         }
                     },
                     {field: "mail", title: "邮箱", width: 150},

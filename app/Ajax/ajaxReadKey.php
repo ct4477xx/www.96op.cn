@@ -14,7 +14,6 @@ function getReadKeyCommunity($fatherId, $Id)
     return '';
 }
 
-
 function getReadKeyHouseRoom($fatherId, $Id)
 {
     $fatherId ?: 0;

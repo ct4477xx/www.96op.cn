@@ -63,7 +63,7 @@
                 {type: "checkbox"},
                 {field: "code", title: "编号", width: 170, sort: true},
                 {field: "name", title: "角色名", width: 100},
-                {field: "remarks", title: "备注", width: 100},
+                {field: "remarks", title: "备注", width: 180},
                 {field: "addName", title: "创建者", width: 85},
                 {
                     field: "isLock", title: "状态", width: 85, templet: function (d) {
@@ -85,7 +85,7 @@
                 }
             ]],
             done: function (res, curr, count) {
-                console.log(res, curr, count);
+                // console.log(res, curr, count);
             }
         });
 
@@ -94,7 +94,7 @@
                 where: data.field,
                 page: {curr: 1}
             });
-            console.log("0000")
+            // console.log("0000")
             return false;
         });
 

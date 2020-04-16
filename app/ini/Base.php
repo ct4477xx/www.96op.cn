@@ -1,5 +1,6 @@
 <?php
 
+use App\SysModel\AdmUserRole;
 use App\SysModel\House;
 use App\SysModel\Route;
 use App\ToolModel\signStreet;
@@ -16,7 +17,6 @@ function _admName()
 {//获取当前用户名称
     return \Cookie::get('admName');
 }
-
 
 function getTime($str)
 {
@@ -180,7 +180,6 @@ function getRouteType($str)
 }
 
 //=================================== 数据库操作类 ===================================
-
 //通过无限极获取菜单
 function getRoute($s)
 {
@@ -193,7 +192,7 @@ function getRoute($s)
         $select = '*';
         $where = ['isOk' => 0];
     }
-    if ($s == 2) {//获取所有路由树
+    if ($s == 2) {//获取所有路由树(页面+数据+按钮)
         $select = getInjoin('id,fatherId,title,spread');
         $where = [];
     }
@@ -219,6 +218,45 @@ function getRoute($s)
         }
     }
     return $tree;
+}
+
+//读取所有数据与按钮的路由id,用于角色权限保存时,仅保存有数据与按钮的id
+function getRouteData()
+{
+    $data = Route::where(['isDel' => 0])
+        ->wherein('isOk', ['4', '8'])
+        ->select('id')
+        ->get();
+
+    foreach ($data as $k => $v) {
+        $list[] = '|*.*|' . $v['id'] . '|*.*|';
+    }
+    return $list;
+}
+
+//在写入角色表时,仅保存类型为 数据和按钮的数据
+function getRouteDataValue($str, $val)
+{
+//往角色关联表写入数据
+    foreach ($str as $k => $v) {
+        if (strpos($k, 'layuiTreeCheck_') !== false) {
+            if ($v > 0) {
+                if (in_array("|*.*|" . $v . "|*.*|", getRouteData())) {
+                    $list[] = array('roleId' => $val, 'powerId' => $v, 'addTime' => getTime(1));
+                }
+            }
+        }
+    }
+    return $list;
+}
+
+//获取用户角色
+function getRole()
+{
+    $db = AdmUserRole::where(['isDel' => 0])
+        ->select('id', 'code', 'name', 'remarks')
+        ->get();
+    return $db;
 }
 
 //不传参数获取楼层->获取顶级信息

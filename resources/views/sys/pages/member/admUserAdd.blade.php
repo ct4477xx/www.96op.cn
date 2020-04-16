@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>添加用户</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     @include('.sys.public.css')
     <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
@@ -55,9 +54,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label">角色</label>
             <div class="layui-input-block">
-                <select name="role">
-                    <option value="0">管理员</option>
-                    <option value="1">普通用户</option>
+                <select name="role" lay-verify="required">
+                    <option value="">请选择角色</option>
+                    @foreach(getRole() as $k=>$v)
+                        <option value="{!! $v['id'] !!}">{!! $v['name'] !!}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
