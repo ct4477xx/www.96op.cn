@@ -54,7 +54,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">角色</label>
             <div class="layui-input-block">
-                <select name="role" lay-verify="required">
+                <select name="roleId" lay-verify="required">
                     <option value="">请选择角色</option>
                     @foreach(getRole() as $k=>$v)
                         <option value="{!! $v['id'] !!}">{!! $v['name'] !!}</option>

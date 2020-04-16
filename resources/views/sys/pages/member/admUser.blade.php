@@ -87,7 +87,7 @@
 </div>
 <!--js逻辑-->
 <script>
-    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils","okFly"], function () {
+    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils", "okFly"], function () {
         let table = layui.table;
         let form = layui.form;
         let laydate = layui.laydate;
@@ -118,45 +118,15 @@
                     {field: "username", title: "用户名", width: 120},
                     {field: "name", title: "姓名", width: 100},
                     {field: "birthDate", title: "出生日期", width: 100, sort: true},
-                    {
-                        field: "sex", title: "性别", width: 60, templet: function (d) {
-                            // okUtils.ajax("/ajaxReadKey/sex/" + d.sex, "get", null, false).done(function (response) {
-                            //     console.log(response.data);
-                            //     return response.data;
-                            // });
-                           // okFly.get("/ajaxReadKey/sex/"+ d.sex).then(function(res){
-                           //     return '123';
-                           // });
-                            okFly.get("/ajaxReadKey/sex/"+ d.sex).then(function(res){
-                               return 123;
-                            }).catch(function(err) {
-                               return 321;
-                            });
-
-                        }
-                    },
+                    {field: "sex", title: "性别", width: 60},
                     {field: "mail", title: "邮箱", width: 150},
                     {field: "mobile", title: "手机号码", width: 120},
-                    {
-                        field: "role", title: "角色", width: 100, templet: function (d) {
-                            if (d.role == '0') {
-                                return '<span class="layui-btn layui-btn-warm layui-btn-xs">普通用户</span>'
-                            } else {
-                                return ' <span class="layui-btn layui-btn-danger layui-btn-xs">超级会员</span>'
-                            }
-                        }
-                    },
-                    {
-                        field: "status", title: "状态", width: 100, templet: function (d) {
-                            if (d.status == '0') {
-                                return '<span class="layui-btn layui-btn-normal layui-btn-xs">已启用</span>'
-                            } else {
-                                return '<span class="layui-btn layui-btn-warm layui-btn-xs">已停用</span>'
-                            }
-                        }
-                    },
-                    {field: "addTime", title: "创建时间", width: 150},
-                    {field: "upTime", title: "更新时间", width: 150},
+                    {field: "role", title: "角色", width: 100},
+                    {field: "isLock", title: "状态", width: 85},
+                    {field: "addName", title: "创建者", width: 90},
+                    {field: "addTime", title: "创建时间", width: 145},
+                    {field: "upName", title: "最后修改人", width: 90},
+                    {field: "upTime", title: "修改时间", width: 145},
                     {
                         title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
                             return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +

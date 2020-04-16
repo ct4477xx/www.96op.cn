@@ -48,6 +48,22 @@ class AdmUserRoleController extends Controller
             ->paginate($inp['limit'])
             ->all();
 
+
+        $dbData = [];
+        foreach ($db as $k => $v) {
+            $dbData[] = [
+                'id' => $v->id,
+                'code' => $v->code,
+                'name' => $v->name,
+                'remarks' => $v->remarks,
+                'isLock' => getIsLock($v->isLock),
+                'addName' => getAdmName($v->addId),
+                'addTime' => $v->addTime,
+                'upName' => getAdmName($v->upId),
+                'upTime' => $v->upTime,
+            ];
+        }
+
         //
         //总记录
         $total = DB::table('adm_role')
@@ -58,7 +74,7 @@ class AdmUserRoleController extends Controller
         $data = [];
         $data['code'] = 0;
         $data['msg'] = '查询用户成功';
-        $data['data'] = $db;
+        $data['data'] = $dbData;
         $data['count'] = $total;
         return $data;
     }
@@ -103,7 +119,7 @@ class AdmUserRoleController extends Controller
         if ($db->save()) {
             //往角色关联表写入数据
             $list = getRouteDataValue($inp, $db['id']);
-            DB::table('adm_role_power')->insert($list);
+            DB::table('adm_role_route')->insert($list);
             return getSuccess(1);
         } else {
             return getSuccess(2);
@@ -136,10 +152,10 @@ class AdmUserRoleController extends Controller
         $list["title"] = "根目录";
         $list["spread"] = true;
         $list["children"] = getRoute(2);
-        $role = DB::table('adm_role_power')->where('roleId', $id)->select('powerId')->get();
+        $role = DB::table('adm_role_route')->where('roleId', $id)->select('routeId')->get();
         $roleList = collect([]);
         foreach ($role as $k) {
-            $roleList->push($k->powerId);
+            $roleList->push($k->routeId);
         }
         return view('.sys.pages.member.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
     }
@@ -158,7 +174,7 @@ class AdmUserRoleController extends Controller
 
         //
         //删除所有当前角色相关的role数据
-        DB::table('adm_role_power')->where('roleId', $id)->delete();
+        DB::table('adm_role_route')->where('roleId', $id)->delete();
         //
         $db = AdmUserRole::find($id);
         $db['upId'] = _admId();
@@ -168,7 +184,7 @@ class AdmUserRoleController extends Controller
         if ($db->save()) {
             //往角色关联表写入数据
             $list = getRouteDataValue($inp, $db['id']);
-            DB::table('adm_role_power')->insert($list);
+            DB::table('adm_role_route')->insert($list);
             return getSuccess(1);
         } else {
             return getSuccess(2);
@@ -190,6 +206,9 @@ class AdmUserRoleController extends Controller
     {
         //
         $inp = $request->all();
+        if (getIsExist('adm_user_role', 'roleId', $inp['id']) > 0) {
+            return getSuccess('当前权限正在被使用中,无法进行删除操作');
+        }
         setDel('adm_role', $inp['id']);
         return getSuccess(1);
     }

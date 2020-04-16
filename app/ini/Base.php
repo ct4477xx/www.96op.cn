@@ -1,5 +1,6 @@
 <?php
 
+use App\SysModel\AdmUserInfo;
 use App\SysModel\AdmUserRole;
 use App\SysModel\House;
 use App\SysModel\Route;
@@ -16,6 +17,12 @@ function _admId()
 function _admName()
 {//获取当前用户名称
     return \Cookie::get('admName');
+}
+
+function getAdmName($code)
+{
+    $db =AdmUserInfo::where('admId',$code)->select('name')->first();
+    return $db['name'];
 }
 
 function getTime($str)
@@ -35,25 +42,11 @@ function getTime($str)
     return $back;
 }
 
-//性别   0女 1男
-function getSex($str)
+//获取角色权限
+function getRoleName($id)
 {
-    if ($str == 1) {
-        return '<span class="layui-btn layui-btn-normal layui-btn-xs">男</span>';
-    } else {
-        return '<span class="layui-btn layui-btn-warm layui-btn-xs">女</span>';
-    }
-}
-
-
-//状态   0正常 1锁定
-function getIsLock($str)
-{
-    if ($str == 0) {
-        return '<span class="layui-btn layui-btn-normal layui-btn-xs">启用</span>';
-    } else {
-        return '<span class="layui-btn layui-btn-warm layui-btn-xs">停用</span>';
-    }
+    $db = AdmUserRole::where('id', $id)->select('name')->first();
+    return '<span class="layui-btn layui-btn-primary layui-btn-xs">' . $db['name'] . '</span>';
 }
 
 
@@ -179,6 +172,28 @@ function getRouteType($str)
     }
 }
 
+
+//性别   0女 1男
+function getSex($str)
+{
+    if ($str == 1) {
+        return '<span class="layui-btn layui-btn-normal layui-btn-xs">男</span>';
+    } else {
+        return '<span class="layui-btn layui-btn-warm layui-btn-xs">女</span>';
+    }
+}
+
+
+//状态   0正常 1锁定
+function getIsLock($str)
+{
+    if ($str == 0) {
+        return '<span class="layui-btn layui-btn-normal layui-btn-xs">启用</span>';
+    } else {
+        return '<span class="layui-btn layui-btn-disabled layui-btn-xs">停用</span>';
+    }
+}
+
 //=================================== 数据库操作类 ===================================
 //通过无限极获取菜单
 function getRoute($s)
@@ -238,11 +253,12 @@ function getRouteData()
 function getRouteDataValue($str, $val)
 {
 //往角色关联表写入数据
+    $list=[];
     foreach ($str as $k => $v) {
         if (strpos($k, 'layuiTreeCheck_') !== false) {
             if ($v > 0) {
                 if (in_array("|*.*|" . $v . "|*.*|", getRouteData())) {
-                    $list[] = array('roleId' => $val, 'powerId' => $v, 'addTime' => getTime(1));
+                    $list[] = array('roleId' => $val, 'routeId' => $v, 'addTime' => getTime(1));
                 }
             }
         }

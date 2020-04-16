@@ -55,7 +55,6 @@
             id: 'permissionTreeId',
             showCheckbox: true,
             showLine: true //是否开启连接线
-
         });
         tree.setChecked('permissionTreeId', {!! $role !!});
         okLoading.close();

@@ -33,9 +33,9 @@ class AdmUserController extends Controller
                 if (!empty($inp['username'])) {
                     $query->where('a.username', $inp['username']);
                 }
-//                if (!empty($inp['role'])) {
-//                    $query->where('a.role', $inp['role']);
-//                }
+                if (!empty($inp['role'])) {
+                    $query->where('c.roleId', $inp['role']);
+                }
                 if (!empty($inp['name'])) {
                     $query->where('b.name', 'like', '%' . $inp['name'] . '%');
                 }
@@ -56,15 +56,35 @@ class AdmUserController extends Controller
             };
         $db = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
-            ->select('a.id', 'a.userName as username', 'a.isLock as status', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addTime', 'a.upTime')
+            ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
+            ->select('a.id', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addId', 'a.addTime', 'a.upId', 'a.upTime', 'c.roleId')
             ->where('a.isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
             ->all();
+        $dbData = [];
+        foreach ($db as $k => $v) {
+            $dbData[] = [
+                'id' => $v->id,
+                'username' => $v->username,
+                'isLock' => getIsLock($v->isLock),
+                'sex' => getSex($v->sex),
+                'name' => $v->name,
+                'birthDate' => $v->birthDate,
+                'mobile' => $v->mobile,
+                'role' => getRoleName($v->roleId),
+                'mail' => $v->mail,
+                'addName' => getAdmName($v->addId),
+                'addTime' => $v->addTime,
+                'upName' => getAdmName($v->upId),
+                'upTime' => $v->upTime,
+            ];
+        }
         //
         //总记录
         $total = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admId')
+            ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
             ->select('1')
             ->where('a.isDel', 0)
             ->where($where)
@@ -72,7 +92,7 @@ class AdmUserController extends Controller
         $data = [];
         $data['code'] = 0;
         $data['msg'] = '查询用户成功';
-        $data['data'] = $db;
+        $data['data'] = $dbData;
         $data['count'] = $total;
         return $data;
     }
@@ -122,8 +142,8 @@ class AdmUserController extends Controller
             $info['isDel'] = 0;
             $info->save();
             //保存角色
-            if ($inp['role']) {
-                DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'roleId' => $inp['role'], 'addTime' => getTime(1)]);
+            if ($inp['roleId']) {
+                DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'roleId' => $inp['roleId'], 'addTime' => getTime(1)]);
             }
             return getSuccess(1);
         } else {
@@ -156,9 +176,10 @@ class AdmUserController extends Controller
             ->select('id', 'code', 'userName', 'isLock')
             ->with('admUserInfo:admId,name,sex,birthDate,mobile,mail')
             ->get();
+
         $role = DB::table('adm_user_role')->where('uid', $id)->select('roleId')->get();
         $result = json_decode($role, true);
-        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'role' => $result[0]['roleId']]);
+        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'roleId' => $result[0]['roleId']]);
     }
 
     /**
@@ -177,7 +198,7 @@ class AdmUserController extends Controller
         if ($inp['password']) {
             $adm['password'] = Hash::make($inp['password']);
         }
-        $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
+       // $adm['isLock'] = empty($inp['isLocks']) ? 1 : 0;
         $adm['upId'] = _admId();
         $adm['upTime'] = getTime(1);
         $adm->save();
@@ -192,9 +213,9 @@ class AdmUserController extends Controller
                 'birthDate' => $inp['birthDate'],
             ]);
         //保存角色
-        if ($inp['role']) {
+        if ($inp['roleId']) {
             DB::table('adm_user_role')->where('uid', $adm['id'])->delete();
-            DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'roleId' => $inp['role'], 'addTime' => getTime(1)]);
+            DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'roleId' => $inp['roleId'], 'addTime' => getTime(1)]);
         }
         return getSuccess(1);
     }

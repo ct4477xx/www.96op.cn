@@ -64,19 +64,11 @@
                 {field: "code", title: "编号", width: 170, sort: true},
                 {field: "name", title: "角色名", width: 100},
                 {field: "remarks", title: "备注", width: 180},
-                {field: "addName", title: "创建者", width: 85},
-                {
-                    field: "isLock", title: "状态", width: 85, templet: function (d) {
-                        if (d.isLock == '0') {
-                            return '{!! getIsLock(0) !!}'
-                        } else {
-                            return '{!! getIsLock(1) !!}'
-                        }
-                    }
-                },
-                {field: "addTime", title: "创建时间", width: 150},
-                {field: "upName", title: "最近修改人", width: 120},
-                {field: "upTime", title: "更新时间", width: 150},
+                {field: "isLock", title: "状态", width: 85},
+                {field: "addName", title: "创建者", width: 90},
+                {field: "addTime", title: "创建时间", width: 145},
+                {field: "upName", title: "最后修改人", width: 90},
+                {field: "upTime", title: "修改时间", width: 145},
                 {
                     title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
                         return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +

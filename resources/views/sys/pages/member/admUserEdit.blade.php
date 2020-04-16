@@ -22,21 +22,21 @@
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-block">
                 <input type="text" name="name" placeholder="请输入真实姓名" autocomplete="off" class="layui-input"
-                       value="{{$db['adm_user_info']['name']}}">
+                       value="{{$db['admUserInfo']['name']}}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">手机号码</label>
             <div class="layui-input-block">
                 <input type="text" name="mobile" placeholder="请输入手机号码" autocomplete="off" class="layui-input"
-                       value="{{$db['adm_user_info']['mobile']}}">
+                       value="{{$db['admUserInfo']['mobile']}}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
                 <input type="text" name="mail" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
-                       value="{{$db['adm_user_info']['mail']}}">
+                       value="{{$db['admUserInfo']['mail']}}">
             </div>
         </div>
         <div class="layui-form-item">
@@ -50,16 +50,16 @@
             <label class="layui-form-label">出生日期</label>
             <div class="layui-input-block">
                 <input type="text" name="birthDate" placeholder="请选择出生日期 格式为yyyy-MM-dd" autocomplete="off"
-                       class="layui-input" id="birthDate" value="{{$db['adm_user_info']['birthDate']}}">
+                       class="layui-input" id="birthDate" value="{{$db['admUserInfo']['birthDate']}}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">角色</label>
             <div class="layui-input-block">
-                <select name="role" lay-verify="required">
+                <select name="roleId" lay-verify="required">
+                    <option value=""></option>
                     @foreach(getRole() as $k=>$v)
-                        <option
-                            value="{!! $v['id'] !!}" {{$v['id']== $role?'selected="selected"':''}}>{!! $v['name'] !!}</option>
+                        <option value="{{$v['id']}}" {{$v['id']==$roleId?'selected':''}}>{{$v['name'] }}</option>
                     @endforeach
                 </select>
             </div>
@@ -72,18 +72,19 @@
         {{--				<input type="checkbox" name="like[run]" value="3" title="运动">--}}
         {{--			</div>--}}
         {{--		</div>--}}
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="isLock" lay-skin="switch" lay-text="启用|停用"
-                       {{$db['isLock']==0?'checked':''}} value=o>
-            </div>
-        </div>
+{{--        <div class=" layui-form-item">--}}
+{{--            <label class="layui-form-label">状态</label>--}}
+{{--            <div class="layui-input-block">--}}
+{{--                <input type="checkbox" name="isLocks" lay-skin="switch" lay-text="启用|停用"--}}
+{{--                       {{$db['isLock']==0?'checked':''}} value=o>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" {{$db['adm_user_info']['sex']==1?'checked':''}}>
-                <input type="radio" name="sex" value="0" title="女" {{$db['adm_user_info']['sex']==0?'checked':''}}>
+                <input type="radio" name="sex" value="1" title="男" {{$db['admUserInfo']['sex']==1?'checked':''}}>
+                <input type="radio" name="sex" value="0" title="女" {{$db['admUserInfo']['sex']==0?'checked':''}}>
             </div>
         </div>
         {{--        <div class="layui-form-item layui-form-text">--}}
@@ -95,7 +96,6 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="edit">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
         {{csrf_field()}}
