@@ -57,7 +57,7 @@ class AdmUserController extends Controller
         $db = DB::table('adm_User as a')
             ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admCode')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
-            ->select('a.id','a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
+            ->select('a.id', 'a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
             ->where('a.isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
@@ -108,7 +108,17 @@ class AdmUserController extends Controller
     public function create()
     {
         //
-        return view('.sys.pages.member.admUserAdd');
+        $db['id'] = '';
+        $db['code'] = '';
+        $db['userName'] = '';
+        $db['isLock'] = '';
+        $db['admUserInfo']['admCode'] = '';
+        $db['admUserInfo']['name'] = '';
+        $db['admUserInfo']['sex'] = 1;
+        $db['admUserInfo']['birthDate'] = '';
+        $db['admUserInfo']['mobile'] = '';
+        $db['admUserInfo']['mail'] = '';
+        return view('.sys.pages.member.admUserEdit', ['db' => $db, 'roleId' => []]);
     }
 
     /**
@@ -139,8 +149,8 @@ class AdmUserController extends Controller
             $info['admCode'] = $adm['code'];
             $info['name'] = $inp['name'];
             $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
-            $info['mobile'] = $inp['phone'];
-            $info['mail'] = $inp['email'];
+            $info['mobile'] = $inp['mobile'];
+            $info['mail'] = $inp['mail'];
             $info['birthDate'] = $inp['birthDate'];
             $info['isDel'] = 0;
             $info->save();

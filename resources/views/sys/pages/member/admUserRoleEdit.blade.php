@@ -15,14 +15,14 @@
             <label class="layui-form-label">角色名</label>
             <div class="layui-input-block">
                 <input type="text" name="name" placeholder="请输入角色名" autocomplete="off" class="layui-input"
-                       lay-verify="required" value="{!! $db['name'] ??'' !!}">
+                       lay-verify="required" value="{!! $db['name'] !!}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
                 <input type="text" name="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input"
-                       lay-verify="" value="{!! $db['remarks']??'' !!}">
+                       lay-verify="" value="{!! $db['remarks'] !!}">
             </div>
         </div>
         <div class="layui-form-item">
@@ -62,7 +62,7 @@
         form.on("submit(edit)", function (data) {
             // TODO 权限节点校验
             // 请求后台
-            okUtils.ajax("/sys/pages/member/admUserRole/{{$db['id']}}", "put", data.field, true).done(function (response) {
+            okUtils.ajax("/sys/pages/member/admUserRole/{{$db['id']}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
                 console.log(response);
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));

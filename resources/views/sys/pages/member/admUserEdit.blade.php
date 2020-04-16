@@ -14,8 +14,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">
-                <input type="text" placeholder="{{$db['userName']}}" autocomplete="off" class="layui-input"
-                       value="{{$db['userName']}}" disabled>
+                <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input"
+                       value="{{$db['userName']}}" {{$db['id']?'disabled':''}}>
             </div>
         </div>
         <div class="layui-form-item">
@@ -125,7 +125,7 @@
         });
 
         form.on("submit(edit)", function (data) {
-            okUtils.ajax("/sys/pages/member/admUser/{{$db['id']}}", "put", data.field, true).done(function (response) {
+            okUtils.ajax("/sys/pages/member/admUser/{{$db['id']}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
                 // console.log(response);
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));

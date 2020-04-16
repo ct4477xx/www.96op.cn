@@ -41,8 +41,7 @@ class AdmUserRoleController extends Controller
                 }
             };
 
-        $db = DB::table('adm_role')
-            ->select('id', 'code', 'name', 'remarks', 'isLock', 'addCode', 'addTime', 'upCode', 'upTime')
+        $db = AdmUserRole::select('id', 'code', 'name', 'remarks', 'isLock', 'addCode', 'addTime', 'upCode', 'upTime')
             ->where('isDel', 0)
             ->where($where)
             ->paginate($inp['limit'])
@@ -66,8 +65,7 @@ class AdmUserRoleController extends Controller
 
         //
         //总记录
-        $total = DB::table('adm_role')
-            ->select(1)
+        $total = AdmUserRole::select(1)
             ->where('isDel', 0)
             ->where($where)
             ->count();
@@ -91,7 +89,11 @@ class AdmUserRoleController extends Controller
         $list["spread"] = true;
         $list["children"] = getRoute(2);
 
-        return view('.sys.pages.member.admUserRoleAdd', ['data' => json_encode($list), 'role' => '']);
+        $db['id'] = '';
+        $db['name'] = '';
+        $db['remarks'] = '';
+
+        return view('.sys.pages.member.admUserRoleEdit', ['db' => $db, 'data' => json_encode($list), 'role' => '']);
     }
 
     /**

@@ -11,26 +11,43 @@
 <body>
 <div class="ok-body">
     <!--模糊搜索区域-->
-{{--    <div class="layui-row">--}}
-{{--        <form class="layui-form layui-col-md12 ok-search">--}}
-{{--            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime" name="startTime">--}}
-{{--            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime" name="endTime">--}}
-{{--            <input class="layui-input" placeholder="请输入角色名" autocomplete="off" name="name">--}}
-{{--            <div class="layui-inline">--}}
-{{--                <label class="layui-form-label">请选择状态</label>--}}
-{{--                <div class="layui-input-inline">--}}
-{{--                    <select name="status" lay-verify="">--}}
-{{--                        <option value="" selected>请选择状态</option>--}}
-{{--                        <option value="o">已启用</option>--}}
-{{--                        <option value="n">已停用</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <button class="layui-btn" lay-submit="" lay-filter="search">--}}
-{{--                <i class="layui-icon layui-icon-search"></i>--}}
-{{--            </button>--}}
-{{--        </form>--}}
-{{--    </div>--}}
+    <div class="layui-row">
+        <form class="layui-form ok-search-form">
+            <div class="layui-inline">
+                <label class="layui-form-label">开始日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime"
+                           name="startTime">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">截止日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime"
+                           name="endTime">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="请输入角色名" autocomplete="off" name="name">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">请选择状态</label>
+                <div class="layui-input-inline">
+                    <select name="status" lay-verify="">
+                        <option value="" selected>请选择状态</option>
+                        <option value="o">已启用</option>
+                        <option value="n">已停用</option>
+                    </select>
+                </div>
+            </div>
+            <button class="layui-btn" lay-submit="" lay-filter="search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </form>
+    </div>
 <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
