@@ -82,8 +82,8 @@ class TenantController extends Controller
         //
         $db = Tenant::find($id);
         //获取楼层id
-        $odb = House::where('id', $db['houseRoom'])->select(['fatherId'])->first();
-        $db['house'] = $odb['fatherId'];
+        $odb = House::where('id', $db['houseRoom'])->select(['father_id'])->first();
+        $db['house'] = $odb['father_id'];
         $db['show'] = 1;
         return view('sys.tenantCreate', $db);
     }
@@ -99,8 +99,8 @@ class TenantController extends Controller
         //
         $db = Tenant::find($id);
         //获取楼层id
-        $odb = House::where('id', $db['houseRoom'])->select(['fatherId'])->first();
-        $db['house'] = $odb['fatherId'];
+        $odb = House::where('id', $db['houseRoom'])->select(['father_id'])->first();
+        $db['house'] = $odb['father_id'];
         $db['show'] = '';
         return view('sys.tenantCreate', $db);
     }

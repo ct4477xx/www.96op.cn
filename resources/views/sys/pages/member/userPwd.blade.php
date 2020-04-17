@@ -13,20 +13,20 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户姓名</label>
         <div class="layui-input-block">
-            <input type="text" value="{{Cookie::get('admName')}}" disabled class="layui-input layui-disabled">
+            <input type="text" value="{{_admName()}}" disabled class="layui-input layui-disabled">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">旧密码</label>
         <div class="layui-input-block">
-            <input name="oldPwd" type="password" value="" placeholder="请输入旧密码" lay-verify="required|oldPwd"
+            <input name="old_pwd" type="password" value="" placeholder="请输入旧密码" lay-verify="required|old_pwd"
                    class="layui-input pwd">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">新密码</label>
         <div class="layui-input-block">
-            <input name="password" type="password" value="" placeholder="请输入新密码" lay-verify="required|pass" id="oldPwd"
+            <input name="pass_word" type="password" value="" placeholder="请输入新密码" lay-verify="required|pass"
                    class="layui-input pwd">
         </div>
     </div>
@@ -54,10 +54,10 @@
         //添加验证规则verify
         form.verify({
             pass: [
-                /^[\S]{2,16}$/
-                , '密码必须2到16位，且不能出现空格'
-            ],
-            // oldPwd: function (value, item) {
+                /^[\S]{6,16}$/
+                , '密码必须6到16位，且不能出现空格'
+            ]
+            // old_pwd: function (value, item) {
             //    if(value!=''){
             //        return "旧密码错误，请重新输入！";
             //     }

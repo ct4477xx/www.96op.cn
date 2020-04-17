@@ -22,10 +22,10 @@ Route::get('ajaxReadKey/{type}/{Id}', 'AjaxReadKeyController@show');
 //
 //免登录路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
-    Route::get('login', 'LoginController@index');//登录页
-    Route::post('login', 'LoginController@login');//登录接口
-    Route::get('register', 'LoginController@register');//注册页面
-    Route::post('registerReg', 'LoginController@registerReg');//注册接口
+    Route::get('login', 'IndexController@index');//登录页
+    Route::post('login', 'IndexController@login');//登录接口
+    Route::get('register', 'IndexController@register');//注册页面
+    Route::post('registerReg', 'IndexController@registerReg');//注册接口
 });
 //
 //登录验证路由

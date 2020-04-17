@@ -55,7 +55,7 @@ class CsignController extends Controller
             $data['users'] = $inp['data']['users'];
             $data['mobile'] = $inp['data']['mobile'];
             $data['addTime'] = date('Y-m-d');
-            $data['upTime'] = $inp['data']['street'];
+            $data['up_time'] = $inp['data']['street'];
             $data['addId'] = getNewId();
             $res = $data->save();
             if ($res) {

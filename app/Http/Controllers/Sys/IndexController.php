@@ -15,7 +15,7 @@ class IndexController extends Controller
     //
     function index()
     {
-        if (\Cookie::get('admCode')) {
+        if (_admCode()) {
             return view('.sys.index');
         } else {
             return view('.sys.login');
@@ -28,19 +28,25 @@ class IndexController extends Controller
         $inp = $request->all();
 
         $db_data = AdmUser::where([
-            'userName' => $inp['data']['username'],
-            'isDel' => 0
+            'user_name' => $inp['data']['user_name'],
+            'is_del' => 0
         ])
-            ->select('id', 'code', 'userName', 'passWord', 'isLock')
-            ->with(['admUserInfo:admCode,name'])
+            ->select('id', 'code', 'user_name', 'pass_word', 'is_lock')
+            ->with(['admUserInfo:adm_code,name'])
             ->first();
         if (!$db_data) {
             return getSuccess('用户名不存在, 再仔细想想?');
         }
-        if ($db_data['isLock'] == 1) {
-            return getSuccess('当前账号已被锁定, 请联系系统管理员');
+        if ($db_data['is_lock'] == 1) {
+            $data = [
+                'success' => false,
+                'msg' => '当前账号已被锁定, 请联系系统管理员',
+                'user_name' => $inp['data']['user_name'],
+                'pass_word' => $inp['data']['pass_word']
+            ];
+            return $data;
         }
-        $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
+        $is_Pwd = json_encode(Hash::check($inp['data']['pass_word'], $db_data['pass_word']));
         if ($is_Pwd == 'true') {
             $time = 1 * 60 * 12;//缓存时间
             //\Session()->put('admId', $db_data['code']);
@@ -58,8 +64,8 @@ class IndexController extends Controller
             $data = [
                 'success' => false,
                 'msg' => '用户名或密码错误, 仔细想想吧',
-                'username' => $inp['data']['username'],
-                'password' => $inp['data']['password']
+                'user_name' => $inp['data']['user_name'],
+                'pass_word' => $inp['data']['pass_word']
             ];
         }
         return $data;
@@ -83,33 +89,33 @@ class IndexController extends Controller
     {
         $inp = $request->all();
         //判断用户名是否存在
-        if (getIsExist('adm_user', 'userName', $inp['data']['username']) > 0) {
+        if (getIsExist('adm_user', 'user_name', $inp['data']['user_name']) > 0) {
             return [
                 'success' => false, 'msg' => '用户名已存在, 请换个用户名试试!',
-                'username' => $inp['data']['username'],
-                'password' => $inp['data']['password'],
+                'user_name' => $inp['data']['user_name'],
+                'pass_word' => $inp['data']['pass_word'],
             ];
         }
         $data = new AdmUser();
         $data['code'] = getNewId();
-        $data['username'] = $inp['data']['username'];
-        $data['password'] = Hash::make($inp['data']['password']);
-        $data['isLock'] = 1;
-        $data['isDel'] = 0;
-        $data['addCode'] = '';
-        $data['addTime'] = getTime(1);
+        $data['user_name'] = $inp['data']['user_name'];
+        $data['pass_word'] = Hash::make($inp['data']['pass_word']);
+        $data['is_lock'] = 1;
+        $data['is_del'] = 0;
+        $data['add_code'] = '';
+        $data['add_time'] = getTime(1);
         if ($data->save()) {
             //用户注册后自动生成关联信息表
             $info = new AdmUserInfo();
-            $info['admCode'] = $data['code'];
+            $info['adm_code'] = $data['code'];
             $info['name'] = $data['code'];
             $info->save();
             return getSuccess(1);
         } else {
             return [
                 'success' => false, 'msg' => '操作失败!',
-                'username' => $inp['data']['username'],
-                'password' => $inp['data']['password'],
+                'user_name' => $inp['data']['user_name'],
+                'pass_word' => $inp['data']['pass_word'],
             ];
         }
     }

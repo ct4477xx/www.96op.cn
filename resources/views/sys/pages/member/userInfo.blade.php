@@ -27,7 +27,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">出生年月</label>
             <div class="layui-input-block">
-                <input id="uDate" name="birthDate" type="text" value="{{$birthDate}}" placeholder="请输入出生年月" lay-verify="required"
+                <input id="birth_date" name="birth_date" type="text" value="{{$birth_date}}" placeholder="请输入出生年月" lay-verify="required"
                        class="layui-input userBirthday">
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
-                <input type="text" name="mail" value="{{$mail}}" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
+                <input type="text" name="email" value="{{$email}}" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
                        lay-verify="email">
             </div>
         </div>
@@ -101,7 +101,7 @@
         // });
         okLoading.close();
         laydate.render({
-            elem: '#uDate', //指定元素
+            elem: '#birth_date', //指定元素
             max: "2020-1-1",
             value: '',
         });

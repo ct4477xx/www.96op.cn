@@ -15,14 +15,14 @@
     <form class="layui-form">
         <div class="login_face"><img src="/images/logo.png"></div>
         <div class="layui-form-item input-item">
-            <label for="username">用户名</label>
-            <input type="text" lay-verify="required" name="username" placeholder="请输入账号" autocomplete="off"
-                   id="username" class="layui-input">
+            <label for="user_name">用户名</label>
+            <input type="text" lay-verify="required" name="user_name" placeholder="请输入账号" autocomplete="off"
+                   id="user_name" class="layui-input">
         </div>
         <div class="layui-form-item input-item">
-            <label for="password">密码</label>
-            <input type="password" lay-verify="required|password" name="password" placeholder="请输入密码" autocomplete="off"
-                   id="password" class="layui-input">
+            <label for="pass_word">密码</label>
+            <input type="password" lay-verify="required|pass_word" name="pass_word" placeholder="请输入密码" autocomplete="off"
+                   id="pass_word" class="layui-input">
         </div>
         {{--            <div class="layui-form-item input-item captcha-box">--}}
         {{--                <label for="captcha">验证码</label>--}}
@@ -56,7 +56,7 @@
          * 数据校验
          */
         form.verify({
-            password: [/^[\S]{6,12}$/, "密码必须6到12位，且不能出现空格"],
+            pass_word: [/^[\S]{1,12}$/, "密码必须6到12位，且不能出现空格"],
             captcha: function (val) {
                 if (verifyCode.validate(val) != "true") {
                     return verifyCode.validate(val)
@@ -75,8 +75,8 @@
                             window.location = "/sys";
                         });
                     } else {
-                        $("#username").val(data.username);
-                        $("#password").val(data.password);
+                        $("#user_name").val(data.user_name);
+                        $("#pass_word").val(data.pass_word);
                         layer.msg(data.msg, {icon: 5, time: 1500});
                     }
                 }, "json");

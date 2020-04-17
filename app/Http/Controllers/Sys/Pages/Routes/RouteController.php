@@ -17,9 +17,9 @@ class RouteController extends Controller
     public function index()
     {
         //
-//        $data = Menu::where(['isDel' => 0])
-//            ->select('id', 'fatherId','title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck','isOk')
-//            //->with(['children:id,fatherId,title,href,fontFamily,icon,spread'])
+//        $data = Menu::where(['is_del' => 0])
+//            ->select('id', 'father_id','title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck','is_type')
+//            //->with(['children:id,father_id,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
         return view('sys.pages.routes.route', ['data' => getRoute(0)]);
@@ -45,15 +45,15 @@ class RouteController extends Controller
     {
         //获取到view返回参数,并进行判断是否已经存在一样的名称
         $inp = $request->all();
-        if (getIsExist('menu', 'title', $inp['routeTitle'])) {
+        if (getIsExist('menu_route', 'title', $inp['route_title'])) {
             return getSuccess('路由名称已存在');
         }
         $db = new Route();
-        $db['title'] = $inp['routeTitle'];
-        $db['fontFamily'] = 'layui-icon';
+        $db['title'] = $inp['route_title'];
+        $db['font_family'] = 'layui-icon';
         $db['icon'] = '&#xe602;';
-        $db['bySort'] = 0;
-        $db['fatherId'] = 0;
+        $db['by_sort'] = 0;
+        $db['father_id'] = 0;
         if ($db->save()) {
             return getSuccess(1);
         } else {
@@ -70,9 +70,9 @@ class RouteController extends Controller
     public function show($id)
     {
         $data = [];
-        $data['fatherId'] = $id;
-        $data['isOk'] = 0;
-        $data['fontFamily'] = 'layui-icon';
+        $data['father_id'] = $id;
+        $data['is_type'] = 0;
+        $data['font_family'] = 'layui-icon';
         //
         return view('.sys.pages.routes.routeSon', $data);
     }
@@ -101,12 +101,13 @@ class RouteController extends Controller
     {
         //
         $inp = $request->all();
+//        return $inp;
         $db = Route::find($id);
         $db['title'] = $inp['title'];
         $db['href'] = $inp['href'];
-        $db['fontFamily'] = $inp['fontFamily'];
+        $db['font_family'] = $inp['font_family'];
         $db['icon'] = $inp['icon'];
-        $db['bySort'] = $inp['bySort'];
+        $db['by_sort'] = $inp['by_sort'];
         if ($db->save()) {
             return getSuccess(1);
         } else {
@@ -127,7 +128,7 @@ class RouteController extends Controller
             return getSuccess(2);
         }
         $db = Route::find($id);
-        $db['isDel'] = 1;
+        $db['is_del'] = 1;
         $db->save();
         return getSuccess(1);
     }
@@ -140,7 +141,7 @@ class RouteController extends Controller
 //        if (getIsExist('menu', 'title', $inp['title'])) {
 //            return getSuccess('路由名称已存在');
 //        }
-
+//        return $inp;
         if ($inp['id'] == 0) {
             $db = new Route();
         } else {
@@ -148,11 +149,11 @@ class RouteController extends Controller
         }
         $db['title'] = $inp['title'];
         $db['href'] = $inp['href'];
-        $db['isOk'] = $inp['isOk'];
-        $db['fontFamily'] = $inp['fontFamily'];
+        $db['is_type'] = $inp['is_type'];
+        $db['font_family'] = $inp['font_family'];
         $db['icon'] = $inp['icon'];
-        $db['bySort'] = $inp['bySort'];
-        $db['fatherId'] = $inp['fatherId'];
+        $db['by_sort'] = $inp['by_sort'];
+        $db['father_id'] = $inp['father_id'];
         if ($db->save()) {
             return getSuccess(1);
         } else {

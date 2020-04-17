@@ -35,19 +35,19 @@
     <form class="layui-form ">
         <div class="layui-form-item tit">注册</div>
         <div class="layui-form-item input-item">
-            <label for="username">用户名</label>
-            <input type="text" lay-verify="required" name="username" placeholder="请输入账号" autocomplete="off"
-                   id="username" class="layui-input">
+            <label for="user_name">用户名</label>
+            <input type="text" lay-verify="required" name="user_name" placeholder="请输入账号" autocomplete="off"
+                   id="user_name" class="layui-input">
         </div>
         <div class="layui-form-item input-item">
-            <label for="password">密码</label>
-            <input type="password" lay-verify="required|password" name="password" placeholder="请输入密码" autocomplete="off"
-                   id="password" class="layui-input">
+            <label for="pass_word">密码</label>
+            <input type="password" lay-verify="required|pass_word" name="pass_word" placeholder="请输入密码" autocomplete="off"
+                   id="pass_word" class="layui-input">
         </div>
         <div class="layui-form-item input-item">
-            <label for="comPassword">确认密码</label>
-            <input type="password" lay-verify="required|comPassword" name="password" placeholder="请确认密码"
-                   autocomplete="off" id="comPassword" class="layui-input">
+            <label for="com_pass_word">确认密码</label>
+            <input type="password" lay-verify="required|com_pass_word" name="pass_word" placeholder="请确认密码"
+                   autocomplete="off" id="com_pass_word" class="layui-input">
         </div>
         {{--        <div class="layui-form-item input-item">--}}
         {{--            <label for="phone">输入手机号</label>--}}
@@ -89,14 +89,14 @@
          * 数据校验
          */
         form.verify({
-            password: [/^[\S]{6,12}$/, "密码必须6到12位，且不能出现空格"],
-            phone: [
-                regPhone,
-                '输入的手机号格式不正确，请重新输入'
-            ],
-            comPassword: function (val) {
-                let password = $("#password").val();
-                return password == val ? '' : "两次密码不一致";
+            pass_word: [/^[\S]{6,12}$/, "密码必须6到12位，且不能出现空格"],
+            // phone: [
+            //     regPhone,
+            //     '输入的手机号格式不正确，请重新输入'
+            // ],
+            com_pass_word: function (val) {
+                let pass_word = $("#pass_word").val();
+                return pass_word == val ? '' : "两次密码不一致";
             }
         });
 
@@ -111,8 +111,8 @@
                             window.location = "./login";
                         });
                     } else {
-                        $("#username").val(data.username);
-                        $("#password").val(data.password);
+                        $("#user_name").val(data.user_name);
+                        $("#pass_word").val(data.pass_word);
                         layer.msg(data.msg, {icon: 5});
                     }
                 }, "json");

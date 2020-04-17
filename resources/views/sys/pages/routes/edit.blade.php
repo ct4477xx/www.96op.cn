@@ -28,10 +28,10 @@
         <div class="layui-form-item">
             <label class="layui-form-label">图标资源</label>
             <div class="layui-input-block">
-                <select name="fontFamily" lay-verify="required">
+                <select name="font_family" lay-verify="required">
                     <option value=""></option>
-                    <option value="ok-icon" {{$fontFamily=='ok-icon'?'selected':''}}>ok-icon</option>
-                    <option value="layui-icon" {{$fontFamily=='layui-icon'?'selected':''}}>layui-icon</option>
+                    <option value="ok-icon" {{$font_family=='ok-icon'?'selected':''}}>ok-icon</option>
+                    <option value="layui-icon" {{$font_family=='layui-icon'?'selected':''}}>layui-icon</option>
                 </select>
             </div>
         </div>
@@ -47,8 +47,8 @@
                 <span class="x-red">*</span>排序
             </label>
             <div class="layui-input-inline">
-                <input type="text" id="bySort" name="bySort" required="" value="{!! $bySort !!}"
-                       lay-verify="required|bySort"
+                <input type="text" id="by_sort" name="by_sort" required="" value="{!! $by_sort !!}"
+                       lay-verify="required|by_sort"
                        autocomplete="off" class="layui-input">
             </div>
             <div class="layui-form-mid layui-word-aux">
@@ -74,7 +74,7 @@
 
         //自定义验证规则
         form.verify({
-            bySort: function (value) {
+            by_sort: function (value) {
                 if (value > 1000) {
                     return '排序最大值请控制在1000以内';
                 }

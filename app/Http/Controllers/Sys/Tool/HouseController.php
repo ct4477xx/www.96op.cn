@@ -16,9 +16,9 @@ class HouseController extends Controller
     public function index()
     {
         //
-        $data = House::where('isDel', 0)
-            ->orderBy('bySort', 'desc')
-            ->orderBy('isLock', 'asc')
+        $data = House::where('is_del', 0)
+            ->orderBy('by_sort', 'desc')
+            ->orderBy('is_lock', 'asc')
             ->orderBy('hideBySort', 'desc')
             ->orderBy('mixBySort', 'desc')
             ->get();
@@ -49,12 +49,12 @@ class HouseController extends Controller
             return redirect('sys/house');
         }
         $data = new House;
-        $data['fatherId'] = 0;
+        $data['father_id'] = 0;
         $data['hideBySort'] = 0;//稍后更新为自己的id
         $data['name'] = $inp['cate_name'];
-        $data['bySort'] = $inp['bySort'];
+        $data['by_sort'] = $inp['by_sort'];
         $data['mixBySort'] = 1000;
-        $data['isLock'] = 0;
+        $data['is_lock'] = 0;
         $data->save();
         //
         $up = House::find($data['id']);
@@ -104,16 +104,16 @@ class HouseController extends Controller
         //
         $inp = $request->all();
         //
-        $bySort = $inp['data']['bySort'];
+        $by_sort = $inp['data']['by_sort'];
         //
         $data = House::find($id);
         $data['name'] = $inp['data']['name'];
-        $data['bySort'] = $bySort;
-        $data['isLock'] = $inp['data']['isLock'] ? 1 : 0;
+        $data['by_sort'] = $by_sort;
+        $data['is_lock'] = $inp['data']['is_lock'] ? 1 : 0;
         if ($data->save()) {
             //父级更新成功后将子级进行更新排序
             $up = House::where('hideBySort', $id);
-            $up->update(['bySort' => $bySort, 'isLock' => $inp['data']['isLock'] ? 1 : 0]);
+            $up->update(['by_sort' => $by_sort, 'is_lock' => $inp['data']['is_lock'] ? 1 : 0]);
             return getSuccess(1);
         } else {
             return getSuccess(2);
@@ -130,13 +130,13 @@ class HouseController extends Controller
     {
         //
         //删除前先检查是否存在下级,如果存在则删除失败
-        $db = House::where(['isDel' => 0, 'fatherId' => $id])
+        $db = House::where(['is_del' => 0, 'father_id' => $id])
             ->get()
             ->count();
         //return $db;
         if ($db == 0) {
             $data = House::find($id);
-            $data['isDel'] = 1;
+            $data['is_del'] = 1;
             $res = $data->save();
             if ($res) {
                 return getSuccess(1);
@@ -157,8 +157,8 @@ class HouseController extends Controller
         $data['id'] = $db['id'];
         $data['fatherName'] = $db['houseFather']['name'];
         $data['name'] = $db['name'];
-        $data['bySort'] = $db['mixBySort'];
-        $data['isLock'] = $db['isLock'];
+        $data['by_sort'] = $db['mixBySort'];
+        $data['is_lock'] = $db['is_lock'];
         //return $data;
         return view('sys/houseRoom', $data);
     }
@@ -170,26 +170,26 @@ class HouseController extends Controller
         if ($inp['data']['sid'] == 1) {
 
             //获取到主排序
-            $db = House::find($inp['data']['fatherId']);
+            $db = House::find($inp['data']['father_id']);
             //
             $data = new House;
-            $data['fatherId'] = $inp['data']['fatherId'];
-            $data['hideBySort'] = $inp['data']['fatherId'];
-            $data['bySort'] = $db['bySort'];
+            $data['father_id'] = $inp['data']['father_id'];
+            $data['hideBySort'] = $inp['data']['father_id'];
+            $data['by_sort'] = $db['by_sort'];
             $data['name'] = $inp['data']['name'];
-            $data['isLock'] = $inp['data']['isLock'] ? 1 : 0;
+            $data['is_lock'] = $inp['data']['is_lock'] ? 1 : 0;
             $data->save();
             return getSuccess(1);
         } else {
             $db = House::find($inp['data']['id']);
             //如果父级被锁定,则不允许解锁与修改子级
             $fatherDb = House::find($db['id']);
-            if ($fatherDb['isLock'] == 1) {
+            if ($fatherDb['is_lock'] == 1) {
                 return getSuccess('当楼层已被锁定的状态下, 不允许修改房间信息');
             } else {
-                $db['mixBySort'] = $inp['data']['bySort'];
+                $db['mixBySort'] = $inp['data']['by_sort'];
                 $db['name'] = $inp['data']['name'];
-                $db['isLock'] = $inp['data']['isLock'] ? 1 : 0;
+                $db['is_lock'] = $inp['data']['is_lock'] ? 1 : 0;
                 $db->save();
                 return getSuccess(1);
             }

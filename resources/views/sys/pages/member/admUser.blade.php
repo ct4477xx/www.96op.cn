@@ -16,21 +16,21 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">开始日期</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime"
-                               name="startTime">
+                        <input type="text" class="layui-input" placeholder="开始日期" autocomplete="off" id="start_time"
+                               name="start_time">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">截止日期</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime"
-                               name="endTime">
+                        <input type="text" class="layui-input" placeholder="截止日期" autocomplete="off" id="end_time"
+                               name="end_time">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">用户名</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" placeholder="用户名" autocomplete="off" name="username">
+                        <input type="text" class="layui-input" placeholder="用户名" autocomplete="off" name="user_name">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -54,10 +54,10 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">请选择角色</label>
                     <div class="layui-input-inline">
-                        <select name="role" lay-verify="">
+                        <select name="role_id" lay-verify="">
                             <option value="" selected>请选择角色</option>
                             @foreach(getRole() as $k=>$v)
-                                <option value="{!! $v['id'] !!}">{!! $v['name'] !!}</option>
+                                <option value="{!! $v['id'] !!}">{!! $v['title'] !!}</option>
                             @endforeach
                         </select>
                     </div>
@@ -65,7 +65,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">请选择状态</label>
                     <div class="layui-input-inline">
-                        <select name="status" lay-verify="">
+                        <select name="is_lock" lay-verify="">
                             <option value="" selected>请选择状态</option>
                             <option value="o">已启用</option>
                             <option value="n">已停用</option>
@@ -95,8 +95,8 @@
         let okUtils = layui.okUtils;
         let okLayx = layui.okLayx;
         let $ = layui.jquery;
-        laydate.render({elem: "#startTime", type: "datetime"});
-        laydate.render({elem: "#endTime", type: "datetime"});
+        laydate.render({elem: "#start_time", type: "datetime"});
+        laydate.render({elem: "#end_time", type: "datetime"});
         okLoading.close($);
         okLayx.notice({
             title: "温馨提示",
@@ -121,26 +121,27 @@
                 [[
                     {type: "checkbox", fixed: "left"},
                     {field: "code", title: "编号", width: 100},
-                    {field: "username", title: "用户名", width: 120},
+                    {field: "user_name", title: "用户名", width: 120},
                     {field: "name", title: "姓名", width: 100},
-                    {field: "birthDate", title: "出生日期", width: 100, sort: true},
+                    {field: "birth_date", title: "出生日期", width: 100, sort: true},
                     {field: "sex", title: "性别", width: 60},
-                    {field: "mail", title: "邮箱", width: 150},
+                    {field: "email", title: "邮箱", width: 150},
                     {field: "mobile", title: "手机号码", width: 120},
-                    {field: "role", title: "角色", width: 100},
+                    {field: "role_name", title: "角色", width: 100},
                     {field: "is_lock_name", title: "状态", width: 85, sort: true},
-                    {field: "moneyRatio", title: "提成比例", width: 95, sort: true},
-                    {field: "addName", title: "创建者", width: 90},
-                    {field: "addTime", title: "创建时间", width: 145, sort: true},
-                    {field: "upName", title: "最后修改人", width: 90},
-                    {field: "upTime", title: "修改时间", width: 145, sort: true},
+                    {field: "money_ratio", title: "提成比例", width: 95, sort: true},
+                    {field: "add_name", title: "创建者", width: 90},
+                    {field: "add_time", title: "创建时间", width: 145, sort: true},
+                    {field: "up_name", title: "最后修改人", width: 90},
+                    {field: "up_time", title: "修改时间", width: 145, sort: true},
                     {
                         title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
-                            if (d.is_lock == 0) {
-                                return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>";
+                            var edit = "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>";
+                            var del = "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>";
+                            if (d.is_lock == 1) {
+                                return edit + del;
                             } else {
-                                return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +
-                                    "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>";
+                                return edit;
                             }
                         }
                     }
@@ -220,14 +221,14 @@
             });
         }
 
-
-        function add() {
-            okLayer.open("添加用户", "admUser/create", "90%", "90%", null, function () {
-                userTable.reload();
-            })
-        }
-
         function batchDel() {
+            var checkStatus = table.checkStatus('tableId');
+            for (var i = 0; i < checkStatus['data'].length; i++) {
+                if (checkStatus['data'][i]['is_lock'] == 0) {
+                    layer.msg("只有在停用状态下才可以被删除哦", {icon: 5});
+                    return;
+                }
+            }
             okLayer.confirm("确定要批量删除吗？", function (index) {
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
@@ -242,6 +243,13 @@
                     });
                 }
             });
+        }
+
+
+        function add() {
+            okLayer.open("添加用户", "admUser/create", "90%", "90%", null, function () {
+                userTable.reload();
+            })
         }
 
 

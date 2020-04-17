@@ -16,27 +16,27 @@
             <div class="layui-inline">
                 <label class="layui-form-label">开始日期</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime"
-                           name="startTime">
+                    <input type="text" class="layui-input" placeholder="开始日期" autocomplete="off" id="start_time"
+                           name="start_time">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">截止日期</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime"
-                           name="endTime">
+                    <input type="text" class="layui-input" placeholder="截止日期" autocomplete="off" id="end_time"
+                           name="end_time">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">用户名</label>
+                <label class="layui-form-label">角色名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" placeholder="请输入角色名" autocomplete="off" name="name">
+                    <input type="text" class="layui-input" placeholder="请输入角色名" autocomplete="off" name="title">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">请选择状态</label>
                 <div class="layui-input-inline">
-                    <select name="status" lay-verify="">
+                    <select name="is_lock" lay-verify="">
                         <option value="" selected>请选择状态</option>
                         <option value="o">已启用</option>
                         <option value="n">已停用</option>
@@ -53,7 +53,7 @@
 </div>
 <!--js逻辑-->
 <script>
-    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils","okLayx"], function () {
+    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils", "okLayx"], function () {
         let table = layui.table;
         let form = layui.form;
         let laydate = layui.laydate;
@@ -67,8 +67,8 @@
             type: "warning",
             message: "{!! frame()['message'] !!}"
         });
-        laydate.render({elem: "#startTime", type: "datetime"});
-        laydate.render({elem: "#endTime", type: "datetime"});
+        laydate.render({elem: "#start_time", type: "datetime"});
+        laydate.render({elem: "#end_time", type: "datetime"});
 
         let roleTable = table.render({
             elem: "#tableId",
@@ -87,17 +87,22 @@
             cols: [[
                 {type: "checkbox"},
                 {field: "code", title: "编号", width: 100},
-                {field: "name", title: "角色名", width: 100},
+                {field: "title", title: "角色名", width: 100},
                 {field: "remarks", title: "备注", width: 180},
-                {field: "isLock", title: "状态", width: 85, sort: true},
-                {field: "addName", title: "创建者", width: 90},
-                {field: "addTime", title: "创建时间", width: 145, sort: true},
-                {field: "upName", title: "最后修改人", width: 90},
-                {field: "upTime", title: "修改时间", width: 145, sort: true},
+                {field: "is_lock_name", title: "状态", width: 85, sort: true},
+                {field: "add_name", title: "创建者", width: 90},
+                {field: "add_time", title: "创建时间", width: 145, sort: true},
+                {field: "up_name", title: "最后修改人", width: 90},
+                {field: "up_time", title: "修改时间", width: 145, sort: true},
                 {
                     title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
-                        return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +
-                            "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>"
+                        var edit = "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>";
+                        var del = "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>";
+                        if (d.is_lock == 1) {
+                            return edit + del;
+                        } else {
+                            return edit;
+                        }
                     }
                 }
             ]],
@@ -178,14 +183,14 @@
         }
 
 
-        function add() {
-            okLayer.open("添加角色", "admUserRole/create", "90%", "90%", null, function () {
-                roleTable.reload();
-            })
-        }
-
-
         function batchDel() {
+            var checkStatus = table.checkStatus('tableId');
+            for (var i = 0; i < checkStatus['data'].length; i++) {
+                if (checkStatus['data'][i]['is_lock'] == 0) {
+                    layer.msg("只有在停用状态下才可以被删除哦", {icon: 5});
+                    return;
+                }
+            }
             okLayer.confirm("确定要批量删除吗？", function (index) {
                 layer.close(index);
                 let idsStr = okUtils.tableBatchCheck(table);
@@ -200,6 +205,13 @@
                     });
                 }
             });
+        }
+
+
+        function add() {
+            okLayer.open("添加角色", "admUserRole/create", "90%", "90%", null, function () {
+                roleTable.reload();
+            })
         }
 
         function edit(data) {

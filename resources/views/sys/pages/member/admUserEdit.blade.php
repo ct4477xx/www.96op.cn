@@ -14,7 +14,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><span class="red">*</span>用户名</label>
             <div class="layui-input-block">
-                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input"
+                <input type="text" name="user_name" placeholder="请输入用户名" autocomplete="off" class="layui-input"
                        lay-verify="required" value="" {{$db['id']?'disabled':''}}>
             </div>
         </div>
@@ -35,31 +35,31 @@
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
-                <input type="text" name="mail" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
+                <input type="text" name="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input"
                        value="">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
             <div class="layui-input-block">
-                <input type="password" name="password" placeholder="密码为空时不进行修改操作" autocomplete="off"
+                <input type="password" name="pass_word" placeholder="密码为空时不进行修改操作" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">出生日期</label>
             <div class="layui-input-block">
-                <input type="text" name="birthDate" placeholder="请选择出生日期 格式为yyyy-MM-dd" autocomplete="off"
-                       class="layui-input" id="birthDate" value="">
+                <input type="text" name="birth_date" placeholder="请选择出生日期 格式为yyyy-MM-dd" autocomplete="off"
+                       class="layui-input" id="birth_date" value="">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><span class="red">*</span>角色</label>
             <div class="layui-input-block">
-                <select name="roleId" lay-verify="required">
+                <select name="role_id" lay-verify="required">
                     <option value=""></option>
                     @foreach(getRole() as $k=>$v)
-                        <option value="{{$v['id']}}" {{$v['id']==$roleId?'selected':''}}>{{$v['name'] }}</option>
+                        <option value="{{$v['id']}}" {{$v['id']==$role_id?'selected':''}}>{{$v['title'] }}</option>
                     @endforeach
                 </select>
             </div>
@@ -90,8 +90,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><span class="red">*</span>提成比例</label>
             <div class="layui-input-block">
-                <input type="text" name="moneyRatio" placeholder="请输入提成比例" autocomplete="off" class="layui-input"
-                       value="" lay-verify="required|number|moneyRatio">
+                <input type="text" name="money_ratio" placeholder="请输入提成比例" autocomplete="off" class="layui-input"
+                       value="" lay-verify="required|number|money_ratio">
             </div>
         </div>
         {{--                <div class="layui-form-item layui-form-text">--}}
@@ -124,11 +124,11 @@
         let okUtils = layui.okUtils;
         okLoading.close();
         form.val("filter", initData);
-        laydate.render({elem: "#birthDate", type: "date"});
+        laydate.render({elem: "#birth_date", type: "date"});
 
         form.verify({
             birthdayVerify: [/^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(([01]\d{1})|(2[0123])):([0-5]\d):([0-5]\d))?$/, '日期格式不正确']
-            , moneyRatio: [
+            ,money_ratio: [
                 /(^[1-9]\d$)|(^\d$)|(^100$)/
                 , '提成比例为 0-100 之间'
             ]

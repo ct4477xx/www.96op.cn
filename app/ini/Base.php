@@ -1,33 +1,20 @@
 <?php
 
 use App\SysModel\AdmUserInfo;
-use App\SysModel\AdmUserRole;
+use App\SysModel\AdmRole;
 use App\SysModel\House;
 use App\SysModel\Route;
 use App\ToolModel\signStreet;
 
 
+
+
 //=================================== 自定义方法类 ===================================
 
-function _admId()
-{//获取当前用户Id
-    return \Cookie::get('admId');
-}
-
-function _admCode()
-{//获取当前用户Id
-    return \Cookie::get('admCode');
-}
-
-
-function _admName()
-{//获取当前用户名称
-    return \Cookie::get('admName');
-}
 
 function getAdmName($code)
 {
-    $db = AdmUserInfo::where('admCode',$code)->select('name')->first();
+    $db = AdmUserInfo::where('adm_code', $code)->select('name')->first();
     return $db['name'];
 }
 
@@ -48,11 +35,13 @@ function getTime($str)
     return $back;
 }
 
-//获取角色权限
+//获取角色权限名称
 function getRoleName($id)
 {
-    $db = AdmUserRole::where('id', $id)->select('name')->first();
-    return '<span class="layui-btn layui-btn-primary layui-btn-xs">' . $db['name'] . '</span>';
+    $db = AdmRole::where('id', $id)->select('title')->first();
+    if ($db) {
+        return '<span class="layui-btn layui-btn-primary layui-btn-xs">' . $db['title'] . '</span>';
+    }
 }
 
 
@@ -211,19 +200,19 @@ function getRoute($s)
     }
     if ($s == 1) {//获取所有未被删除且为页面的路由
         $select = '*';
-        $where = ['isOk' => 0];
+        $where = ['is_type' => 0];
     }
     if ($s == 2) {//获取所有路由树(页面+数据+按钮)
-        $select = getInjoin('id,fatherId,title,spread');
+        $select = getInjoin('id,father_id,title,spread');
         $where = [];
     }
 
-    $data = Route::where(['isDel' => 0])
+    $data = Route::where(['is_del' => 0])
         ->where($where)
         ->select($select)
-        ->orderBy('fatherId', 'asc')
-        ->orderBy('isOk', 'desc')
-        ->orderBy('bySort', 'desc')
+        ->orderBy('father_id', 'asc')
+        ->orderBy('is_type', 'desc')
+        ->orderBy('by_sort', 'desc')
         ->get()
         ->toArray();
     $items = [];
@@ -232,8 +221,8 @@ function getRoute($s)
     }
     $tree = [];
     foreach ($items as $k => $v) {
-        if (isset($items[$v['fatherId']])) {
-            $items[$v['fatherId']]['children'][] = &$items[$k];
+        if (isset($items[$v['father_id']])) {
+            $items[$v['father_id']]['children'][] = &$items[$k];
         } else {
             $tree[] = &$items[$k];
         }
@@ -244,8 +233,8 @@ function getRoute($s)
 //读取所有数据与按钮的路由id,用于角色权限保存时,仅保存有数据与按钮的id
 function getRouteData()
 {
-    $data = Route::where(['isDel' => 0])
-        ->wherein('isOk', ['4', '8'])
+    $data = Route::where(['is_del' => 0])
+        ->wherein('is_type', ['4', '8'])
         ->select('id')
         ->get();
 
@@ -259,12 +248,12 @@ function getRouteData()
 function getRouteDataValue($str, $val)
 {
 //往角色关联表写入数据
-    $list=[];
+    $list = [];
     foreach ($str as $k => $v) {
         if (strpos($k, 'layuiTreeCheck_') !== false) {
             if ($v > 0) {
                 if (in_array("|*.*|" . $v . "|*.*|", getRouteData())) {
-                    $list[] = array('roleId' => $val, 'routeId' => $v, 'addTime' => getTime(1));
+                    $list[] = array('role_id' => $val, 'route_id' => $v, 'add_time' => getTime(1));
                 }
             }
         }
@@ -275,8 +264,8 @@ function getRouteDataValue($str, $val)
 //获取用户角色
 function getRole()
 {
-    $db = AdmUserRole::where(['isDel' => 0])
-        ->select('id', 'code', 'name', 'remarks')
+    $db = AdmRole::where(['is_del' => 0])
+        ->select('id', 'code', 'title', 'remarks')
         ->get();
     return $db;
 }
@@ -284,9 +273,9 @@ function getRole()
 //不传参数获取楼层->获取顶级信息
 function getHouse()
 {
-    $db = House::where(['isDel' => 0, 'fatherId' => 0])
-        ->orderBy('bySort', 'desc')
-        ->orderBy('isLock', 'asc')
+    $db = House::where(['is_del' => 0, 'father_id' => 0])
+        ->orderBy('by_sort', 'desc')
+        ->orderBy('is_lock', 'asc')
         ->get();
     return $db;
 }
@@ -294,9 +283,9 @@ function getHouse()
 //获取带楼层参数的房间号->房间信息
 function getHouseRoom($fid)
 {
-    $db = House::where(['isDel' => 0, 'isLock' => 0, 'fatherId' => $fid])
-        ->orderBy('bySort', 'desc')
-        ->orderBy('isLock', 'asc')
+    $db = House::where(['is_del' => 0, 'is_lock' => 0, 'father_id' => $fid])
+        ->orderBy('by_sort', 'desc')
+        ->orderBy('is_lock', 'asc')
         ->orderBy('hideBySort', 'desc')
         ->orderBy('mixBySort', 'desc')
         ->get();
@@ -318,7 +307,7 @@ function getHouseAndRoom($id)
 //不带参数获取街道名称->获取顶级信息
 function signStreet()
 {
-    $db = signStreet::where('fatherId', '2')
+    $db = signStreet::where('father_id', '2')
         ->get();
     return $db;
 }
@@ -326,8 +315,8 @@ function signStreet()
 //获取带父id参数的社区名称
 function getStreet($fid)
 {
-    $db = signStreet::where('fatherId', $fid)
-        ->orderBy('bySort', 'desc')
+    $db = signStreet::where('father_id', $fid)
+        ->orderBy('by_sort', 'desc')
         ->get();
     return $db;
 }
@@ -344,13 +333,26 @@ function signStreet_String($Id)
     }
 }
 
+//=================================== 数据判断操作 ===================================
+function getIsExist($table, $str, $val)
+{
+    $data = DB::table($table)
+        ->where('is_del', 0)
+        ->where($str, $val)
+        ->count();
+    return $data;
+}
+
+
+
+//=================================== 通用操作方法类 ===================================
 //伪删除
 function setDel($table, $val)
 {
     $data = DB::table($table)
-        ->where('isDel', 0)
+        ->where('is_del', 0)
         ->whereIn('id', getInjoin($val))
-        ->update(['isDel' => 1, 'delCode' => _admCode(), 'delTime' => getTime(1)]);
+        ->update(['is_del' => 1, 'del_code' => _admCode(), 'del_time' => getTime(1)]);
     return $data;
 }
 
@@ -358,9 +360,9 @@ function setDel($table, $val)
 function setLock($table, $val)
 {
     $data = DB::table($table)
-        ->where('isLock', 0)
+        ->where('is_lock', 0)
         ->whereIn('id', getInjoin($val))
-        ->update(['isLock' => 1, 'upCode' => _admCode(), 'upTime' => getTime(1)]);
+        ->update(['is_lock' => 1, 'up_code' => _admCode(), 'up_time' => getTime(1)]);
     return $data;
 }
 
@@ -368,18 +370,27 @@ function setLock($table, $val)
 function setNoLock($table, $val)
 {
     $data = DB::table($table)
-        ->where('isLock', 1)
+        ->where('is_lock', 1)
         ->whereIn('id', getInjoin($val))
-        ->update(['isLock' => 0, 'upCode' => _admCode(), 'upTime' => getTime(1)]);
+        ->update(['is_lock' => 0, 'up_code' => _admCode(), 'up_time' => getTime(1)]);
     return $data;
 }
 
-//=================================== 数据判断操作 ===================================
-function getIsExist($table, $str, $val)
-{
-    $data = DB::table($table)
-        ->where('isDel', 0)
-        ->where($str, $val)
-        ->count();
-    return $data;
+
+
+//=================================== 自定义私有方法类 ===================================
+function _admId()
+{//获取当前用户Id
+    return \Cookie::get('admId');
+}
+
+function _admCode()
+{//获取当前用户Id
+    return \Cookie::get('admCode');
+}
+
+
+function _admName()
+{//获取当前用户名称
+    return \Cookie::get('admName');
 }

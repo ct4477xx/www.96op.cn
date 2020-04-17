@@ -21,8 +21,8 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5" method="post">
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="一级菜单路由名称" name="routeTitle"
-                                   lay-verify="required|routeTitle"></div>
+                            <input class="layui-input" placeholder="一级菜单路由名称" name="route_title"
+                                   lay-verify="required|route_title"></div>
                         <div class="layui-input-inline layui-show-xs-block">
                             <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon"></i>增加路由
                             </button>
@@ -43,7 +43,7 @@
                         </thead>
                         <tbody class="x-cate">
                         @foreach($data as $v)
-                            <tr cate-id='{{$v['id']}}' fid='{{$v['fatherId']}}'>
+                            <tr cate-id='{{$v['id']}}' fid='{{$v['father_id']}}'>
                                 {{--                                <td>{{$v['id']}}</td>--}}
                                 <td>
                                     @if(isset($v['children']))
@@ -53,8 +53,8 @@
                                     @endif
                                     {!! $v['title'] !!}
                                 </td>
-                                <td>{!! getRouteType($v['isOk']) !!}</td>
-                                <td>{!! $v['bySort'] !!}</td>
+                                <td>{!! getRouteType($v['is_type']) !!}</td>
+                                <td>{!! $v['by_sort'] !!}</td>
                                 <td class="td-manage">
                                     <button class="layui-btn layui-btn layui-btn-xs"
                                             onclick="xadmin.open('编辑','/sys/pages/routes/route/{{$v['id']}}/edit')"><i
@@ -90,11 +90,9 @@
         let form = layui.form;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
-
-
         //自定义验证规则
         form.verify({
-            routeTitle: function (value) {
+            route_title: function (value) {
                 if (value.length > 6) {
                     return '路由名称请控制在6个字符以内';
                 }
@@ -169,7 +167,7 @@
 <?php
 function children($li, $i)
 {
-    echo '<tr cate-id=' . $li['id'] . ' fid=' . $li['fatherId'] . '>';
+    echo '<tr cate-id=' . $li['id'] . ' fid=' . $li['father_id'] . '>';
 //    echo '<td><input type="checkbox" name="" lay-skin="primary"></td>';
 //    echo '<td>' . $li['id'] . '</td>';
     echo '<td>';
@@ -182,13 +180,13 @@ function children($li, $i)
         echo '|-- ' . $li['title'];
     }
     echo '</td>';
-    echo '<td>' . getRouteType($li['isOk']) . '</td>';
+    echo '<td>' . getRouteType($li['is_type']) . '</td>';
     echo '<td>';
     echo '|';
     for ($k = 1; $k <= $i; $k++) {
         echo '--';
     }
-    echo $li['bySort'];
+    echo $li['by_sort'];
     echo ' </td>';
     echo '<td class="td-manage">';
     echo '<button class="layui-btn layui-btn layui-btn-xs" onclick="xadmin.open(\'编辑\',\'routeSon/' . $li['id'] . '/edit\')"><i class="layui-icon">&#xe642;</i>编辑</button>';

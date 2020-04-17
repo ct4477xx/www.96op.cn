@@ -27,41 +27,41 @@ class AdmUserController extends Controller
         $inp = $request->all();
         $where =
             function ($query) use ($inp) {
-                if (!empty($inp['status'])) {
-                    $query->where('a.isLock', $inp['status'] == "n" ? 1 : 0);
+                if (!empty($inp['is_lock'])) {
+                    $query->where('a.is_lock', $inp['is_lock'] == "n" ? 1 : 0);
                 }
-                if (!empty($inp['username'])) {
-                    $query->where('a.username', $inp['username']);
+                if (!empty($inp['user_name'])) {
+                    $query->where('a.user_name', $inp['user_name']);
                 }
-                if (!empty($inp['role'])) {
-                    $query->where('c.roleId', $inp['role']);
+                if (!empty($inp['role_id'])) {
+                    $query->where('c.role_id', $inp['role_id']);
                 }
                 if (!empty($inp['name'])) {
                     $query->where('b.name', 'like', '%' . $inp['name'] . '%');
                 }
                 if (!empty($inp['email'])) {
-                    $query->where('b.mail', 'like', '%' . $inp['email'] . '%');
+                    $query->where('b.email', 'like', '%' . $inp['email'] . '%');
                 }
                 if (!empty($inp['mobile'])) {
                     $query->where('b.mobile', 'like', '%' . $inp['mobile'] . '%');
                 }
-                if (!empty($inp['startTime']) && !empty($inp['endTime'])) {
-                    $query->where('a.addTime', '>=', $inp['startTime'])
-                        ->where('a.addTime', '<=', $inp['endTime']);
-                } else if (!empty($inp['startTime'])) {
-                    $query->where('a.addTime', '>=', $inp['startTime']);
-                } else if (!empty($inp['endTime'])) {
-                    $query->where('a.addTime', '<=', $inp['endTime']);
+                if (!empty($inp['start_time']) && !empty($inp['end_time'])) {
+                    $query->where('a.add_time', '>=', $inp['start_time'])
+                        ->where('a.add_time', '<=', $inp['end_time']);
+                } else if (!empty($inp['start_time'])) {
+                    $query->where('a.add_time', '>=', $inp['start_time']);
+                } else if (!empty($inp['end_time'])) {
+                    $query->where('a.add_time', '<=', $inp['end_time']);
                 }
             };
-        $db = DB::table('adm_User as a')
-            ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.admCode')
+        $db = DB::table('adm_user as a')
+            ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.adm_code')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
-            ->select('a.id', 'a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail','b.moneyRatio', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
-            ->where('a.isDel', 0)
+            ->select('a.id', 'a.code', 'a.user_name', 'a.is_lock', 'b.sex', 'b.name', 'b.birth_date', 'b.mobile', 'b.email','b.money_ratio', 'a.add_code', 'a.add_time', 'a.up_code', 'a.up_time', 'c.role_id')
+            ->where('a.is_del', 0)
             ->where($where)
-            ->orderBy('a.isLock','asc')
-            ->orderBy('a.addTime','asc')
+            ->orderBy('a.is_lock','asc')
+            ->orderBy('a.add_time','asc')
             ->paginate($inp['limit'])
             ->all();
 
@@ -70,30 +70,30 @@ class AdmUserController extends Controller
             $dbData[] = [
                 'id' => $v->id,//id
                 'code' => $v->code,//编号
-                'username' => $v->username,//用户名
-                'is_lock_name' => getIsLock($v->isLock),//状态
-                'is_lock' => $v->isLock,//状态
+                'user_name' => $v->user_name,//用户名
+                'is_lock_name' => getIsLock($v->is_lock),//状态
+                'is_lock' => $v->is_lock,//状态
                 'sex' => getSex($v->sex),//性别
                 'name' => $v->name,//姓名
-                'birthDate' => $v->birthDate,//出生日期
+                'birth_date' => $v->birth_date,//出生日期
                 'mobile' => $v->mobile,//手机号码
-                'moneyRatio' => $v->moneyRatio,//提成比例
-                'role' => getRoleName($v->roleId),//权限角色
-                'mail' => $v->mail,//邮件地址
-                'addName' => getAdmName($v->addCode),//创建者
-                'addTime' => $v->addTime,//创建时间
-                'upName' => getAdmName($v->upCode),//最后修改人
-                'upTime' => $v->upTime,//修改时间
+                'money_ratio' => $v->money_ratio,//提成比例
+                'role_name' => getRoleName($v->role_id),//权限角色
+                'email' => $v->email,//邮件地址
+                'add_name' => getAdmName($v->add_code),//创建者
+                'add_time' => $v->add_time,//创建时间
+                'up_name' => getAdmName($v->up_code),//最后修改人
+                'up_time' => $v->up_time,//修改时间
             ];
         }
 
         //
         //总记录
-        $total = DB::table('adm_User as a')
-            ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.admCode')
+        $total = DB::table('adm_user as a')
+            ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.adm_code')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
             ->select('1')
-            ->where('a.isDel', 0)
+            ->where('a.is_del', 0)
             ->where($where)
             ->count();
         $data = [];
@@ -113,9 +113,9 @@ class AdmUserController extends Controller
     {
         //
         $db['id'] = '';
-        $db['isLock'] = '';
+        $db['is_lock'] = '';
         $db['admUserInfo']['sex'] = 1;
-        return view('.sys.pages.member.admUserEdit', ['db' => $db, 'roleId' => []]);
+        return view('.sys.pages.member.admUserEdit', ['db' => $db, 'role_id' => []]);
     }
 
     /**
@@ -140,13 +140,13 @@ class AdmUserController extends Controller
     {
         //
         $db = AdmUser::where('id', $id)
-            ->select('id', 'isLock')
-            ->with('admUserInfo:admCode,sex')
+            ->select('id','code', 'is_lock')
+            ->with('admUserInfo:adm_code,sex')
             ->get();
 
-        $role = DB::table('adm_user_role')->where('uid', $id)->select('roleId')->get();
+        $role = DB::table('adm_user_role')->where('uid', $id)->select('role_id')->get();
         $result = json_decode($role, true);
-        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'roleId' => $result[0]['roleId'] ?? []]);
+        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'role_id' => $result[0]['role_id'] ?? []]);
     }
 
     /**
@@ -160,32 +160,32 @@ class AdmUserController extends Controller
         //
         $inp = $request->all();
         //验证用户名是否存在
-        if (getIsExist('adm_user', 'userName', $inp['username'])) {
+        if (getIsExist('adm_user', 'user_name', $inp['user_name'])) {
             return getSuccess('用户名已存在, 重新换一个吧.');
         }
         $adm = new AdmUser();
         $adm['code'] = getNewId();
-        $adm['userName'] = $inp['username'];
-        $adm['password'] = Hash::make($inp['password']);
-        $adm['isLock'] = empty($inp['isLock']) ? 1 : 0;
-        $adm['isDel'] = 0;
-        $adm['addCode'] = _admCode();
-        $adm['addTime'] = getTime(1);
+        $adm['user_name'] = $inp['user_name'];
+        $adm['pass_word'] = Hash::make($inp['pass_word']);
+        $adm['is_lock'] = empty($inp['is_lock']) ? 1 : 0;
+        $adm['is_del'] = 0;
+        $adm['add_code'] = _admCode();
+        $adm['add_time'] = getTime(1);
         if ($adm->save()) {
             //创建admInfo信息
             $info = new AdmUserInfo();
-            $info['admCode'] = $adm['code'];
+            $info['adm_code'] = $adm['code'];
             $info['name'] = $inp['name'];
             $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
             $info['mobile'] = $inp['mobile'];
-            $info['mail'] = $inp['mail'];
-            $info['birthDate'] = $inp['birthDate'];
-            $info['moneyRatio'] = $inp['moneyRatio'];
-            $info['isDel'] = 0;
+            $info['email'] = $inp['email'];
+            $info['birth_date'] = $inp['birth_date'];
+            $info['money_ratio'] = $inp['money_ratio'];
+            $info['is_del'] = 0;
             $info->save();
             //保存角色
-            if ($inp['roleId']) {
-                DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'roleId' => $inp['roleId'], 'addTime' => getTime(1)]);
+            if ($inp['role_id']) {
+                DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'role_id' => $inp['role_id'], 'add_time' => getTime(1)]);
             }
             return getSuccess(1);
         } else {
@@ -206,41 +206,41 @@ class AdmUserController extends Controller
         $inp = $request->all();
 
         $adm = AdmUser::find($id);
-        if ($inp['password']) {
-            $adm['password'] = Hash::make($inp['password']);
+        if ($inp['pass_word']) {
+            $adm['pass_word'] = Hash::make($inp['pass_word']);
         }
-        // $adm['isLock'] = empty($inp['isLocks']) ? 1 : 0;
-        $adm['upCode'] = _admCode();
-        $adm['upTime'] = getTime(1);
+        // $adm['is_lock'] = empty($inp['is_lock']) ? 1 : 0;
+        $adm['up_code'] = _admCode();
+        $adm['up_time'] = getTime(1);
         $adm->save();
 
 
         //在没有找到用户资料时,创建用户资料
-        if (getIsExist('adm_user_info', 'admCode', _admCode()) == 0) {
+        if (getIsExist('adm_user_info', 'adm_code',$adm['code']) == 0) {
             $info = new AdmUserInfo();
-            $info['admCode'] = $adm['code'];
+            $info['adm_code'] = $adm['code'];
             $info['name'] = $inp['name'];
             $info['sex'] = $inp['sex'] == 0 ? 0 : 1;
             $info['mobile'] = $inp['mobile'];
-            $info['mail'] = $inp['mail'];
-            $info['birthDate'] = $inp['birthDate'];
+            $info['email'] = $inp['email'];
+            $info['birth_date'] = $inp['birth_date'];
             $info->save();
         } else {
             //修改admInfo信息
-            $info = AdmUserInfo::where('admCode', $adm['code'])
+            $info = AdmUserInfo::where('adm_code', $adm['code'])
                 ->update([
                     'name' => $inp['name'],
                     'sex' => $inp['sex'] == 0 ? 0 : 1,
                     'mobile' => $inp['mobile'],
-                    'mail' => $inp['mail'],
-                    'birthDate' => $inp['birthDate'],
-                    'moneyRatio' => $inp['moneyRatio'],
+                    'email' => $inp['email'],
+                    'birth_date' => $inp['birth_date'],
+                    'money_ratio' => $inp['money_ratio'],
                 ]);
         }
         //保存角色
-        if ($inp['roleId']) {
+        if ($inp['role_id']) {
             DB::table('adm_user_role')->where('uid', $adm['id'])->delete();
-            DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'roleId' => $inp['roleId'], 'addTime' => getTime(1)]);
+            DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'role_id' => $inp['role_id'], 'add_time' => getTime(1)]);
         }
         return getSuccess(1);
     }

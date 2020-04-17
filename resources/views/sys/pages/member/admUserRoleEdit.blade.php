@@ -14,7 +14,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">角色名</label>
             <div class="layui-input-block">
-                <input type="text" name="name" placeholder="请输入角色名" autocomplete="off" class="layui-input"
+                <input type="text" name="title" placeholder="请输入角色名" autocomplete="off" class="layui-input"
                        lay-verify="required" value="">
             </div>
         </div>

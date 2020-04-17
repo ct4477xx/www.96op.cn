@@ -29,13 +29,13 @@ class IndexController extends Controller
     {
         //个人用户信息
         //在没有找到用户资料时,创建用户资料
-        if (getIsExist('adm_user_info', 'admCode', \Cookie::get('admCode')) == 0) {
+        if (getIsExist('adm_user_info', 'adm_code', _admCode()) == 0) {
             $info = new AdmUserInfo();
-            $info['admCode'] = \Cookie::get('admCode');
-            $info['name'] = \Cookie::get('admName');
+            $info['adm_code'] = _admCode();
+            $info['name'] = _admName();
             $info->save();
         }
-        $db = AdmUserInfo::where('admCode', \Cookie::get('admCode'))
+        $db = AdmUserInfo::where('adm_code', _admCode())
             ->first();
         return view('sys.pages.member.userInfo', $db);
     }
@@ -44,22 +44,21 @@ class IndexController extends Controller
     {
         //执行更新
         $inp = $request->all();
-        $info = $db = AdmUserInfo::where('admCode', _admCode())
+        $info = $db = AdmUserInfo::where('adm_code', _admCode())
             ->update(
                 [
                     'name' => $inp['data']['name'],
                     'sex' => $inp['data']['sex'] == 'false' ? 0 : 1,
-                    'birthDate' => $inp['data']['birthDate'],
+                    'birth_date' => $inp['data']['birth_date'],
                     'mobile' => $inp['data']['mobile'],
-                    'mail' => $inp['data']['mail']
+                    'email' => $inp['data']['email']
                 ]
             );
 
-        $bool = AdmUser::where('code', _admCode())->update(['upCode' => _admCode(), 'upTime' => getTime(1)]);
+        $bool = AdmUser::where('code', _admCode())->update(['up_code' => _admCode(), 'up_time' => getTime(1)]);
         if ($info || $bool) {
             $time = 1 * 60 * 12;//缓存时间
             \Cookie::queue('admName', $inp['data']['name'], $time);
-
             return getSuccess(1);
         } else {
             return getSuccess(2);
@@ -77,15 +76,15 @@ class IndexController extends Controller
         //执行更新
         $inp = $request->all();
         //查找用户
-        $db = AdmUser::where('code', \Cookie::get('admCode'))
-            ->select(['password'])
+        $db = AdmUser::where('code', _admCode())
+            ->select(['pass_word'])
             ->first();
-        $is_Pwd = json_encode(Hash::check($inp['data']['oldPwd'], $db['password']));
-        if ($is_Pwd == 'false') {
+        $is_pwd = json_encode(Hash::check($inp['data']['old_pwd'], $db['pass_word']));
+        if ($is_pwd == 'false') {
             return getSuccess('旧密码错误，请重新输入！');
         }
-        $data = AdmUser::where('code', \Cookie::get('admCode'))
-            ->update(['password' => Hash::make($inp['data']['password'])]);
+        $data = AdmUser::where('code', _admCode())
+            ->update(['pass_word' => Hash::make($inp['data']['pass_word'])]);
         if ($data) {
             return getSuccess(1);
         } else {
@@ -96,9 +95,9 @@ class IndexController extends Controller
     function menu()
     {
         //无限极菜单
-//        $data = Menu::where(['fatherId' => 0, 'isDel' => 0])
+//        $data = Menu::where(['father_id' => 0, 'is_del' => 0])
 //            ->select('id', 'title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck')
-//            ->with(['children:id,fatherId,title,href,fontFamily,icon,spread'])
+//            ->with(['children:id,father_id,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
         return getRoute(1);

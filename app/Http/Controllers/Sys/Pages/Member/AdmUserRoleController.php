@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sys\Pages\Member;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\AdmUserRole;
+use App\SysModel\AdmRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,27 +25,27 @@ class AdmUserRoleController extends Controller
         $inp = $request->all();
         $where =
             function ($query) use ($inp) {
-                if (!empty($inp['status'])) {
-                    $query->where('isLock', $inp['status'] == "n" ? 1 : 0);
+                if (!empty($inp['is_lock'])) {
+                    $query->where('is_lock', $inp['is_lock'] == "n" ? 1 : 0);
                 }
-                if (!empty($inp['name'])) {
-                    $query->where('name', 'like', '%' . $inp['name'] . '%');
+                if (!empty($inp['title'])) {
+                    $query->where('title', 'like', '%' . $inp['title'] . '%');
                 }
-                if (!empty($inp['startTime']) && !empty($inp['endTime'])) {
-                    $query->where('addTime', '>=', $inp['startTime'])
-                        ->where('addTime', '<=', $inp['endTime']);
-                } else if (!empty($inp['startTime'])) {
-                    $query->where('addTime', '>=', $inp['startTime']);
-                } else if (!empty($inp['endTime'])) {
-                    $query->where('addTime', '<=', $inp['endTime']);
+                if (!empty($inp['start_time']) && !empty($inp['end_time'])) {
+                    $query->where('add_time', '>=', $inp['start_time'])
+                        ->where('add_time', '<=', $inp['end_time']);
+                } else if (!empty($inp['start_time'])) {
+                    $query->where('add_time', '>=', $inp['start_time']);
+                } else if (!empty($inp['end_time'])) {
+                    $query->where('add_time', '<=', $inp['end_time']);
                 }
             };
 
-        $db = AdmUserRole::select('id', 'code', 'name', 'remarks', 'isLock', 'addCode', 'addTime', 'upCode', 'upTime')
-            ->where('isDel', 0)
+        $db = AdmRole::select('id', 'code', 'title', 'remarks', 'is_lock', 'add_code', 'add_time', 'up_code', 'up_time')
+            ->where('is_del', 0)
             ->where($where)
-            ->orderBy('isLock','asc')
-            ->orderBy('addTime','asc')
+            ->orderBy('is_lock', 'asc')
+            ->orderBy('add_time', 'asc')
             ->paginate($inp['limit'])
             ->all();
 
@@ -55,20 +55,21 @@ class AdmUserRoleController extends Controller
             $dbData[] = [
                 'id' => $v->id,
                 'code' => $v->code,
-                'name' => $v->name,
+                'title' => $v->title,
                 'remarks' => $v->remarks,
-                'isLock' => getIsLock($v->isLock),
-                'addName' => getAdmName($v->addCode),
-                'addTime' => $v->addTime,
-                'upName' => getAdmName($v->upCode),
-                'upTime' => $v->upTime,
+                'is_lock_name' => getIsLock($v->is_lock),//状态
+                'is_lock' => $v->is_lock,//状态
+                'add_name' => getAdmName($v->add_code),
+                'add_time' => $v->add_time,
+                'up_name' => getAdmName($v->up_code),
+                'up_time' => $v->up_time,
             ];
         }
 
         //
         //总记录
-        $total = AdmUserRole::select(1)
-            ->where('isDel', 0)
+        $total = AdmRole::select(1)
+            ->where('is_del', 0)
             ->where($where)
             ->count();
         $data = [];
@@ -120,10 +121,10 @@ class AdmUserRoleController extends Controller
         $list["title"] = "根目录";
         $list["spread"] = true;
         $list["children"] = getRoute(2);
-        $role = DB::table('adm_role_route')->where('roleId', $id)->select('routeId')->get();
+        $role = DB::table('adm_role_route')->where('role_id', $id)->select('route_id')->get();
         $roleList = collect([]);
         foreach ($role as $k) {
-            $roleList->push($k->routeId);
+            $roleList->push($k->route_id);
         }
         return view('.sys.pages.member.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
     }
@@ -142,13 +143,13 @@ class AdmUserRoleController extends Controller
         //
         $inp = $request->all();
         //
-        $db = new AdmUserRole();
+        $db = new AdmRole();
         $db['code'] = getNewId();
-        $db['isLock'] = 0;
-        $db['isDel'] = 0;
-        $db['addCode'] = _admCode();
-        $db['addTime'] = getTime(1);
-        $db['name'] = $inp['name'];
+        $db['is_lock'] = 0;
+        $db['is_del'] = 0;
+        $db['add_code'] = _admCode();
+        $db['add_time'] = getTime(1);
+        $db['title'] = $inp['title'];
         $db['remarks'] = $inp['remarks'];
 
         if ($db->save()) {
@@ -175,12 +176,12 @@ class AdmUserRoleController extends Controller
 
         //
         //删除所有当前角色相关的role数据
-        DB::table('adm_role_route')->where('roleId', $id)->delete();
+        DB::table('adm_role_route')->where('role_id', $id)->delete();
         //
-        $db = AdmUserRole::find($id);
-        $db['upCode'] = _admCode();
-        $db['upTime'] = getTime(1);
-        $db['name'] = $inp['name'];
+        $db = AdmRole::find($id);
+        $db['up_code'] = _admCode();
+        $db['up_time'] = getTime(1);
+        $db['title'] = $inp['title'];
         $db['remarks'] = $inp['remarks'];
         if ($db->save()) {
             //往角色关联表写入数据
@@ -207,7 +208,7 @@ class AdmUserRoleController extends Controller
     {
         //
         $inp = $request->all();
-        if (getIsExist('adm_user_role', 'roleId', $inp['id']) > 0) {
+        if (getIsExist('adm_user_role', 'role_id', $inp['id']) > 0) {
             return getSuccess('当前权限正在被使用中,无法进行删除操作');
         }
         setDel('adm_role', $inp['id']);

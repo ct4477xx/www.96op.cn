@@ -8,6 +8,6 @@ class urlMaxToMin extends Model
 {
     //
     protected $table = 'urlMaxToMin';
-    const CREATED_AT = 'addTime';
+    const CREATED_AT = 'add_time';
     const UPDATED_AT = 'visitTime';
 }

@@ -4,7 +4,7 @@ namespace App\SysModel;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AdmUserRole extends Model
+class AdmRole extends Model
 {
     //
     protected $table = 'adm_role';//自定义表名（protected $table）

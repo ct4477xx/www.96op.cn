@@ -13,6 +13,6 @@ class House extends Model
 
     public function houseFather()
     {
-        return $this->belongsTo(House::class,'fatherId','id');
+        return $this->belongsTo(House::class,'father_id','id');
     }
 }
