@@ -60,8 +60,8 @@ class AdmUserController extends Controller
             ->select('a.id', 'a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail','b.moneyRatio', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
             ->where('a.isDel', 0)
             ->where($where)
-            ->orderBy('isLock','asc')
-            ->orderBy('addTime','asc')
+            ->orderBy('a.isLock','asc')
+            ->orderBy('a.addTime','asc')
             ->paginate($inp['limit'])
             ->all();
 
@@ -71,7 +71,8 @@ class AdmUserController extends Controller
                 'id' => $v->id,//id
                 'code' => $v->code,//编号
                 'username' => $v->username,//用户名
-                'isLock' => getIsLock($v->isLock),//状态
+                'is_lock_name' => getIsLock($v->isLock),//状态
+                'is_lock' => $v->isLock,//状态
                 'sex' => getSex($v->sex),//性别
                 'name' => $v->name,//姓名
                 'birthDate' => $v->birthDate,//出生日期

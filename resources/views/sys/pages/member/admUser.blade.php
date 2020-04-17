@@ -128,7 +128,7 @@
                     {field: "mail", title: "邮箱", width: 150},
                     {field: "mobile", title: "手机号码", width: 120},
                     {field: "role", title: "角色", width: 100},
-                    {field: "isLock", title: "状态", width: 85, sort: true},
+                    {field: "is_lock_name", title: "状态", width: 85, sort: true},
                     {field: "moneyRatio", title: "提成比例", width: 95, sort: true},
                     {field: "addName", title: "创建者", width: 90},
                     {field: "addTime", title: "创建时间", width: 145, sort: true},
@@ -136,8 +136,12 @@
                     {field: "upTime", title: "修改时间", width: 145, sort: true},
                     {
                         title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
-                            return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +
-                                "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>"
+                            if (d.is_lock == 0) {
+                                return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>";
+                            } else {
+                                return "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>\n" +
+                                    "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>";
+                            }
                         }
                     }
                 ]],
