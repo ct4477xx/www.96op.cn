@@ -51,7 +51,7 @@
                                     @else
                                         <i class="layui-icon">&#xe63f;</i>
                                     @endif
-                                    {!! $v['title'] !!}
+                                    {!! $v['title'] !!}  ({!! $v['href'] !!})
                                 </td>
                                 <td>{!! getRouteType($v['is_type']) !!}</td>
                                 <td>{!! $v['by_sort'] !!}</td>
@@ -175,9 +175,9 @@ function children($li, $i)
         echo '&nbsp;&nbsp;&nbsp;&nbsp;';
     }
     if (isset($li['children'])) {
-        echo ' <i class="layui-icon x-show" status="true">&#xe623;</i>' . $li['title'];
+        echo ' <i class="layui-icon x-show" status="true">&#xe623;</i>' . $li['title'] . "  (" . $li['href'] . ")";
     } else {
-        echo '|-- ' . $li['title'];
+        echo '|-- ' . $li['title'] . "  (" . $li['href'] . ")";
     }
     echo '</td>';
     echo '<td>' . getRouteType($li['is_type']) . '</td>';
