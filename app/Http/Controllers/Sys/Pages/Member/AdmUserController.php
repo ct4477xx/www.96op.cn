@@ -167,7 +167,7 @@ class AdmUserController extends Controller
         $adm['code'] = getNewId();
         $adm['user_name'] = $inp['user_name'];
         $adm['pass_word'] = Hash::make($inp['pass_word']);
-        $adm['is_lock'] = empty($inp['is_lock']) ? 1 : 0;
+        $adm['is_lock'] = 0;
         $adm['is_del'] = 0;
         $adm['add_code'] = _admCode();
         $adm['add_time'] = getTime(1);
