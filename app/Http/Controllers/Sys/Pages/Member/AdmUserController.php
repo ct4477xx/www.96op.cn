@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Sys;
+namespace App\Http\Controllers\Sys\Pages\Member;
 
 use App\Http\Controllers\Controller;
 use App\SysModel\AdmUser;
@@ -55,38 +55,41 @@ class AdmUserController extends Controller
                 }
             };
         $db = DB::table('adm_User as a')
-            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admCode')
+            ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.admCode')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
-            ->select('a.id', 'a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
+            ->select('a.id', 'a.code', 'a.userName as username', 'a.isLock', 'b.sex', 'b.name', 'b.birthDate', 'b.mobile', 'b.mail','b.moneyRatio', 'a.addCode', 'a.addTime', 'a.upCode', 'a.upTime', 'c.roleId')
             ->where('a.isDel', 0)
             ->where($where)
+            ->orderBy('isLock','asc')
+            ->orderBy('addTime','asc')
             ->paginate($inp['limit'])
             ->all();
 
         $dbData = [];
         foreach ($db as $k => $v) {
             $dbData[] = [
-                'id' => $v->id,
-                'code' => $v->code,
-                'username' => $v->username,
-                'isLock' => getIsLock($v->isLock),
-                'sex' => getSex($v->sex),
-                'name' => $v->name,
-                'birthDate' => $v->birthDate,
-                'mobile' => $v->mobile,
-                'role' => getRoleName($v->roleId),
-                'mail' => $v->mail,
-                'addName' => getAdmName($v->addCode),
-                'addTime' => $v->addTime,
-                'upName' => getAdmName($v->upCode),
-                'upTime' => $v->upTime,
+                'id' => $v->id,//id
+                'code' => $v->code,//编号
+                'username' => $v->username,//用户名
+                'isLock' => getIsLock($v->isLock),//状态
+                'sex' => getSex($v->sex),//性别
+                'name' => $v->name,//姓名
+                'birthDate' => $v->birthDate,//出生日期
+                'mobile' => $v->mobile,//手机号码
+                'moneyRatio' => $v->moneyRatio,//提成比例
+                'role' => getRoleName($v->roleId),//权限角色
+                'mail' => $v->mail,//邮件地址
+                'addName' => getAdmName($v->addCode),//创建者
+                'addTime' => $v->addTime,//创建时间
+                'upName' => getAdmName($v->upCode),//最后修改人
+                'upTime' => $v->upTime,//修改时间
             ];
         }
 
         //
         //总记录
         $total = DB::table('adm_User as a')
-            ->leftJoin('adm_userinfo as b', 'a.code', '=', 'b.admCode')
+            ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.admCode')
             ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
             ->select('1')
             ->where('a.isDel', 0)
@@ -109,16 +112,40 @@ class AdmUserController extends Controller
     {
         //
         $db['id'] = '';
-        $db['code'] = '';
-        $db['userName'] = '';
         $db['isLock'] = '';
-        $db['admUserInfo']['admCode'] = '';
-        $db['admUserInfo']['name'] = '';
         $db['admUserInfo']['sex'] = 1;
-        $db['admUserInfo']['birthDate'] = '';
-        $db['admUserInfo']['mobile'] = '';
-        $db['admUserInfo']['mail'] = '';
         return view('.sys.pages.member.admUserEdit', ['db' => $db, 'roleId' => []]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+        $db = AdmUser::where('id', $id)
+            ->select('id', 'isLock')
+            ->with('admUserInfo:admCode,sex')
+            ->get();
+
+        $role = DB::table('adm_user_role')->where('uid', $id)->select('roleId')->get();
+        $result = json_decode($role, true);
+        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'roleId' => $result[0]['roleId'] ?? []]);
     }
 
     /**
@@ -152,6 +179,7 @@ class AdmUserController extends Controller
             $info['mobile'] = $inp['mobile'];
             $info['mail'] = $inp['mail'];
             $info['birthDate'] = $inp['birthDate'];
+            $info['moneyRatio'] = $inp['moneyRatio'];
             $info['isDel'] = 0;
             $info->save();
             //保存角色
@@ -162,37 +190,6 @@ class AdmUserController extends Controller
         } else {
             return getSuccess(2);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-        $db = AdmUser::where('id', $id)
-            ->select('id', 'code', 'userName', 'isLock')
-            ->with('admUserInfo:admCode,name,sex,birthDate,mobile,mail')
-            ->get();
-
-        $role = DB::table('adm_user_role')->where('uid', $id)->select('roleId')->get();
-        $result = json_decode($role, true);
-        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'roleId' => $result[0]['roleId'] ?? []]);
     }
 
     /**
@@ -218,7 +215,7 @@ class AdmUserController extends Controller
 
 
         //在没有找到用户资料时,创建用户资料
-        if (getIsExist('adm_userinfo', 'admCode', \Cookie::get('admCode')) == 0) {
+        if (getIsExist('adm_user_info', 'admCode', _admCode()) == 0) {
             $info = new AdmUserInfo();
             $info['admCode'] = $adm['code'];
             $info['name'] = $inp['name'];
@@ -236,6 +233,7 @@ class AdmUserController extends Controller
                     'mobile' => $inp['mobile'],
                     'mail' => $inp['mail'],
                     'birthDate' => $inp['birthDate'],
+                    'moneyRatio' => $inp['moneyRatio'],
                 ]);
         }
         //保存角色

@@ -7,10 +7,10 @@
           content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <meta name="keywords" content="{!! site()['keywords'] !!}">
     <meta name="description" content="{!! site()['description'] !!}">
-    <link rel="stylesheet" href="/resource/css/okadmin.css">
+    <link rel="stylesheet" href="/css/okadmin.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/resource/lib/layui/layui.js" charset="utf-8"></script>
-    <script src="/resource/js/xadmin.js" charset="utf-8"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script src="/js/xadmin.js" charset="utf-8"></script>
 </head>
 
 <body>

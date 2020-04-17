@@ -5,7 +5,7 @@
     <title>角色列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     @include('.sys.public.css')
-    <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
+    <script type="text/javascript" src="/lib/loading/okLoading.js"></script>
     @include('.sys.public.js')
 </head>
 <body>
@@ -48,26 +48,34 @@
             </button>
         </form>
     </div>
-<!--数据表格-->
+    <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
 <script>
-    layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils"], function () {
+    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils","okLayx"], function () {
         let table = layui.table;
         let form = layui.form;
         let laydate = layui.laydate;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
+        let okLayx = layui.okLayx;
+        let $ = layui.jquery;
         okLoading.close();
+        okLayx.notice({
+            title: "温馨提示",
+            type: "warning",
+            message: "{!! frame()['message'] !!}"
+        });
         laydate.render({elem: "#startTime", type: "datetime"});
         laydate.render({elem: "#endTime", type: "datetime"});
 
         let roleTable = table.render({
             elem: "#tableId",
             url: '/sys/pages/member/admUserRoleRead',
-            limit: '{!! pages()['limit'] !!}',
-            limits: [{!! pages()['limits'] !!}],
+            limit: '{!! frame()['limit'] !!}',
+            limits: [{!! frame()['limits'] !!}],
+            title: '角色列表_{{getTime(3)}}',
             page: true,
             toolbar: '<div class="layui-btn-container">\n' +
                 '        <button class="layui-btn layui-btn-sm" lay-event="add">添加角色</button>\n' +
@@ -103,7 +111,6 @@
                 where: data.field,
                 page: {curr: 1}
             });
-            // console.log("0000")
             return false;
         });
 
@@ -128,7 +135,7 @@
             let data = obj.data;
             switch (obj.event) {
                 case "edit":
-                    edit(data.id);
+                    edit(data);
                     break;
                 case "del":
                     del(data.id);
@@ -195,8 +202,11 @@
             });
         }
 
-        function edit(id) {
-            okLayer.open("编辑角色", "admUserRole/" + id + "/edit", "90%", "90%", null, function () {
+        function edit(data) {
+            okLayer.open("编辑角色", "admUserRole/" + data.id + "/edit", "90%", "90%", function (layero) {
+                let iframeWin = window[layero.find("iframe")[0]["name"]];
+                iframeWin.initForm(data);
+            }, function () {
                 roleTable.reload();
             })
         }
@@ -207,7 +217,6 @@
                     id: id,
                     _token: '{{csrf_token()}}'
                 }, true).done(function (response) {
-                    console.log(response);
                     okUtils.tableSuccessMsg(response.msg);
                 }).fail(function (error) {
                     console.log(error)

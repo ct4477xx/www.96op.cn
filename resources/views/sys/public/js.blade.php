@@ -1,1 +1,1 @@
-<script src="{{asset('/resource/lib/layui/layui.js')}}"></script>
+<script src="{{asset('/lib/layui/layui.js')}}"></script>

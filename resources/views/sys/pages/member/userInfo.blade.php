@@ -5,7 +5,7 @@
     <title>基本资料</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     @include('.sys.public.css')
-    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    <script type="text/javascript" src="{{asset('/lib/loading/okLoading.js')}}"></script>
     @include('.sys.public.js')
 </head>
 <body class="user-info">
@@ -82,7 +82,7 @@
         form.on("submit(changeInfo)", function (data) {
             var index = layer.msg('提交中，请稍候', {icon: 16, time: false, shade: 0.8});
             setTimeout(function () {
-                $.post("{{url('sys/userInfo')}}", {_token: "{{csrf_token()}}", 'data': data.field},
+                $.post("{{url('sys/pages/userInfo')}}", {_token: "{{csrf_token()}}", 'data': data.field},
                     function (data) {
                         if (data.success) {
                             layer.msg(data.msg);

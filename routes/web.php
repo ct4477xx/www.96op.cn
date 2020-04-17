@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::redirect('/', 'csign', 301);
+Route::redirect('/', 'sys', 301);
 /**
  *
  * 公共方法
@@ -31,20 +31,21 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
 //登录验证路由
 Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin'], function () {
     Route::get('', 'IndexController@index');//后台主页
-    Route::get('logout', 'LoginController@logout');//退出系统
-    Route::get('userInfo', 'IndexController@userInfo');//基本资料
-    Route::post('userInfo', 'IndexController@userInfoUp');//基本资料接口
-    Route::get('userPwd', 'IndexController@userPwd');//安全设置
-    Route::post('userPwd', 'IndexController@userPwdUp');//安全设置接口
-    Route::get('menu', 'IndexController@menu');//左侧菜单
+    Route::get('logout', 'IndexController@logout');//退出系统
     //
-    Route::group(['prefix' => 'pages/'], function () {
-        //
+    Route::group(['prefix' => 'pages/', 'namespace' => 'Pages'], function () {
+        //框架公共部分
+        Route::get('userInfo', 'IndexController@userInfo');//基本资料
+        Route::post('userInfo', 'IndexController@userInfoUp');//基本资料接口
+        Route::get('userPwd', 'IndexController@userPwd');//安全设置
+        Route::post('userPwd', 'IndexController@userPwdUp');//安全设置接口
+        Route::get('menu', 'IndexController@menu');//左侧菜单
         Route::get('console', 'IndexController@console');//控制台
         Route::get('weather', 'IndexController@weather');//天气预报
         //
         //账号相关
-        Route::group(['prefix' => 'member/'], function () {
+        Route::group(['prefix' => 'member/', 'namespace' => 'Member'], function () {
+            //账户列表
             Route::resource('admUser', 'AdmUserController');
             Route::get('admUserRead', 'AdmUserController@read');//获取页面数据
             Route::post('admUserDel', 'AdmUserController@del');//删除用户
@@ -57,27 +58,26 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
             Route::post('admUserRoleDel', 'AdmUserRoleController@del');//删除用户
             Route::post('admUserRoleStart', 'AdmUserRoleController@start');//启用用户
             Route::post('admUserRoleStop', 'AdmUserRoleController@stop');//禁止用户
-            //
+            //角色授权页
             Route::get('admUserRoleReadEdit', 'AdmUserRoleController@edit');//编辑角色权限页面
-            //权限列表
-            Route::get('admUserPowerRoute', 'AdmUserPowerController@route');
         });
+        //路由管理
+        Route::group(['prefix' => 'routes/', 'namespace' => 'Routes'], function () {
+            Route::resource('route', 'RouteController');
+            Route::post('storeSon', 'RouteController@storeSon');//子项路由添加
+            Route::get('routeSon/{id}/edit', 'RouteController@routeSonEdit');//路由编辑页
+        });
+        //框架相关
+        Route::group(['prefix' => 'system/', 'namespace' => 'System'], function () {
+            Route::get('alertSkin', 'SystemController@alertSkin');
+        });
+        //
         //房屋管理
         Route::group(['prefix' => 'house/'], function () {
             Route::resource('house', 'HouseController');
             Route::PATCH('houseRoom', 'HouseController@houseRoomStore');
             Route::get('houseRoom/{id}', 'HouseController@houseRoomEdit');
             Route::resource('tenant', 'TenantController');
-        });
-        //系统相关
-        Route::group(['prefix' => 'system/'], function () {
-            Route::get('alertSkin', 'IndexController@alertSkin');
-        });
-        //路由管理
-        Route::group(['prefix' => 'routes/'], function () {
-            Route::resource('route', 'RouteController');
-            Route::post('storeSon', 'RouteController@storeSon');
-            Route::get('routeSon/{id}/edit', 'RouteController@routeSonEdit');
         });
     });
 });

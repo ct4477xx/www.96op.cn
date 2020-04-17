@@ -9,111 +9,114 @@ use App\SysModel\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+
 class IndexController extends Controller
 {
     //
     function index()
     {
-        //首页
-        return view('sys.index');
-    }
-
-
-    function console()
-    {
-        //控制台
-        return view('sys.pages.console');
-    }
-
-    function weather()
-    {
-        //天气预报
-        return view('sys.pages.weather');
-    }
-
-    function userInfo()
-    {
-        //个人用户信息
-        //在没有找到用户资料时,创建用户资料
-        if (getIsExist('adm_userinfo', 'admCode', \Cookie::get('admCode')) == 0) {
-            $info = new AdmUserInfo();
-            $info['admCode'] = \Cookie::get('admCode');
-            $info['name'] = \Cookie::get('admName');
-            $info->save();
+        if (\Cookie::get('admCode')) {
+            return view('.sys.index');
+        } else {
+            return view('.sys.login');
         }
-        $db = AdmUserInfo::where('admCode', \Cookie::get('admCode'))
-            ->first();
-        return view('sys.pages.member.userInfo', $db);
     }
 
-    function userInfoUp(Request $request)
-    {
-        //执行更新
-        $inp = $request->all();
-        $info = $db = AdmUserInfo::where('admCode', _admCode())
-            ->update(
-                [
-                    'name' => $inp['data']['name'],
-                    'sex' => $inp['data']['sex'] == 'false' ? 0 : 1,
-                    'birthDate' => $inp['data']['birthDate'],
-                    'mobile' => $inp['data']['mobile'],
-                    'mail' => $inp['data']['mail']
-                ]
-            );
 
-        $bool = AdmUser::where('code', _admCode())->update(['upCode' => _admCode(), 'upTime' => getTime(1)]);
-        if ($info || $bool) {
+    function login(Request $request)
+    {
+        $inp = $request->all();
+
+        $db_data = AdmUser::where([
+            'userName' => $inp['data']['username'],
+            'isDel' => 0
+        ])
+            ->select('id', 'code', 'userName', 'passWord', 'isLock')
+            ->with(['admUserInfo:admCode,name'])
+            ->first();
+        if (!$db_data) {
+            return getSuccess('用户名不存在, 再仔细想想?');
+        }
+        if ($db_data['isLock'] == 1) {
+            return getSuccess('当前账号已被锁定, 请联系系统管理员');
+        }
+        $is_Pwd = json_encode(Hash::check($inp['data']['password'], $db_data['passWord']));
+        if ($is_Pwd == 'true') {
             $time = 1 * 60 * 12;//缓存时间
-            \Cookie::queue('admName', $inp['data']['name'], $time);
-
-            return getSuccess(1);
+            //\Session()->put('admId', $db_data['code']);
+            \Cookie::queue('admId', $db_data['id'], $time);
+            $name = $db_data['admUserInfo']['name'];
+            \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
+            \Cookie::queue('admCode', $db_data['code'], $time);
+            \Cookie::queue('captcha', null, -1);
+            $data = [
+                'success' => true
+            ];
         } else {
-            return getSuccess(2);
+            \Cookie::get('captcha') ? \Cookie::get('captcha') : 0;
+            \Cookie::queue('captcha', \Cookie::get('captcha') + 1, 0);
+            $data = [
+                'success' => false,
+                'msg' => '用户名或密码错误, 仔细想想吧',
+                'username' => $inp['data']['username'],
+                'password' => $inp['data']['password']
+            ];
         }
+        return $data;
     }
 
-    function userPwd()
+    function logout()
     {
-        //个人密码
-        return view('sys.pages.member.userPwd');
+        //\Session()->forget('admId');
+        \Cookie::queue('admId', null, -1);
+        \Cookie::queue('admName', null, -1);
+        \Cookie::queue('admCode', null, -1);
+        return redirect('sys');
     }
 
-    function userPwdUp(Request $request)
+    function register()
     {
-        //执行更新
+        return view('sys.register');
+    }
+
+    function registerReg(Request $request)
+    {
         $inp = $request->all();
-        //查找用户
-        $db = AdmUser::where('code', \Cookie::get('admCode'))
-            ->select(['password'])
-            ->first();
-        $is_Pwd = json_encode(Hash::check($inp['data']['oldPwd'], $db['password']));
-        if ($is_Pwd == 'false') {
-            return getSuccess('旧密码错误，请重新输入！');
+        //判断用户名是否存在
+        if (getIsExist('adm_user', 'userName', $inp['data']['username']) > 0) {
+            return [
+                'success' => false, 'msg' => '用户名已存在, 请换个用户名试试!',
+                'username' => $inp['data']['username'],
+                'password' => $inp['data']['password'],
+            ];
         }
-        $data = AdmUser::where('code', \Cookie::get('admCode'))
-            ->update(['password' => Hash::make($inp['data']['password'])]);
-        if ($data) {
+        $data = new AdmUser();
+        $data['code'] = getNewId();
+        $data['username'] = $inp['data']['username'];
+        $data['password'] = Hash::make($inp['data']['password']);
+        $data['isLock'] = 1;
+        $data['isDel'] = 0;
+        $data['addCode'] = '';
+        $data['addTime'] = getTime(1);
+        if ($data->save()) {
+            //用户注册后自动生成关联信息表
+            $info = new AdmUserInfo();
+            $info['admCode'] = $data['code'];
+            $info['name'] = $data['code'];
+            $info->save();
             return getSuccess(1);
         } else {
-            return getSuccess(2);
+            return [
+                'success' => false, 'msg' => '操作失败!',
+                'username' => $inp['data']['username'],
+                'password' => $inp['data']['password'],
+            ];
         }
     }
 
-    function alertSkin()
+    function forget()
     {
-        //配色设置
-        return view('sys.pages.system.alertSkin');
-    }
-
-    function menu()
-    {
-        //无限极菜单
-//        $data = Menu::where(['fatherId' => 0, 'isDel' => 0])
-//            ->select('id', 'title', 'href', 'fontFamily', 'icon', 'spread', 'isCheck')
-//            ->with(['children:id,fatherId,title,href,fontFamily,icon,spread'])
-//            ->get();
-//        return $data;
-        return getRoute(1);
+        return view('sys.pages.forget');
     }
 
 }

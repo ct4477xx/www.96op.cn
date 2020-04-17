@@ -13,7 +13,7 @@
 <body class="page-fill">
 <div class="page-fill" id="login">
     <form class="layui-form">
-        <div class="login_face"><img src="/resource/images/logo.png"></div>
+        <div class="login_face"><img src="/images/logo.png"></div>
         <div class="layui-form-item input-item">
             <label for="username">用户名</label>
             <input type="text" lay-verify="required" name="username" placeholder="请输入账号" autocomplete="off"

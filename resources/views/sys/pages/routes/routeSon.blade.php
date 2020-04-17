@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     @include('.sys.public.css')
-    <script type="text/javascript" src="/resource/lib/loading/okLoading.js"></script>
+    <script type="text/javascript" src="/lib/loading/okLoading.js"></script>
     @include('.sys.public.js')
 </head>
 <body>

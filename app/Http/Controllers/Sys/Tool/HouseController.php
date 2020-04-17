@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Sys;
 use App\Http\Controllers\Controller;
 use App\SysModel\House;
 use Illuminate\Http\Request;
-use function MongoDB\BSON\toJSON;
 
 class HouseController extends Controller
 {

@@ -1,1 +1,1 @@
-<link rel="stylesheet" href="{{asset('/resource/css/oksub.css')}}"/>
+<link rel="stylesheet" href="{{asset('/css/oksub.css')}}"/>

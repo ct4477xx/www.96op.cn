@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Sys;
+namespace App\Http\Controllers\Sys\Pages\Routes;
 
 use App\Http\Controllers\Controller;
 use App\SysModel\Menu;

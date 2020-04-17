@@ -16,9 +16,9 @@ class AjaxReadKeyController extends Controller
             case 'houseRoom':
                 return getReadKeyHouseRoom($Id, '');
                 break;
-//            case 'sex':
-//                return ['code' => 0, 'data' => getSex($Id)];
-//                break;
+            case 'sex':
+                return ['code' => 0, 'data' => getSex($Id)];
+                break;
             default:
                 return ['success' => false, 'msg' => '不存在的类型'];
                 break;

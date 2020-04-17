@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Sys;
+namespace App\Http\Controllers\Sys\Pages\Member;
 
 use App\Http\Controllers\Controller;
 use App\SysModel\AdmUserRole;
@@ -44,6 +44,8 @@ class AdmUserRoleController extends Controller
         $db = AdmUserRole::select('id', 'code', 'name', 'remarks', 'isLock', 'addCode', 'addTime', 'upCode', 'upTime')
             ->where('isDel', 0)
             ->where($where)
+            ->orderBy('isLock','asc')
+            ->orderBy('addTime','asc')
             ->paginate($inp['limit'])
             ->all();
 
@@ -90,11 +92,42 @@ class AdmUserRoleController extends Controller
         $list["children"] = getRoute(2);
 
         $db['id'] = '';
-        $db['name'] = '';
-        $db['remarks'] = '';
-
         return view('.sys.pages.member.admUserRoleEdit', ['db' => $db, 'data' => json_encode($list), 'role' => '']);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+        $db['id'] = $id;
+        $list = [];
+        $list["title"] = "根目录";
+        $list["spread"] = true;
+        $list["children"] = getRoute(2);
+        $role = DB::table('adm_role_route')->where('roleId', $id)->select('routeId')->get();
+        $roleList = collect([]);
+        foreach ($role as $k) {
+            $roleList->push($k->routeId);
+        }
+        return view('.sys.pages.member.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -126,40 +159,6 @@ class AdmUserRoleController extends Controller
         } else {
             return getSuccess(2);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-
-        $db = AdmUserRole::find($id);
-        $list = [];
-        $list["title"] = "根目录";
-        $list["spread"] = true;
-        $list["children"] = getRoute(2);
-        $role = DB::table('adm_role_route')->where('roleId', $id)->select('routeId')->get();
-        $roleList = collect([]);
-        foreach ($role as $k) {
-            $roleList->push($k->routeId);
-        }
-        return view('.sys.pages.member.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
     }
 
     /**

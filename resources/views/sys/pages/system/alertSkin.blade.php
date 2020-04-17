@@ -2,9 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>皮肤动画</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link rel="stylesheet" href="/resource/css/oksub.css">
+        @include('.sys.public.css')
+        @include('.sys.public.js')
     </head>
     <body>
         <div class="ok-body">
@@ -41,7 +41,6 @@
             </form>
         </div>
         <!--js逻辑-->
-        <script src="/resource/lib/layui/layui.js"></script>
         <script>
             layui.use(["element", "form", "okLayer", "okUtils"], function () {
                 let form = layui.form;

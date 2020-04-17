@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     @include('.sys.public.css')
-    <script type="text/javascript" src="{{asset('/resource/lib/loading/okLoading.js')}}"></script>
+    <script type="text/javascript" src="{{asset('/lib/loading/okLoading.js')}}"></script>
     @include('.sys.public.js')
 </head>
 <body>
@@ -87,22 +87,28 @@
 </div>
 <!--js逻辑-->
 <script>
-    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils", "okFly"], function () {
+    layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils", "okLayx"], function () {
         let table = layui.table;
         let form = layui.form;
         let laydate = layui.laydate;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
-        let okFly = layui.okFly;
+        let okLayx = layui.okLayx;
         let $ = layui.jquery;
         laydate.render({elem: "#startTime", type: "datetime"});
         laydate.render({elem: "#endTime", type: "datetime"});
         okLoading.close($);
+        okLayx.notice({
+            title: "温馨提示",
+            type: "warning",
+            message: "{!! frame()['message'] !!}"
+        });
         let userTable = table.render({
             elem: '#tableId',
             url: '/sys/pages/member/admUserRead',
-            limit: '{!! pages()['limit'] !!}',
-            limits: [{!! pages()['limits'] !!}],
+            limit: '{!! frame()['limit'] !!}',
+            limits: [{!! frame()['limits'] !!}],
+            title: '用户列表_{{getTime(3)}}',
             page: true,
             toolbar: '<div class="layui-btn-container">\n' +
                 '        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>\n' +
@@ -123,6 +129,7 @@
                     {field: "mobile", title: "手机号码", width: 120},
                     {field: "role", title: "角色", width: 100},
                     {field: "isLock", title: "状态", width: 85, sort: true},
+                    {field: "moneyRatio", title: "提成比例", width: 95, sort: true},
                     {field: "addName", title: "创建者", width: 90},
                     {field: "addTime", title: "创建时间", width: 145, sort: true},
                     {field: "upName", title: "最后修改人", width: 90},
@@ -154,11 +161,11 @@
                 case "batchDisabled":
                     batchDisabled();
                     break;
-                case "batchDel":
-                    batchDel();
-                    break;
                 case "add":
                     add();
+                    break;
+                case "batchDel":
+                    batchDel();
                     break;
             }
         });
@@ -209,6 +216,13 @@
             });
         }
 
+
+        function add() {
+            okLayer.open("添加用户", "admUser/create", "90%", "90%", null, function () {
+                userTable.reload();
+            })
+        }
+
         function batchDel() {
             okLayer.confirm("确定要批量删除吗？", function (index) {
                 layer.close(index);
@@ -226,14 +240,9 @@
             });
         }
 
-        function add() {
-            okLayer.open("添加用户", "admUser/create", "90%", "90%", null, function () {
-                userTable.reload();
-            })
-        }
 
         function edit(data) {
-            okLayer.open("更新用户", "admUser/" + data.id + "/edit", "90%", "90%", function (layero) {
+            okLayer.open("编辑用户", "admUser/" + data.id + "/edit", "90%", "90%", function (layero) {
                 let iframeWin = window[layero.find("iframe")[0]["name"]];
                 iframeWin.initForm(data);
             }, function () {
@@ -247,7 +256,6 @@
                     id: id,
                     _token: '{{csrf_token()}}'
                 }, true).done(function (response) {
-                    console.log(response);
                     okUtils.tableSuccessMsg(response.msg);
                 }).fail(function (error) {
                     console.log(error)

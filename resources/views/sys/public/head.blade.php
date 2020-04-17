@@ -45,12 +45,12 @@
 
         <li class="no-line layui-nav-item">
             <a href="javascript:">
-                <img src="/resource/images/avatar.png" class="layui-nav-img">
+                <img src="/images/avatar.png" class="layui-nav-img">
                 {{\Cookie::get('admName')}}
             </a>
             <dl id="userInfo" class="layui-nav-child">
-                <dd><a lay-id="u-1" href="javascript:" data-url="/sys/userInfo">基本资料</a></dd>
-                <dd><a lay-id="u-2" href="javascript:" data-url="/sys/userPwd">安全设置</a></dd>
+                <dd><a lay-id="u-1" href="javascript:" data-url="/sys/pages/userInfo">基本资料</a></dd>
+                <dd><a lay-id="u-2" href="javascript:" data-url="/sys/pages/userPwd">安全设置</a></dd>
                 <dd><a lay-id="u-3" href="javascript:" id="alertSkin">皮肤动画<span class="layui-badge-dot"></span></a></dd>
                 <dd>
                     <hr/>

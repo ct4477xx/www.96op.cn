@@ -1,9 +1,9 @@
 <div class="layui-side layui-side-menu okadmin-bg-20222A ok-left">
     <div class="layui-side-scroll okadmin-side">
-        <div class="okadmin-logo">新疆峰景门店小助手</div>
+        <div class="okadmin-logo">{!! site()['title'] !!}</div>
         <div class="user-photo">
             <a class="img" title="我的头像">
-                <img src="/resource/images/avatar.png" class="userAvatar">
+                <img src="/images/avatar.png" class="userAvatar">
             </a>
             <p>你好！<span class="userName">{{\Cookie::get('admName')}}</span>, 欢迎登录</p>
         </div>

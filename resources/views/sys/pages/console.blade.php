@@ -12,11 +12,11 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
 	@include('.sys.public.css')
-	<script type="text/javascript" src="/resource/lib/echarts/echarts.min.js"></script>
-	<script type="text/javascript" src="/resource/lib/echarts/echarts.theme.js"></script>
-	<script type="text/javascript" src="/resource/lib/echarts/world/js/china.js"></script>
+	<script type="text/javascript" src="/lib/echarts/echarts.min.js"></script>
+	<script type="text/javascript" src="/lib/echarts/echarts.theme.js"></script>
+	<script type="text/javascript" src="/lib/echarts/world/js/china.js"></script>
     @include('.sys.public.js')
-    <script type="text/javascript" src="/resource/js/console.js"></script>
+    <script type="text/javascript" src="/js/console.js"></script>
 </head>
 <body class="ok-body-scroll console">
 <div class="ok-body home">
@@ -25,7 +25,7 @@
 			<div class="layui-card">
 				<div class="ok-card-body">
 					<div class="img-box" ok-pc-in-show>
-						<img src="/resource/images/home-01.png" alt="none"/>
+						<img src="/images/home-01.png" alt="none"/>
 					</div>
 					<div class="cart-r">
 						<div class="stat-text incomes-num">0</div>
@@ -39,7 +39,7 @@
 			<div class="layui-card ">
 				<div class="ok-card-body">
 					<div class="img-box" ok-pc-in-show>
-						<img src="/resource/images/home-02.png" alt="none"/>
+						<img src="/images/home-02.png" alt="none"/>
 					</div>
 					<div class="cart-r">
 						<div class="stat-text goods-num">0</div>
@@ -53,7 +53,7 @@
 			<div class="layui-card">
 				<div class="ok-card-body">
 					<div class="img-box" ok-pc-in-show>
-						<img src="/resource/images/home-03.png" alt="none"/>
+						<img src="/images/home-03.png" alt="none"/>
 					</div>
 					<div class="cart-r">
 						<div class="stat-text blogs-num">0</div>
@@ -67,7 +67,7 @@
 			<div class="layui-card">
 				<div class="ok-card-body">
 					<div class="img-box" ok-pc-in-show>
-						<img src="/resource/images/home-04.png" alt="none"/>
+						<img src="/images/home-04.png" alt="none"/>
 					</div>
 					<div class="cart-r">
 						<div class="stat-text fans-num">0</div>
@@ -98,7 +98,7 @@
 				<div class="ok-card-body map-body">
 					<div class="progress-box ">
 						<div class="pro-head">
-							<img src="/resource/images/face.jpg" alt="none"/>
+							<img src="/images/face.jpg" alt="none"/>
 						</div>
 						<div class="pro-data">
 							<h4 class="por-title">Visits</h4>
@@ -111,7 +111,7 @@
 
 					<div class="progress-box ">
 						<div class="pro-head">
-							<img src="/resource/images/face.jpg" alt="none"/>
+							<img src="/images/face.jpg" alt="none"/>
 						</div>
 						<div class="pro-data">
 							<h4 class="por-title">Visits</h4>
@@ -124,7 +124,7 @@
 
 					<div class="progress-box ">
 						<div class="pro-head">
-							<img src="/resource/images/face.jpg" alt="none"/>
+							<img src="/images/face.jpg" alt="none"/>
 						</div>
 						<div class="pro-data">
 							<h4 class="por-title">Visits</h4>
@@ -137,7 +137,7 @@
 
 					<div class="progress-box ">
 						<div class="pro-head">
-							<img src="/resource/images/face.jpg" alt="none"/>
+							<img src="/images/face.jpg" alt="none"/>
 						</div>
 						<div class="pro-data">
 							<h4 class="por-title">Visits</h4>
