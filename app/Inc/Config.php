@@ -1,8 +1,6 @@
 <?php
 
 //后台动态参数配置
-use http\Url;
-
 function site()
 {
     $data = [];

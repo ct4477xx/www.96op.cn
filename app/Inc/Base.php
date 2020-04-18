@@ -9,14 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 
 //=================================== 自定义方法类 ===================================
-
-
-function getAdmName($code)
-{
-    $db = AdmUserInfo::where('adm_code', $code)->select('name')->first();
-    return $db['name'];
-}
-
 function getTime($str)
 {
     switch ($str) {
@@ -34,14 +26,6 @@ function getTime($str)
     return $back;
 }
 
-//获取角色权限名称
-function getRoleName($id)
-{
-    $db = AdmRole::where('id', $id)->select('title')->first();
-    if ($db) {
-        return '<span class="layui-btn layui-btn-primary layui-btn-xs">' . $db['title'] . '</span>';
-    }
-}
 
 
 //输入以逗号分隔的字符串,生成带单引号的数组
@@ -189,6 +173,37 @@ function getIsLock($str)
 }
 
 //=================================== 数据库操作类 ===================================
+function getAdmName($code)
+{
+    $db = AdmUserInfo::where('adm_code', $code)->select('name')->first();
+    return $db['name'];
+}
+
+
+//获取角色权限名称
+function getRoleName($id)
+{
+    $db = AdmRole::where('id', $id)->select('title')->first();
+    if ($db) {
+        return '<span class="layui-btn layui-btn-primary layui-btn-xs">' . $db['title'] . '</span>';
+    }
+}
+
+//获取用户角色
+function getRole($v)
+{
+    if ($v == 0) {
+        $where = [];
+    } else {
+        $where = ['is_lock' => 0];
+    }
+    $db = AdmRole::where(['is_del' => 0])
+        ->where($where)
+        ->select('id', 'code', 'title', 'remarks')
+        ->get();
+    return $db;
+}
+
 //通过无限极获取菜单
 function getRoute($s)
 {
@@ -259,79 +274,6 @@ function getRouteDataValue($str, $val)
     }
     return $list;
 }
-
-//获取用户角色
-function getRole()
-{
-    $db = AdmRole::where(['is_del' => 0])
-        ->select('id', 'code', 'title', 'remarks')
-        ->get();
-    return $db;
-}
-
-//不传参数获取楼层->获取顶级信息
-function getHouse()
-{
-    $db = House::where(['is_del' => 0, 'father_id' => 0])
-        ->orderBy('by_sort', 'desc')
-        ->orderBy('is_lock', 'asc')
-        ->get();
-    return $db;
-}
-
-//获取带楼层参数的房间号->房间信息
-function getHouseRoom($fid)
-{
-    $db = House::where(['is_del' => 0, 'is_lock' => 0, 'father_id' => $fid])
-        ->orderBy('by_sort', 'desc')
-        ->orderBy('is_lock', 'asc')
-        ->orderBy('hideBySort', 'desc')
-        ->orderBy('mixBySort', 'desc')
-        ->get();
-    return $db;
-}
-
-
-//带参数获取楼层与房间号
-function getHouseAndRoom($id)
-{
-    //根据子id获取父id,然后在获取子名称
-    $db = House::where('id', $id)
-        ->with(['houseFather:id,name'])
-        ->first();
-
-    return $db['houseFather']['name'] . ' / ' . $db['name'];
-}
-
-//不带参数获取街道名称->获取顶级信息
-function signStreet()
-{
-    $db = signStreet::where('father_id', '2')
-        ->get();
-    return $db;
-}
-
-//获取带父id参数的社区名称
-function getStreet($fid)
-{
-    $db = signStreet::where('father_id', $fid)
-        ->orderBy('by_sort', 'desc')
-        ->get();
-    return $db;
-}
-
-//获取带id参数的社区名称
-function signStreet_String($Id)
-{
-    $Id ?: '';
-    if ($Id) {
-        $db = signStreet::select(['name'])
-            ->where('Id', $Id)
-            ->get();
-        return $db[0]['name'];
-    }
-}
-
 //=================================== 数据判断操作 ===================================
 function getIsExist($table, $str, $val)
 {
@@ -399,4 +341,69 @@ function _admUserRole()
         ->with(['admUserRole:uid,role_id'])
         ->first();
     return $db;
+}
+
+
+//=================================== 其他方法类 ===================================
+//不传参数获取楼层->获取顶级信息
+function getHouse()
+{
+    $db = House::where(['is_del' => 0, 'father_id' => 0])
+        ->orderBy('by_sort', 'desc')
+        ->orderBy('is_lock', 'asc')
+        ->get();
+    return $db;
+}
+
+//获取带楼层参数的房间号->房间信息
+function getHouseRoom($fid)
+{
+    $db = House::where(['is_del' => 0, 'is_lock' => 0, 'father_id' => $fid])
+        ->orderBy('by_sort', 'desc')
+        ->orderBy('is_lock', 'asc')
+        ->orderBy('hideBySort', 'desc')
+        ->orderBy('mixBySort', 'desc')
+        ->get();
+    return $db;
+}
+
+
+//带参数获取楼层与房间号
+function getHouseAndRoom($id)
+{
+    //根据子id获取父id,然后在获取子名称
+    $db = House::where('id', $id)
+        ->with(['houseFather:id,name'])
+        ->first();
+
+    return $db['houseFather']['name'] . ' / ' . $db['name'];
+}
+
+//不带参数获取街道名称->获取顶级信息
+function signStreet()
+{
+    $db = signStreet::where('father_id', '2')
+        ->get();
+    return $db;
+}
+
+//获取带父id参数的社区名称
+function getStreet($fid)
+{
+    $db = signStreet::where('father_id', $fid)
+        ->orderBy('by_sort', 'desc')
+        ->get();
+    return $db;
+}
+
+//获取带id参数的社区名称
+function signStreet_String($Id)
+{
+    $Id ?: '';
+    if ($Id) {
+        $db = signStreet::select(['name'])
+            ->where('Id', $Id)
+            ->get();
+        return $db[0]['name'];
+    }
 }

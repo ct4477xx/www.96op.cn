@@ -67,7 +67,7 @@
                         <div class="layui-input-block">
                             <select name="role_id" lay-verify="required">
                                 <option value=""></option>
-                                @foreach(getRole() as $k=>$v)
+                                @foreach(getRole(1) as $k=>$v)
                                     <option
                                         value="{{$v['id']}}" {{$v['id']==$role_id?'selected':''}}>{{$v['title'] }}</option>
                                 @endforeach

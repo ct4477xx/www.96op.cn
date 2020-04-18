@@ -56,7 +56,7 @@
                     <div class="layui-input-inline">
                         <select name="role_id" lay-verify="">
                             <option value="" selected>请选择角色</option>
-                            @foreach(getRole() as $k=>$v)
+                            @foreach(getRole(0) as $k=>$v)
                                 <option value="{!! $v['id'] !!}">{!! $v['title'] !!}</option>
                             @endforeach
                         </select>
