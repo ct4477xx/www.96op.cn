@@ -128,20 +128,13 @@
 </div>
 <!--js逻辑-->
 <script type="text/javascript">
-    let initData;
-
-    function initForm(data) {
-        let jsonString = JSON.stringify(data);
-        initData = JSON.parse(jsonString);
-    }
-
     layui.use(["element", "form", "laydate", "okLayer", "okUtils"], function () {
         let form = layui.form;
         let laydate = layui.laydate;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
+        form.val("filter",eval('('+parent.json+')'));
         okLoading.close();
-        form.val("filter", initData);
         laydate.render({elem: "#birth_date", type: "date"});
 
         form.verify({

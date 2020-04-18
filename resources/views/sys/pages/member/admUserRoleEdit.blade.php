@@ -41,19 +41,11 @@
 </div>
 <!--js逻辑-->
 <script type="text/javascript">
-    let initData;
-
-    function initForm(data) {
-        let jsonString = JSON.stringify(data);
-        initData = JSON.parse(jsonString);
-    }
-
     layui.use(["element", "form", "tree", "okLayer", "okUtils"], function () {
         let form = layui.form;
         let tree = layui.tree;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
-
         let data = [{!! $data !!}]
         tree.render({
             elem: "#permissionTree",
@@ -64,8 +56,8 @@
 
         });
         tree.setChecked('permissionTreeId', {!! $role !!});
+        form.val("filter",eval('('+parent.json+')'));
         okLoading.close();
-        form.val("filter", initData);
         form.on("submit(edit)", function (data) {
             // TODO 权限节点校验
             // 请求后台

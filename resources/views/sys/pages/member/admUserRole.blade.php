@@ -53,6 +53,7 @@
 </div>
 <!--js逻辑-->
 <script>
+    var json;
     layui.use(["element", "jquery", "table", "form", "laydate", "okLayer", "okUtils", "okLayx"], function () {
         let table = layui.table;
         let form = layui.form;
@@ -214,14 +215,14 @@
             })
         }
 
+
         function edit(data) {
-            okLayer.open("编辑角色", "admUserRole/" + data.id + "/edit", "90%", "90%", function (layero) {
-                let iframeWin = window[layero.find("iframe")[0]["name"]];
-                iframeWin.initForm(data);
-            }, function () {
+            json = JSON.stringify(data);
+            okLayer.open("编辑角色", "admUserRole/" + data.id + "/edit", "90%", "90%", null, function () {
                 roleTable.reload();
             })
         }
+
 
         function del(id) {
             okLayer.confirm("确定要删除吗？", function () {
