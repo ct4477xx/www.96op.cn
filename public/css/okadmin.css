@@ -3,6 +3,7 @@
 @import "./okadmin.theme.css";
 @import "../lib/layui/css/okmodules/jquery.contextMenu.css";
 
+
 /*边距*/
 .ptb20{
     padding-top: 20px;
@@ -721,5 +722,6 @@
         width: 180px !important;
         margin: 0;
     }
+
 }
 
