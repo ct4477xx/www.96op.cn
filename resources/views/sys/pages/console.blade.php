@@ -18,6 +18,7 @@
     @include('.sys.public.js')
     <script type="text/javascript" src="/js/console.js"></script>
 </head>
+
 <body class="ok-body-scroll console">
 <div class="ok-body home">
 	<div class="layui-row layui-col-space15">

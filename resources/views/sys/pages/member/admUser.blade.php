@@ -248,13 +248,14 @@
 
 
         function add() {
+            json = JSON.stringify('');
             okLayer.open("添加用户", "admUser/create", "90%", "90%", null, function () {
                 userTable.reload();
             })
         }
 
         function edit(data) {
-            json=JSON.stringify(data);
+            json = JSON.stringify(data);
             okLayer.open("编辑用户", "admUser/" + data.id + "/edit", "90%", "90%", null, function () {
                 userTable.reload();
             })

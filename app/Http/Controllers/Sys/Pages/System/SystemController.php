@@ -10,6 +10,6 @@ class SystemController extends Controller
     function alertSkin()
     {
         //配色设置
-        return view('sys.pages.system.alertSkin');
+        return view('.sys.pages.system.alertSkin');
     }
 }

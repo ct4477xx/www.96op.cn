@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sys\Pages\Member;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\AdmRole;
+use App\SysModel\Pages\Member\AdmRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

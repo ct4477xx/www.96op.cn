@@ -14,9 +14,9 @@
         </li>
     </ul>
     <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item ok-input-search">
-            <input type="text" placeholder="搜索..." class="layui-input layui-input-search"/>
-        </li>
+        {{--        <li class="layui-nav-item ok-input-search">--}}
+        {{--            <input type="text" placeholder="搜索..." class="layui-input layui-input-search"/>--}}
+        {{--        </li>--}}
         <li class="layui-nav-item">
             <a class="ok-refresh" href="javascript:" title="刷新">
                 <i class="layui-icon layui-icon-refresh-3"></i>
@@ -46,7 +46,7 @@
         <li class="no-line layui-nav-item">
             <a href="javascript:">
                 <img src="/images/avatar.png" class="layui-nav-img">
-                {{\Cookie::get('admName')}}
+                {{_admName()}}
             </a>
             <dl id="userInfo" class="layui-nav-child">
                 <dd><a lay-id="u-1" href="javascript:" data-url="/sys/pages/userInfo">基本资料</a></dd>

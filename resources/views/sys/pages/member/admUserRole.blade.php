@@ -210,11 +210,11 @@
 
 
         function add() {
+            json = JSON.stringify('');
             okLayer.open("添加角色", "admUserRole/create", "90%", "90%", null, function () {
                 roleTable.reload();
             })
         }
-
 
         function edit(data) {
             json = JSON.stringify(data);
@@ -222,7 +222,6 @@
                 roleTable.reload();
             })
         }
-
 
         function del(id) {
             okLayer.confirm("确定要删除吗？", function () {

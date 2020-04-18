@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "barryvdh/laravel-debugbar": "^3.2",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
@@ -42,9 +42,9 @@
             "database/factories"
         ],
         "files": [
-            "app/ini/Config.php",
-            "app/ini/Base.php",
-            "app/Ajax/ajaxReadKey.php"
+            "app/Inc/Config.php",
+            "app/Inc/Base.php",
+            "app/Inc/ajaxReadKey.php"
         ]
     },
     "autoload-dev": {

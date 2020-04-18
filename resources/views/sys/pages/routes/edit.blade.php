@@ -85,7 +85,7 @@
         });
 
         form.on("submit(edit)", function (data) {
-            okUtils.ajax("/sys/pages/routes/route/{{$id}}", "PATCH", data.field, true).done(function (response) {
+            okUtils.ajax("{{url('sys/pages/routes/route/'.$id)}}", "PATCH", data.field, true).done(function (response) {
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                 });

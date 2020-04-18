@@ -3,28 +3,27 @@
 namespace App\Http\Controllers\Sys\Pages;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\AdmUser;
-use App\SysModel\AdmUserInfo;
+use App\SysModel\Pages\Member\AdmUser;
+use App\SysModel\Pages\Member\AdmUserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class IndexController extends Controller
 {
     //
-
+    //控制台
     function console()
     {
-        //控制台
-        return view('sys.pages.console');
+        return view('.sys.pages.console');
     }
 
+    //天气预报
     function weather()
     {
-        //天气预报
-        return view('sys.pages.weather');
+        return view('.sys.pages.weather');
     }
 
-
+    //个人信息页面
     function userInfo()
     {
         //个人用户信息
@@ -37,9 +36,10 @@ class IndexController extends Controller
         }
         $db = AdmUserInfo::where('adm_code', _admCode())
             ->first();
-        return view('sys.pages.member.userInfo', $db);
+        return view('.sys.pages.member.userInfo', $db);
     }
 
+    //个人信息更新
     function userInfoUp(Request $request)
     {
         //执行更新
@@ -65,12 +65,14 @@ class IndexController extends Controller
         }
     }
 
+    //个人密码页面
     function userPwd()
     {
         //个人密码
-        return view('sys.pages.member.userPwd');
+        return view('.sys.pages.member.userPwd');
     }
 
+    //个人密码更新
     function userPwdUp(Request $request)
     {
         //执行更新
@@ -92,6 +94,7 @@ class IndexController extends Controller
         }
     }
 
+    //菜单
     function menu()
     {
         //无限极菜单
@@ -102,4 +105,5 @@ class IndexController extends Controller
 //        return $data;
         return getRoute(1);
     }
+
 }

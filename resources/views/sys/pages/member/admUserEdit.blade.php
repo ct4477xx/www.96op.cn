@@ -112,7 +112,7 @@
                         <div class="layui-input-block">
                             <input type="text" name="money_ratio" placeholder="请输入提成比例" autocomplete="off"
                                    class="layui-input"
-                                   value="" lay-verify="required|number|money_ratio">
+                                   value="0" lay-verify="required|number|money_ratio">
                         </div>
                     </div>
                 </div>
@@ -123,6 +123,7 @@
                     <button class="layui-btn" lay-submit lay-filter="edit">立即提交</button>
                 </div>
             </div>
+        </div>
         {{csrf_field()}}
     </form>
 </div>
@@ -133,7 +134,7 @@
         let laydate = layui.laydate;
         let okLayer = layui.okLayer;
         let okUtils = layui.okUtils;
-        form.val("filter",eval('('+parent.json+')'));
+        form.val("filter", eval('(' + parent.json + ')'));
         okLoading.close();
         laydate.render({elem: "#birth_date", type: "date"});
 
@@ -146,7 +147,7 @@
         });
 
         form.on("submit(edit)", function (data) {
-            okUtils.ajax("/sys/pages/member/admUser/{{$db['id']}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
+            okUtils.ajax("{{url('sys/pages/member/admUser/'.$db['id'])}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                 });

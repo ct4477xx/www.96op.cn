@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Sys\Pages\Member;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\AdmUser;
-use App\SysModel\AdmUserInfo;
+use App\SysModel\Pages\Member\AdmUser;
+use App\SysModel\Pages\Member\AdmUserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;

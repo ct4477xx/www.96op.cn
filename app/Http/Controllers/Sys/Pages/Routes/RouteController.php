@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Sys\Pages\Routes;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\Menu;
-use App\SysModel\Route;
+use App\SysModel\Pages\Route\Route;
 use Illuminate\Http\Request;
 
 class RouteController extends Controller
@@ -22,7 +21,7 @@ class RouteController extends Controller
 //            //->with(['children:id,father_id,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
-        return view('sys.pages.routes.route', ['data' => getRoute(0)]);
+        return view('.sys.pages.routes.route', ['data' => getRoute(0)]);
     }
 
     /**

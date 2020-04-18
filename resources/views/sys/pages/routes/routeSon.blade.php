@@ -97,8 +97,8 @@
         });
 
         form.on("submit(edit)", function (data) {
-            okUtils.ajax("/sys/pages/routes/storeSon/", "post", data.field, true).done(function (response) {
-                okLayer.greenTickMsg(response.msg+' 稍后请自行刷新', function () {
+            okUtils.ajax("{{url('sys/pages/routes/storeSon/')}}", "post", data.field, true).done(function (response) {
+                okLayer.greenTickMsg(response.msg + ' 稍后请自行刷新', function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                     //parent.location.reload();
                 });

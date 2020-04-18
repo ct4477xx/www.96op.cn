@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\AdmUser;
-use App\SysModel\AdmUserInfo;
-use App\SysModel\Menu;
+use App\SysModel\Pages\Member\AdmUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 
 class IndexController extends Controller
 {
-    //
+    //首页 / 登录页
     function index()
     {
         if (_admCode()) {
@@ -22,7 +20,7 @@ class IndexController extends Controller
         }
     }
 
-
+    //登录接口
     function login(Request $request)
     {
         $inp = $request->all();
@@ -38,13 +36,13 @@ class IndexController extends Controller
             return getSuccess('用户名不存在, 再仔细想想?');
         }
         if ($db_data['is_lock'] == 1) {
-            $data = [
+            $res = [
                 'success' => false,
                 'msg' => '当前账号已被锁定, 请联系系统管理员',
                 'user_name' => $inp['data']['user_name'],
                 'pass_word' => $inp['data']['pass_word']
             ];
-            return $data;
+            return $res;
         }
         $is_Pwd = json_encode(Hash::check($inp['data']['pass_word'], $db_data['pass_word']));
         if ($is_Pwd == 'true') {
@@ -55,22 +53,25 @@ class IndexController extends Controller
             \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
-            $data = [
+            //登录验证成功后 获取当前用户所关联所有用户角色下的所有权限id
+//            return _admUserRole();
+            $res = [
                 'success' => true
             ];
         } else {
             \Cookie::get('captcha') ? \Cookie::get('captcha') : 0;
             \Cookie::queue('captcha', \Cookie::get('captcha') + 1, 0);
-            $data = [
+            $res = [
                 'success' => false,
                 'msg' => '用户名或密码错误, 仔细想想吧',
                 'user_name' => $inp['data']['user_name'],
                 'pass_word' => $inp['data']['pass_word']
             ];
         }
-        return $data;
+        return $res;
     }
 
+    //退出接口
     function logout()
     {
         //\Session()->forget('admId');
@@ -80,11 +81,13 @@ class IndexController extends Controller
         return redirect('sys');
     }
 
+    //注册接口
     function register()
     {
-        return view('sys.register');
+        return view('.sys.register');
     }
 
+    //注册提交接口
     function registerReg(Request $request)
     {
         $inp = $request->all();
@@ -120,9 +123,9 @@ class IndexController extends Controller
         }
     }
 
-    function forget()
-    {
-        return view('sys.pages.forget');
-    }
-
+    //找回密码
+//    function forget()
+//    {
+//        return view('.sys.pages.forget');
+//    }
 }
