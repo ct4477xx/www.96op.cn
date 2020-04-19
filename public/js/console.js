@@ -1,5 +1,5 @@
 "use strict";
-layui.use(["okUtils", "table", "okCountUp", "okMock"], function () {
+layui.use(["okUtils", "table", "okCountUp"], function () {
     var countUp = layui.okCountUp;
     var table = layui.table;
     var okUtils = layui.okUtils;
@@ -52,7 +52,7 @@ layui.use(["okUtils", "table", "okCountUp", "okMock"], function () {
     function userList() {
         table.render({
             method: "get",
-            url: okMock.api.user.list,
+            url: '',
             elem: '#userData',
             height: 340,
             page: true,

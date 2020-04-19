@@ -147,7 +147,7 @@ class RouteController extends Controller
             $db = Route::find($inp['id']);
         }
         $db['title'] = $inp['title'];
-        $db['href'] = $inp['href'];
+        $db['href'] = $inp['href']??'/';
         $db['is_type'] = $inp['is_type'];
         $db['font_family'] = $inp['font_family'];
         $db['icon'] = $inp['icon'];
@@ -163,7 +163,6 @@ class RouteController extends Controller
     public function routeSonEdit($id)
     {
         $db = Route::find($id);
-//        return $db;
         return view('.sys.pages.routes.routeSon', $db);
     }
 

@@ -177,7 +177,7 @@ function children($li, $i)
     if (isset($li['children'])) {
         echo ' <i class="layui-icon x-show" status="true">&#xe623;</i>' . $li['title'];
     } else {
-        echo '|-- ' . $li['title'] . "  (" . $li['href'] . ")";
+        echo '|-- ' . $li['title'] . " (routeId->  " . $li['id'] . ")";
     }
     echo '</td>';
     echo '<td>' . getRouteType($li['is_type']) . '</td>';
@@ -190,7 +190,7 @@ function children($li, $i)
     echo ' </td>';
     echo '<td class="td-manage">';
     echo '<button class="layui-btn layui-btn layui-btn-xs" onclick="xadmin.open(\'编辑\',\'routeSon/' . $li['id'] . '/edit\')"><i class="layui-icon">&#xe642;</i>编辑</button>';
-    echo '<button class="layui-btn layui-btn-warm layui-btn-xs" onclick="xadmin.open(\'添加子路由\',\'/sys/pages/routes/route/' . $li['id'] . '/\')"><i class="layui-icon">&#xe642;</i>添加子路由</button>';
+    echo $li['is_type']==0?'<button class="layui-btn layui-btn-warm layui-btn-xs" onclick="xadmin.open(\'添加子路由\',\'/sys/pages/routes/route/' . $li['id'] . '/\')"><i class="layui-icon">&#xe642;</i>添加子路由</button>':'';
     if (isset($li['children']) == false) {
         echo '<button class="layui-btn-danger layui-btn layui-btn-xs" onclick="del(this,' . $li['id'] . ')" href="javascript:;"><i class="layui-icon">&#xe640;</i>删除</button>';
     }

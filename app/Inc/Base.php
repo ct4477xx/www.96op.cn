@@ -334,19 +334,23 @@ function _admName()
     return \Cookie::get('admName');
 }
 
-
-function _admUserRole()
-{//获取当前用户名下所有角色,并获取到所有关联权限id
+function _admPower(){
     $roles = AdmUser::find(_admId())->admUserRole;
     $arr = [];
     foreach ($roles as $v) {
         $routes = $v->route;
         foreach ($routes as $route) {
-            $arr[] = $route->href;
+            $arr[] = $route->id;
         }
     }
     $arr = array_unique($arr);
-    \Session()->put('role', $arr);
+    \Session()->put('routeIds',$arr);
+}
+//授权控制
+function hasPower($routeId)
+{
+    //在用户权限组如果找到了对应权限 则返回真,否则返回假
+    return in_array($routeId, \Session()->get('routeIds')) ? true : false;
 }
 
 

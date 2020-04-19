@@ -18,6 +18,7 @@
                        lay-verify="required" value="{{$title ?? ''}}">
             </div>
         </div>
+        @if($is_type==0)
         <div class="layui-form-item">
             <label class="layui-form-label">子地址</label>
             <div class="layui-input-block">
@@ -25,6 +26,7 @@
                        lay-verify="required" value="{{$href ?? "/"}}">
             </div>
         </div>
+        @endif
         <div class="layui-form-item">
             <label class="layui-form-label">类型</label>
             <div class="layui-input-block">

@@ -112,11 +112,11 @@
             title: '用户列表_{{getTime(3)}}',
             page: true,
             toolbar: '<div class="layui-btn-container">\n' +
-                '        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>\n' +
-                '        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchEnabled">批量启用</button>\n' +
-                '        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="batchDisabled">批量停用</button>\n' +
-                '        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>\n' +
-                '    </div>',
+                @if(hasPower(53)) '<button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>\n' + @endif
+                    @if(hasPower(75)) '<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchEnabled">批量启用</button>\n' +
+                '<button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="batchDisabled">批量停用</button>\n' + @endif
+                    @if(hasPower(55)) '<button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>\n' + @endif
+                    '    </div>',
             size: "sm",
             cols:
                 [[
@@ -137,8 +137,8 @@
                     {field: "up_time", title: "修改时间", width: 145, sort: true},
                     {
                         title: "操作", width: 100, align: "center", fixed: "right", templet: function (d) {
-                            var edit = "<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>";
-                            var del = "<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>";
+                            var edit = "@if(hasPower(54))<a href=\"javascript:\" title=\"编辑\" lay-event=\"edit\"><i class=\"layui-icon\">&#xe642;</i></a>@endif";
+                            var del = "@if(hasPower(55))<a href=\"javascript:\" title=\"删除\" lay-event=\"del\"><i class=\"layui-icon\">&#xe640;</i></a>@endif";
                             if (d.is_lock == 1) {
                                 return edit + del;
                             } else {

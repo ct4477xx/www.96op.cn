@@ -53,8 +53,8 @@ class IndexController extends Controller
             \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
-            //登录验证成功后 获取当前用户所关联所有用户角色下的所有权限id
-            //_admUserRole();
+            //缓存当前用户的已有权限
+            _admPower();
             $res = [
                 'success' => true
             ];
@@ -76,6 +76,7 @@ class IndexController extends Controller
     {
         //\Session()->forget('admId');
         //\Session()->forget('admId');
+        \Session()->forget('routeIds');
         \Cookie::queue('admId', null, -1);
         \Cookie::queue('admName', null, -1);
         \Cookie::queue('admCode', null, -1);
@@ -127,7 +128,8 @@ class IndexController extends Controller
 
     function demo()
     {
-        return _admUserRole();
+//        return _admUserRole();
+        return json_encode(hasPower(50, [5]));
     }
 
     //找回密码

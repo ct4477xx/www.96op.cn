@@ -29,7 +29,7 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
 });
 //
 //登录验证路由
-Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => ['isLogin', 'hasRole']], function () {
+Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => ['isLogin']], function () {
     Route::get('demo', 'IndexController@demo');//demo测试
     Route::get('', 'IndexController@index');//后台主页
     Route::get('logout', 'IndexController@logout');//退出系统
