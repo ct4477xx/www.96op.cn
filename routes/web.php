@@ -29,22 +29,23 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys'], function () {
 });
 //
 //登录验证路由
-Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin'], function () {
+Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => ['isLogin', 'hasRole']], function () {
+    Route::get('demo', 'IndexController@demo');//demo测试
     Route::get('', 'IndexController@index');//后台主页
     Route::get('logout', 'IndexController@logout');//退出系统
     //
     Route::group(['prefix' => 'pages/', 'namespace' => 'Pages'], function () {
         //框架公共部分
-        Route::get('userInfo', 'IndexController@userInfo');//基本资料
-        Route::post('userInfo', 'IndexController@userInfoUp');//基本资料接口
-        Route::get('userPwd', 'IndexController@userPwd');//安全设置
-        Route::post('userPwd', 'IndexController@userPwdUp');//安全设置接口
+        Route::get('admInfo', 'IndexController@admInfo');//基本资料
+        Route::post('admInfo', 'IndexController@admInfoUp');//基本资料接口
+        Route::get('admPwd', 'IndexController@admPwd');//安全设置
+        Route::post('admPwd', 'IndexController@admPwdUp');//安全设置接口
         Route::get('menu', 'IndexController@menu');//左侧菜单
         Route::get('console', 'IndexController@console');//控制台
         Route::get('weather', 'IndexController@weather');//天气预报
         //
-        //账号相关
-        Route::group(['prefix' => 'member/', 'namespace' => 'Member'], function () {
+        //管理员账号相关
+        Route::group(['prefix' => 'admin/', 'namespace' => 'Admin'], function () {
             //账户列表
             Route::resource('admUser', 'AdmUserController');
             Route::get('admUserRead', 'AdmUserController@read');//获取页面数据
@@ -60,6 +61,10 @@ Route::group(['prefix' => 'sys/', 'namespace' => 'Sys', 'middleware' => 'IsLogin
             Route::post('admUserRoleStop', 'AdmUserRoleController@stop');//禁止用户
             //角色授权页
             Route::get('admUserRoleReadEdit', 'AdmUserRoleController@edit');//编辑角色权限页面
+        });
+        //会员账号相关
+        Route::group(['prefix' => 'member/', 'namespace' => 'Member'], function () {
+
         });
         //路由管理
         Route::group(['prefix' => 'routes/', 'namespace' => 'Routes'], function () {

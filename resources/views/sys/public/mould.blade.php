@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{!! site()['siteWebName'] !!}</title>
-    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <meta name="keywords" content="{!! site()['keywords'] !!}">
     <meta name="description" content="{!! site()['description'] !!}">
     <link rel="shortcut icon" href="{!! site()['ico'] !!}" type="image/x-icon"/>
@@ -51,7 +52,7 @@
 
             <div id="tabContent" class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src='sys/pages/console' frameborder="0" scrolling="yes" width="100%"
+                    <iframe src='/sys/pages/console' frameborder="0" scrolling="yes" width="100%"
                             height="100%"></iframe>
                 </div>
             </div>

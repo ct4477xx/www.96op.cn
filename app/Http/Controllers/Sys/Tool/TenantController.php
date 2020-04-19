@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\House;
-use App\SysModel\Tenant;
+use App\Model\House;
+use App\Model\Tenant;
 use Illuminate\Http\Request;
 
 class TenantController extends Controller

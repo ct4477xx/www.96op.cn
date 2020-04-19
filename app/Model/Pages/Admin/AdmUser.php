@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SysModel\Pages\Member;
+namespace App\Model\Pages\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +19,7 @@ class AdmUser extends Model
 
     public function admUserRole()
     {//根据用户查找所有用户角色
-        return $this->hasMany(AdmUserRole::class, 'uid', 'id');
+        return $this->belongsToMany(AdmRole::class, 'adm_user_role', 'adm_id', 'role_id');
     }
+
 }

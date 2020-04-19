@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SysModel\Pages\Route;
+namespace App\Model\Pages\Routes;
 
 use Illuminate\Database\Eloquent\Model;
 

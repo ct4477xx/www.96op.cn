@@ -106,7 +106,7 @@
         });
         let userTable = table.render({
             elem: '#tableId',
-            url: '/sys/pages/member/admUserRead',
+            url: '/sys/pages/admin/admUserRead',
             limit: '{!! frame()['limit'] !!}',
             limits: [{!! frame()['limits'] !!}],
             title: '用户列表_{{getTime(3)}}',

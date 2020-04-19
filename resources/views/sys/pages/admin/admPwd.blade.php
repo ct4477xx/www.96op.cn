@@ -72,7 +72,7 @@
         form.on("submit(changePwd)", function (data) {
             var index = layer.msg('提交中，请稍候', {icon: 16, time: false, shade: 0.8});
             setTimeout(function () {
-                $.post("{{url('sys/pages/userPwd')}}", {_token: "{{csrf_token()}}", 'data': data.field},
+                $.post("{{url('sys/pages/admPwd')}}", {_token: "{{csrf_token()}}", 'data': data.field},
                     function (data) {
                         if (data.success) {
                             layer.msg(data.msg);

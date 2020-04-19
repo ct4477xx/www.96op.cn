@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Sys\Pages;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\Pages\Member\AdmUser;
-use App\SysModel\Pages\Member\AdmUserInfo;
+use App\Model\Pages\Admin\AdmUser;
+use App\Model\Pages\Admin\AdmUserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,7 +24,7 @@ class IndexController extends Controller
     }
 
     //个人信息页面
-    function userInfo()
+    function admInfo()
     {
         //个人用户信息
         //在没有找到用户资料时,创建用户资料
@@ -36,11 +36,11 @@ class IndexController extends Controller
         }
         $db = AdmUserInfo::where('adm_code', _admCode())
             ->first();
-        return view('.sys.pages.member.userInfo', $db);
+        return view('.sys.pages.admin.admInfo', $db);
     }
 
     //个人信息更新
-    function userInfoUp(Request $request)
+    function admInfoUp(Request $request)
     {
         //执行更新
         $inp = $request->all();
@@ -66,14 +66,14 @@ class IndexController extends Controller
     }
 
     //个人密码页面
-    function userPwd()
+    function admPwd()
     {
         //个人密码
-        return view('.sys.pages.member.userPwd');
+        return view('.sys.pages.admin.admPwd');
     }
 
     //个人密码更新
-    function userPwdUp(Request $request)
+    function admPwdUp(Request $request)
     {
         //执行更新
         $inp = $request->all();

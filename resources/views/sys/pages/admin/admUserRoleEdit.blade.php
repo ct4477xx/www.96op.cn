@@ -61,7 +61,7 @@
         form.on("submit(edit)", function (data) {
             // TODO 权限节点校验
             // 请求后台
-            okUtils.ajax("{{url('sys/pages/member/admUserRole/'.$db['id'])}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
+            okUtils.ajax("{{url('sys/pages/admin/admUserRole/'.$db['id'])}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                 });

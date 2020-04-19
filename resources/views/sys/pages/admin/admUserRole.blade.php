@@ -73,7 +73,7 @@
 
         let roleTable = table.render({
             elem: "#tableId",
-            url: '/sys/pages/member/admUserRoleRead',
+            url: '/sys/pages/admin/admUserRoleRead',
             limit: '{!! frame()['limit'] !!}',
             limits: [{!! frame()['limits'] !!}],
             title: '角色列表_{{getTime(3)}}',

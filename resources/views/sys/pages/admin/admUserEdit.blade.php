@@ -147,7 +147,7 @@
         });
 
         form.on("submit(edit)", function (data) {
-            okUtils.ajax("{{url('sys/pages/member/admUser/'.$db['id'])}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
+            okUtils.ajax("{{url('sys/pages/admin/admUser/'.$db['id'])}}", "{{$db['id']?'put':'post'}}", data.field, true).done(function (response) {
                 okLayer.greenTickMsg(response.msg, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                 });

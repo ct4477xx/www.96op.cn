@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\Pages\Member\AdmUser;
+use App\Model\Pages\Admin\AdmUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -54,7 +54,7 @@ class IndexController extends Controller
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
             //登录验证成功后 获取当前用户所关联所有用户角色下的所有权限id
-//            return _admUserRole();
+            //_admUserRole();
             $res = [
                 'success' => true
             ];
@@ -74,6 +74,7 @@ class IndexController extends Controller
     //退出接口
     function logout()
     {
+        //\Session()->forget('admId');
         //\Session()->forget('admId');
         \Cookie::queue('admId', null, -1);
         \Cookie::queue('admName', null, -1);
@@ -121,6 +122,12 @@ class IndexController extends Controller
                 'pass_word' => $inp['data']['pass_word'],
             ];
         }
+    }
+
+
+    function demo()
+    {
+        return _admUserRole();
     }
 
     //找回密码

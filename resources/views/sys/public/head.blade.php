@@ -8,7 +8,7 @@
         <!--天气信息-->
         <li class="ok-nav-item ok-hide-md">
             <div class="weather-ok">
-                <iframe frameborder="0" scrolling="no" class="iframe-style" src="sys/pages/weather"
+                <iframe frameborder="0" scrolling="no" class="iframe-style" src="/sys/pages/weather"
                         frameborder="0"></iframe>
             </div>
         </li>
@@ -49,8 +49,8 @@
                 {{_admName()}}
             </a>
             <dl id="userInfo" class="layui-nav-child">
-                <dd><a lay-id="u-1" href="javascript:" data-url="/sys/pages/userInfo">基本资料</a></dd>
-                <dd><a lay-id="u-2" href="javascript:" data-url="/sys/pages/userPwd">安全设置</a></dd>
+                <dd><a lay-id="u-1" href="javascript:" data-url="/sys/pages/admInfo">基本资料</a></dd>
+                <dd><a lay-id="u-2" href="javascript:" data-url="/sys/pages/admPwd">安全设置</a></dd>
                 <dd><a lay-id="u-3" href="javascript:" id="alertSkin">皮肤动画<span class="layui-badge-dot"></span></a></dd>
                 <dd>
                     <hr/>

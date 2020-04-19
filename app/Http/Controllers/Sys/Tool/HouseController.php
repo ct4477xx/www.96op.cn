@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\House;
+use App\Model\House;
 use Illuminate\Http\Request;
 
 class HouseController extends Controller

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Sys\Pages\Member;
+namespace App\Http\Controllers\Sys\Pages\Admin;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\Pages\Member\AdmUser;
-use App\SysModel\Pages\Member\AdmUserInfo;
+use App\Model\Pages\Admin\AdmUser;
+use App\Model\Pages\Admin\AdmUserInfo;
+use App\Model\Pages\Admin\AdmUserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +20,7 @@ class AdmUserController extends Controller
     public function index()
     {
         //
-        return view('.sys.pages.member.admUser');
+        return view('.sys.pages.admin.admUser');
     }
 
     public function read(Request $request)
@@ -56,7 +57,7 @@ class AdmUserController extends Controller
             };
         $db = DB::table('adm_user as a')
             ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.adm_code')
-            ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
+            ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.adm_id')
             ->select('a.id', 'a.code', 'a.user_name', 'a.is_lock', 'b.sex', 'b.name', 'b.birth_date', 'b.mobile', 'b.email','b.money_ratio', 'a.add_code', 'a.add_time', 'a.up_code', 'a.up_time', 'c.role_id')
             ->where('a.is_del', 0)
             ->where($where)
@@ -91,7 +92,7 @@ class AdmUserController extends Controller
         //总记录
         $total = DB::table('adm_user as a')
             ->leftJoin('adm_user_info as b', 'a.code', '=', 'b.adm_code')
-            ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.uid')
+            ->leftJoin('adm_user_role as c', 'a.id', '=', 'c.adm_id')
             ->select('1')
             ->where('a.is_del', 0)
             ->where($where)
@@ -115,7 +116,7 @@ class AdmUserController extends Controller
         $db['id'] = '';
         $db['is_lock'] = '';
         $db['admUserInfo']['sex'] = 1;
-        return view('.sys.pages.member.admUserEdit', ['db' => $db, 'role_id' => []]);
+        return view('.sys.pages.admin.admUserEdit', ['db' => $db, 'role_id' => []]);
     }
 
     /**
@@ -140,13 +141,12 @@ class AdmUserController extends Controller
     {
         //
         $db = AdmUser::where('id', $id)
-            ->select('id','code', 'is_lock')
+            ->select('id', 'code', 'is_lock')
             ->with('admUserInfo:adm_code,sex')
             ->get();
-
-        $role = DB::table('adm_user_role')->where('uid', $id)->select('role_id')->get();
+        $role = DB::table('adm_user_role')->where('adm_id', $id)->select('role_id')->get();
         $result = json_decode($role, true);
-        return view('.sys.pages.member.admUserEdit', ['db' => $db[0], 'role_id' => $result[0]['role_id'] ?? []]);
+        return view('.sys.pages.admin.admUserEdit', ['db' => $db[0], 'role_id' => $result[0]['role_id'] ?? []]);
     }
 
     /**
@@ -185,7 +185,7 @@ class AdmUserController extends Controller
             $info->save();
             //保存角色
             if ($inp['role_id']) {
-                DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'role_id' => $inp['role_id'], 'add_time' => getTime(1)]);
+                DB::table('adm_user_role')->insert(['adm_id' => $adm['id'], 'role_id' => $inp['role_id'], 'add_time' => getTime(1)]);
             }
             return getSuccess(1);
         } else {
@@ -239,8 +239,8 @@ class AdmUserController extends Controller
         }
         //保存角色
         if ($inp['role_id']) {
-            DB::table('adm_user_role')->where('uid', $adm['id'])->delete();
-            DB::table('adm_user_role')->insert(['uid' => $adm['id'], 'role_id' => $inp['role_id'], 'add_time' => getTime(1)]);
+            AdmUserRole::where('adm_id', $id)->delete();
+            DB::table('adm_user_role')->insert(['adm_id' => $adm['id'], 'role_id' => $inp['role_id'], 'add_time' => getTime(1)]);
         }
         return getSuccess(1);
     }

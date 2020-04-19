@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SysModel\Pages\Member;
+namespace App\Model\Pages\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Sys\Pages\Member;
+namespace App\Http\Controllers\Sys\Pages\Admin;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\Pages\Member\AdmRole;
+use App\Model\Pages\Admin\AdmRole;
+use App\Model\Pages\Admin\AdmRoleRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,7 @@ class AdmUserRoleController extends Controller
     public function index()
     {
         //
-        return view('.sys.pages.member.admUserRole');
+        return view('.sys.pages.admin.admUserRole');
     }
 
     public function read(Request $request)
@@ -93,7 +94,7 @@ class AdmUserRoleController extends Controller
         $list["children"] = getRoute(2);
 
         $db['id'] = '';
-        return view('.sys.pages.member.admUserRoleEdit', ['db' => $db, 'data' => json_encode($list), 'role' => '']);
+        return view('.sys.pages.admin.admUserRoleEdit', ['db' => $db, 'data' => json_encode($list), 'role' => '']);
     }
 
     /**
@@ -126,7 +127,7 @@ class AdmUserRoleController extends Controller
         foreach ($role as $k) {
             $roleList->push($k->route_id);
         }
-        return view('.sys.pages.member.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
+        return view('.sys.pages.admin.admUserRoleEdit', ['data' => json_encode($list), 'db' => $db, 'role' => $roleList]);
     }
 
 
@@ -176,7 +177,7 @@ class AdmUserRoleController extends Controller
 
         //
         //删除所有当前角色相关的role数据
-        DB::table('adm_role_route')->where('role_id', $id)->delete();
+        AdmRoleRoute::where('role_id', $id)->delete();
         //
         $db = AdmRole::find($id);
         $db['up_code'] = _admCode();

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sys\Pages\Routes;
 
 use App\Http\Controllers\Controller;
-use App\SysModel\Pages\Route\Route;
+use App\Model\Pages\Routes\Route;
 use Illuminate\Http\Request;
 
 class RouteController extends Controller

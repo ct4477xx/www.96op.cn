@@ -1,9 +1,9 @@
 <?php
 
-use App\SysModel\Pages\Member\AdmRole;
-use App\SysModel\Pages\Member\AdmUser;
-use App\SysModel\Pages\Member\AdmUserInfo;
-use App\SysModel\Pages\Route\Route;
+use App\Model\Pages\Admin\AdmRole;
+use App\Model\Pages\Admin\AdmUser;
+use App\Model\Pages\Admin\AdmUserInfo;
+use App\Model\Pages\Routes\Route;
 use App\ToolModel\signStreet;
 use Illuminate\Support\Facades\DB;
 
@@ -25,7 +25,6 @@ function getTime($str)
     }
     return $back;
 }
-
 
 
 //输入以逗号分隔的字符串,生成带单引号的数组
@@ -274,6 +273,7 @@ function getRouteDataValue($str, $val)
     }
     return $list;
 }
+
 //=================================== 数据判断操作 ===================================
 function getIsExist($table, $str, $val)
 {
@@ -337,10 +337,16 @@ function _admName()
 
 function _admUserRole()
 {//获取当前用户名下所有角色,并获取到所有关联权限id
-    $db = AdmUser::where(['is_del' => 0, 'id' => _admId()])
-        ->with(['admUserRole:uid,role_id'])
-        ->first();
-    return $db;
+    $roles = AdmUser::find(_admId())->admUserRole;
+    $arr = [];
+    foreach ($roles as $v) {
+        $routes = $v->route;
+        foreach ($routes as $route) {
+            $arr[] = $route->href;
+        }
+    }
+    $arr = array_unique($arr);
+    \Session()->put('role', $arr);
 }
 
 
