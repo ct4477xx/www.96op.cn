@@ -252,61 +252,13 @@ function getRouteTree($data)
     return $tree;
 }
 
-//与getMenu配合使用, 用于找到当前权限的所有父亲与顶级;
-function father($f_id, $routeAll)
-{
-    $routeId = \Session()->get('routeIds');
-    //获取到传过来的父id后,与所有id进行匹配
-    $list = [];
-    foreach ($routeAll as $k => $v) {
-        //2.从所有权限中遍历 是否存在当前的用户权限, 如果存在则记录当前权限id,并且继续找父级
-        if (in_array($v['id'], [$f_id])) {
-            $list[] = $v['id'];
-            if ($v['father_id'] > 0) {
-                //3.循环遍历
-                $list[] = father($v['father_id'], $routeAll);
-            }
-        }
-    }
-    return $list;
-}
-
-//将某个带有层级的数组合并为一个数组集合
-function mergeArr($arr)
-{
-    $result = array();
-    foreach ($arr as $key => $val) {
-        if( is_array($val) ) {
-            $result = array_merge($result, mergeArr($val));
-        } else {
-            $result[] = $val;
-        }
-    }
-    return $result;
-}
-
 //获取带有权限控制的左侧导航
 function getMenu()
 {
-    //此方法需要重写,需要根据带有 已有的权限in进行获取树
-    $routeId = \Session()->get('routeIds');
-    $routeAll = getRouteData(3);
-
-    //1.首先遍历系统中所有的路由id
-    $arr = [];
-    foreach ($routeAll as $k => $v) {
-        //2.从所有权限中遍历 是否存在当前的用户权限, 如果存在则记录当前权限id,并且继续找父级
-        if (in_array($v['id'], $routeId)) {
-            $arr[] = $v['id'];
-            if ($v['father_id'] > 0) {
-                //3.循环遍历
-                $arr[] = father($v['father_id'], $routeAll);
-            }
-        }
-    }
+    _admPower();
     $data = Route::where(['is_del' => 0])
         ->where(['is_type' => 0])
-        ->whereIn('id', mergeArr($arr))
+        ->whereIn('id', \Session()->get('routeIds'))
         ->orderBy('father_id', 'asc')
         ->orderBy('is_type', 'desc')
         ->orderBy('by_sort', 'desc')
@@ -430,17 +382,60 @@ function _admPower()
                 $arr[] = $route->id;
             }
         }
-        //根据按钮id获取父级id
-
-
-        //去重
-        $arr = array_unique($arr);
+        //获取到所有路由的id与父id 用于与当前用户id进行比较和遍历
+        $routeAll = getRouteData(3);
+        //1.首先遍历系统中所有的路由id
+        foreach ($routeAll as $k => $v) {
+            //2.从所有权限中遍历 是否存在当前的用户权限, 如果存在则记录当前权限id,并且继续找父级
+            if (in_array($v['id'], $arr)) {
+                $arr[] = $v['id'];
+                if ($v['father_id'] > 0) {
+                    //3.循环遍历
+                    $arr[] = father($v['father_id'], $routeAll);
+                }
+            }
+        }
+        //将所有递归的数组合并后进行去重
+        $arr = array_unique(mergeArr($arr));
         \Session()->put('routeIds', $arr);
         return $arr;
     }
 }
 
-//授权控制
+
+//与_admPower配合使用, 用于找到当前权限的所有父亲与顶级;
+function father($f_id, $routeAll)
+{
+    //获取到传过来的父id后,与所有id进行匹配
+    $list = [];
+    foreach ($routeAll as $k => $v) {
+        //2.从所有权限中遍历 是否存在当前的用户权限, 如果存在则记录当前权限id,并且继续找父级
+        if (in_array($v['id'], [$f_id])) {
+            $list[] = $v['id'];
+            if ($v['father_id'] > 0) {
+                //3.循环遍历
+                $list[] = father($v['father_id'], $routeAll);
+            }
+        }
+    }
+    return $list;
+}
+
+//将某个带有层级的数组合并为一个数组集合
+function mergeArr($arr)
+{
+    $result = array();
+    foreach ($arr as $key => $val) {
+        if (is_array($val)) {
+            $result = array_merge($result, mergeArr($val));
+        } else {
+            $result[] = $val;
+        }
+    }
+    return $result;
+}
+
+//授权控制,通过数组来查找
 function hasPower($routeId)
 {
     //在用户权限组如果找到了对应权限 则返回真,否则返回假

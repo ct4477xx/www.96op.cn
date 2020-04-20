@@ -54,7 +54,6 @@ class IndexController extends Controller
             \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
-
             $res = [
                 'success' => true
             ];
@@ -127,8 +126,9 @@ class IndexController extends Controller
 
     function demo()
     {
-        $getMenu = getMenu();
-        return $getMenu;
+//        $getMenu = getMenu();
+//        return \Session()->get('routeIds');
+//        return $getMenu;
 
 //        return father(52, getRouteData(3));
     }
