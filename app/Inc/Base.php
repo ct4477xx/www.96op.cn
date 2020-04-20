@@ -203,6 +203,33 @@ function getRole($v)
     return $db;
 }
 
+
+//获取带有权限控制的左侧导航
+function getMenu()
+{
+    _admPower();//激活权限session
+    $data = Route::where(['is_del' => 0, 'is_type' => 0])
+        ->whereIn('id', \Session()->get('routeIds'))
+        ->orderBy('father_id', 'asc')
+        ->orderBy('is_type', 'desc')
+        ->orderBy('by_sort', 'desc')
+        ->get()
+        ->toArray();
+    $items = [];
+    foreach ($data as $value) {
+        $items[$value['id']] = $value;
+    }
+    $tree = [];
+    foreach ($items as $k => $v) {
+        if (isset($items[$v['father_id']])) {
+            $items[$v['father_id']]['children'][] = &$items[$k];
+        } else {
+            $tree[] = &$items[$k];
+        }
+    }
+    return $tree;
+}
+
 //通过无限极获取菜单
 function getRoute($s)
 {
@@ -218,6 +245,7 @@ function getRoute($s)
     if ($s == 2) {//获取所有路由树(页面+数据+按钮)
         $select = getInjoin('id,father_id,title,spread');
         $where = [];
+        $whereIn = '';
     }
 
     $data = Route::where(['is_del' => 0])
@@ -334,23 +362,37 @@ function _admName()
     return \Cookie::get('admName');
 }
 
-function _admPower(){
-    $roles = AdmUser::find(_admId())->admUserRole;
-    $arr = [];
-    foreach ($roles as $v) {
-        $routes = $v->route;
-        foreach ($routes as $route) {
-            $arr[] = $route->id;
+function _admPower()
+{
+    if (\Session()->get('routeIds')) {
+        return \Session()->get('routeIds');
+    } else {
+        $roles = AdmUser::find(_admId());
+        $roles = $roles->admUserRole;
+        $arr = [];
+        $arr[] = 1;
+        $arr[] = 2;
+        $arr[] = 7;
+        $arr[] = 8;
+        //$arr[] = 10;
+        //$arr[] = 11;
+        foreach ($roles as $v) {
+            $routes = $v->route;
+            foreach ($routes as $route) {
+                $arr[] = $route->id;
+            }
         }
+        $arr = array_unique($arr);
+        \Session()->put('routeIds', $arr);
+        return $arr;
     }
-    $arr = array_unique($arr);
-    \Session()->put('routeIds',$arr);
 }
+
 //授权控制
 function hasPower($routeId)
 {
     //在用户权限组如果找到了对应权限 则返回真,否则返回假
-    return in_array($routeId, \Session()->get('routeIds')) ? true : false;
+    return in_array($routeId, _admPower()) ? true : false;
 }
 
 

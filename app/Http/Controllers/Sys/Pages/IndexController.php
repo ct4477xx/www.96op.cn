@@ -103,7 +103,8 @@ class IndexController extends Controller
 //            ->with(['children:id,father_id,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
-        return getRoute(1);
+        //return getRoute(1);
+        return getMenu();
     }
 
 }
