@@ -21,7 +21,7 @@ class RouteController extends Controller
 //            //->with(['children:id,father_id,title,href,fontFamily,icon,spread'])
 //            ->get();
 //        return $data;
-        return view('.sys.pages.routes.route', ['data' => getRoute(0)]);
+        return view('.sys.pages.routes.route', ['data' => getRouteMabage()]);
     }
 
     /**
@@ -70,7 +70,7 @@ class RouteController extends Controller
     {
         $data = [];
         $data['father_id'] = $id;
-        $data['is_type'] = 0;
+        $data['is_type'] = 2;
         $data['font_family'] = 'layui-icon';
         //
         return view('.sys.pages.routes.routeSon', $data);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
 use App\Model\Pages\Admin\AdmUser;
+use App\Model\Pages\Routes\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -127,7 +128,10 @@ class IndexController extends Controller
 
     function demo()
     {
-        return _admPower();
+        $routeAll = getRouteData(3);
+        $route = \Session()->get('routeIds');
+
+        return $route;
     }
 
     //找回密码

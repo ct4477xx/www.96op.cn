@@ -188,8 +188,8 @@ function getRoleName($id)
     }
 }
 
-//获取用户角色
-function getRole($v)
+//获取用户所设置的角色
+function getUserRole($v)
 {
     if ($v == 0) {
         $where = [];
@@ -203,51 +203,26 @@ function getRole($v)
     return $db;
 }
 
-
-//获取带有权限控制的左侧导航
-function getMenu()
-{
-    _admPower();//激活权限session
-    $data = Route::where(['is_del' => 0, 'is_type' => 0])
-        ->whereIn('id', \Session()->get('routeIds'))
-        ->orderBy('father_id', 'asc')
-        ->orderBy('is_type', 'desc')
-        ->orderBy('by_sort', 'desc')
-        ->get()
-        ->toArray();
-    $items = [];
-    foreach ($data as $value) {
-        $items[$value['id']] = $value;
-    }
-    $tree = [];
-    foreach ($items as $k => $v) {
-        if (isset($items[$v['father_id']])) {
-            $items[$v['father_id']]['children'][] = &$items[$k];
-        } else {
-            $tree[] = &$items[$k];
-        }
-    }
-    return $tree;
-}
-
-//通过无限极获取菜单
-function getRoute($s)
+//通过无限极获取数据
+function getRouteData($s)
 {
     $s ?? 0;
     if ($s == 0) {//获取所有未被删除的路由
         $select = '*';
         $where = [];
     }
-    if ($s == 1) {//获取所有未被删除且为页面的路由
+    if ($s == 1) {//获取所有未被删除且为页面的路由 用于作为菜单使用
         $select = '*';
         $where = ['is_type' => 0];
     }
     if ($s == 2) {//获取所有路由树(页面+数据+按钮)
         $select = getInjoin('id,father_id,title,spread');
         $where = [];
-        $whereIn = '';
     }
-
+    if ($s == 3) {//获取所有路由树(页面+数据+按钮) -> 用于权限使用,所有仅需要id和父id
+        $select = getInjoin('id,father_id');
+        $where = [];
+    }
     $data = Route::where(['is_del' => 0])
         ->where($where)
         ->select($select)
@@ -256,6 +231,12 @@ function getRoute($s)
         ->orderBy('by_sort', 'desc')
         ->get()
         ->toArray();
+    return $data;
+}
+
+//getRouteData 的关联方法,用于生成树
+function getRouteTree($data)
+{
     $items = [];
     foreach ($data as $value) {
         $items[$value['id']] = $value;
@@ -271,8 +252,37 @@ function getRoute($s)
     return $tree;
 }
 
-//读取所有数据与按钮的路由id,用于角色权限保存时,仅保存有数据与按钮的id
-function getRouteData()
+//获取带有权限控制的左侧导航
+function getMenu()
+{
+    //此方法需要重写,需要根据带有 已有的权限in进行获取树
+    $arr = [];
+    $arr[] = 1;
+    $arr[] = 2;
+    $arr[] = 7;
+    $arr[] = 8;
+    $arr[] = 10;
+    $arr[] = 11;
+
+    $data = Route::where(['is_del' => 0])
+        ->where(['is_type' => 0])
+        ->whereIn('id', $arr)
+        ->orderBy('father_id', 'asc')
+        ->orderBy('is_type', 'desc')
+        ->orderBy('by_sort', 'desc')
+        ->get()
+        ->toArray();
+    return getRouteTree($data);;
+}
+
+//获取路由管理页面当中的数据
+function getRouteMabage()
+{
+    return getRouteTree(getRouteData(0));;
+}
+
+//读取所有数据与按钮的路由id,用于角色权限保存时,仅保存有数据与按钮的id  仅提供给getRouteDataValue方法使用
+function getRouteTypeData()
 {
     $data = Route::where(['is_del' => 0])
         ->wherein('is_type', ['4', '8'])
@@ -280,7 +290,7 @@ function getRouteData()
         ->get();
 
     foreach ($data as $k => $v) {
-        $list[] = '|*.*|' . $v['id'] . '|*.*|';
+        $list[] = $v['id'];
     }
     return $list;
 }
@@ -293,7 +303,7 @@ function getRouteDataValue($str, $val)
     foreach ($str as $k => $v) {
         if (strpos($k, 'layuiTreeCheck_') !== false) {
             if ($v > 0) {
-                if (in_array("|*.*|" . $v . "|*.*|", getRouteData())) {
+                if (in_array($v, getRouteTypeData())) {
                     $list[] = array('role_id' => $val, 'route_id' => $v, 'add_time' => getTime(1));
                 }
             }
@@ -345,23 +355,26 @@ function setNoLock($table, $val)
 }
 
 
-//=================================== 自定义私有方法类 ===================================
+//=================================== 自定义用户私有方法类 ===================================
+//获取当前用户Id
 function _admId()
-{//获取当前用户Id
+{
     return \Cookie::get('admId');
 }
 
+//获取当前用户Id
 function _admCode()
-{//获取当前用户Id
+{
     return \Cookie::get('admCode');
 }
 
-
+//获取当前用户名称
 function _admName()
-{//获取当前用户名称
+{
     return \Cookie::get('admName');
 }
 
+//获取当前私有账号所拥有的路由权限id
 function _admPower()
 {
     if (\Session()->get('routeIds')) {
@@ -370,18 +383,17 @@ function _admPower()
         $roles = AdmUser::find(_admId());
         $roles = $roles->admUserRole;
         $arr = [];
-        $arr[] = 1;
-        $arr[] = 2;
-        $arr[] = 7;
-        $arr[] = 8;
-        //$arr[] = 10;
-        //$arr[] = 11;
+        //获取到当前用户拥有的按钮权限id
         foreach ($roles as $v) {
             $routes = $v->route;
             foreach ($routes as $route) {
                 $arr[] = $route->id;
             }
         }
+        //根据按钮id获取父级id
+
+
+        //去重
         $arr = array_unique($arr);
         \Session()->put('routeIds', $arr);
         return $arr;
