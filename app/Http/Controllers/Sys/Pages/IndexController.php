@@ -104,6 +104,8 @@ class IndexController extends Controller
 //            ->get();
 //        return $data;
         //return getRoute(1);
+        //缓存当前用户的已有权限
+        _admPower();
         return getMenu();
     }
 

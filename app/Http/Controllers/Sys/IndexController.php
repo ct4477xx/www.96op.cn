@@ -54,8 +54,7 @@ class IndexController extends Controller
             \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
             \Cookie::queue('captcha', null, -1);
-//            //缓存当前用户的已有权限
-//            return _admPower();
+
             $res = [
                 'success' => true
             ];
@@ -128,10 +127,10 @@ class IndexController extends Controller
 
     function demo()
     {
-        $routeAll = getRouteData(3);
-        $route = \Session()->get('routeIds');
+        $getMenu = getMenu();
+        return $getMenu;
 
-        return $route;
+//        return father(52, getRouteData(3));
     }
 
     //找回密码

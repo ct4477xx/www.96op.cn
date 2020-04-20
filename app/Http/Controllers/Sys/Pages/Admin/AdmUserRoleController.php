@@ -121,7 +121,7 @@ class AdmUserRoleController extends Controller
         $list = [];
         $list["title"] = "根目录";
         $list["spread"] = true;
-        $list["children"] = getRoute(2);
+        $list["children"] = getRouteMabage();
         $role = DB::table('adm_role_route')->where('role_id', $id)->select('route_id')->get();
         $roleList = collect([]);
         foreach ($role as $k) {
