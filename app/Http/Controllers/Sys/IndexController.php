@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
 use App\Model\Pages\Admin\AdmUser;
-use App\Model\Pages\Routes\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Redis\RedisServiceProvider;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 
 
 class IndexController extends Controller
@@ -129,6 +129,37 @@ class IndexController extends Controller
 
     function demo()
     {
+
+
+//
+//        Redis::set('name',123);
+
+
+        $arrs = [];
+        $listKey = 'LIST:ADM';
+        $hashKey = 'HASH:ADM:';
+
+        if (Redis::exists($listKey)) {
+            $lists = Redis::Lrange($listKey, 0, -1);
+            foreach ($lists as $k => $v) {
+                $arrs[] = Redis::hgetall($hashKey . $v);
+            }
+        } else {
+            $arrs= AdmUser::get()->toArray();
+            foreach ($arrs as $k => $v) {
+                Redis::rpush($listKey . $v['id']);
+                Redis::hmset($hashKey . $v['code'], $v);
+            }
+        }
+
+//        return $arrs;
+
+
+        //Redis::set('name', _admName());
+//        $values = Redis::get('name');
+
+//        return $values;
+
 
 //        if (Cache::has('as-' . _admCode())) {
 //            echo Cache::get('as-' . _admCode());
