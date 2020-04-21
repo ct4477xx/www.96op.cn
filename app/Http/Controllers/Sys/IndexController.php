@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Pages\Admin\AdmUser;
 use App\Model\Pages\Routes\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -47,13 +48,15 @@ class IndexController extends Controller
         }
         $is_Pwd = json_encode(Hash::check($inp['data']['pass_word'], $db_data['pass_word']));
         if ($is_Pwd == 'true') {
-            $time = 1 * 60 * 12;//缓存时间
+            $time = base()['cacheTime'];//缓存时间
             //\Session()->put('admId', $db_data['code']);
             \Cookie::queue('admId', $db_data['id'], $time);
             $name = $db_data['admUserInfo']['name'];
             \Cookie::queue('admName', $name ? $name : $db_data['code'], $time);
             \Cookie::queue('admCode', $db_data['code'], $time);
-            \Cookie::queue('captcha', null, -1);
+            \Cookie::queue('captcha', null, -1);//验证码校验
+            //
+            _admCache($db_data['code']);//销毁缓存
             $res = [
                 'success' => true
             ];
@@ -74,7 +77,7 @@ class IndexController extends Controller
     function logout()
     {
         //\Session()->forget('admId');
-        \Session()->forget('routeIds');
+//        \Session()->forget('routeIds');
         \Cookie::queue('admId', null, -1);
         \Cookie::queue('admName', null, -1);
         \Cookie::queue('admCode', null, -1);
@@ -126,8 +129,21 @@ class IndexController extends Controller
 
     function demo()
     {
+
+//        if (Cache::has('as-' . _admCode())) {
+//            echo Cache::get('as-' . _admCode());
+//            Cache::forget('as-' . _admCode());//权限值
+//        } else {
+//            Cache::put('as-' . _admCode(), "3");
+//        }
+
+
+        //return objectToArray(Cache::get('routeIds-' . _admCode()));
+        //Cache::forget('routeIds-' . _admCode());//权限值
+        //Cache::put('321-' . _admCode(), "321");
+
+
 //        $getMenu = getMenu();
-//        return \Session()->get('routeIds');
 //        return $getMenu;
 
 //        return father(52, getRouteData(3));

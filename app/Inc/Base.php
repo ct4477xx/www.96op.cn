@@ -5,8 +5,18 @@ use App\Model\Pages\Admin\AdmUser;
 use App\Model\Pages\Admin\AdmUserInfo;
 use App\Model\Pages\Routes\Route;
 use App\ToolModel\signStreet;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
+
+//=================================== 底层方法类 ===================================
+function base()
+{
+    $data = [];
+    $data['moneyRatio'] = '15';//销售提成 默认值
+    $data ['cacheTime'] = 1 * 60 * 12; //系统中所有与缓存相关时间
+    return $data;
+}
 
 //=================================== 自定义方法类 ===================================
 function getTime($str)
@@ -25,7 +35,6 @@ function getTime($str)
     }
     return $back;
 }
-
 
 //输入以逗号分隔的字符串,生成带单引号的数组
 function getInjoin($str)
@@ -62,6 +71,12 @@ function getRandstr($len)
     return $rands;
 }
 
+
+function objectToArray($object)
+{
+    //先编码成json字符串，再解码成数组
+    return json_decode(json_encode($object), true);
+}
 
 //创建唯一Id
 function getNewId($type = 5, $length = 8, $time = 0)
@@ -171,6 +186,7 @@ function getIsLock($str)
     }
 }
 
+
 //=================================== 数据库操作类 ===================================
 function getAdmName($code)
 {
@@ -256,9 +272,10 @@ function getRouteTree($data)
 function getMenu()
 {
     _admPower();
+    $routeIds = objectToArray(Cache::get('routeIds-' . _admCode()));
     $data = Route::where(['is_del' => 0])
         ->where(['is_type' => 0])
-        ->whereIn('id', \Session()->get('routeIds'))
+        ->whereIn('id', $routeIds)
         ->orderBy('father_id', 'asc')
         ->orderBy('is_type', 'desc')
         ->orderBy('by_sort', 'desc')
@@ -369,8 +386,8 @@ function _admName()
 //获取当前私有账号所拥有的路由权限id
 function _admPower()
 {
-    if (\Session()->get('routeIds')) {
-        return \Session()->get('routeIds');
+    if (Cache::has('routeIds-' . _admCode())) {
+        return Cache::get('routeIds-' . _admCode());
     } else {
         $roles = AdmUser::find(_admId());
         $roles = $roles->admUserRole;
@@ -397,7 +414,7 @@ function _admPower()
         }
         //将所有递归的数组合并后进行去重
         $arr = array_unique(mergeArr($arr));
-        \Session()->put('routeIds', $arr);
+        Cache::put('routeIds-' . _admCode(), $arr);
         return $arr;
     }
 }
@@ -440,6 +457,12 @@ function hasPower($routeId)
 {
     //在用户权限组如果找到了对应权限 则返回真,否则返回假
     return in_array($routeId, _admPower()) ? true : false;
+}
+
+//重新生成登录账号相关的cache
+function _admCache($admCode)
+{
+    Cache::forget('routeIds-' . $admCode);//权限值
 }
 
 
